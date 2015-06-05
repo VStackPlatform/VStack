@@ -1,5 +1,9 @@
 {
   "name": "vstack",
+  "description": "The VStack was built to improve upon the great work done already by puphpet.com and to build a more integrated environment.",
+  "keywords": ["vagrant", "puppet", "vagrant gui", "puphpet", "lamp", "local development"],
+  "author": "Damian Dennis <damian@developingweb.com.au> (http://damiandennis.com)",
+  "license" : "BSD-3-Clause",
   "main": "index.html",
   "version": "0.1.1",
   "window": {
