@@ -1,0 +1,156 @@
+
+<div class="row">
+    <div class="col-lg-12">
+        <a class="btn btn-default pull-left" data-bind="click: prev">&laquo; Prev</a>
+        <a class="btn btn-default pull-right" data-bind="click: next">Next &raquo;</a>
+    </div>
+    <div class="col-lg-12">
+        <h2 class="checkbox checkbox-success large">
+            <input id="locally" data-bind="checked: apache" type="checkbox" value="apache" />
+            <label for="locally">Install Apache</label>
+        </h2>
+        <div data-bind="visible: apache(), with: options">
+            <div class="form-group">
+                <label for="apache-modules">Apache Modules:</label>
+                <input type="text" id="apache-modules" class="form-control" data-bind="select2val: modules, select2: $parent.module_config" />
+            </div>
+            <div class="form-group clearfix">
+                <label>Virtual Hosts:</label>
+                <!-- ko foreach: vhosts -->
+                <div class="panel clearfix">
+                    <div class="clearfix" style="margin: 5px 5px 0 5px">
+                        <a data-bind="click: $parents[1].removeVirtualHost"><i class="fa fa-times pull-right"></i></a>
+                    </div>
+                    <div class="clearfix">
+                        <div class="form-group col-lg-6">
+                            <label>Server Name</label>
+                            <input type="text" class="form-control" id="server-name" placeholder="Server Name" data-bind="value: name" />
+                            <p class="alert-danger" data-bind="validationMessage: name"></p>
+                        </div>
+                        <div  class="form-group col-lg-6">
+                            <label>Server Aliases</label>
+                            <input type="text" class="form-control" id="server-alias" placeholder="Server Alias" data-bind="select2val: serveraliases, select2: $parents[1].serveraliases_config" />
+                            <p class="alert-danger" data-bind="validationMessage: serveraliases"></p>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="form-group col-lg-6">
+                            <label>Document Root</label>
+                            <input type="text" class="form-control" id="document-root" placeholder="Document Root" data-bind="value: docroot" />
+                            <p class="alert-danger" data-bind="validationMessage: docroot"></p>
+                        </div>
+                        <div  class="form-group col-lg-6">
+                            <label>Port</label>
+                            <input type="text" class="form-control" id="server-port" placeholder="Server Port" data-bind="value: port" />
+                            <p class="alert-danger" data-bind="validationMessage: port"></p>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label>Environment</label>
+                        <input type="text" class="form-control" id="environment" placeholder="Environment Variables" data-bind="select2val: setEnv, select2: $parents[1].env_config" />
+                        <p class="alert-danger" data-bind="validationMessage: setEnv"></p>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <div class="checkbox checkbox-success">
+                            <input id="use-ssl" data-bind="checked: ssl" type="checkbox" value="1" />
+                            <label for="use-ssl"><strong>Use SSL</strong></label>
+                        </div>
+                    </div>
+                    <div class="col-lg-12" data-bind="visible: ssl">
+                        <label>SSL:</label>
+                        <div class="form-group clearfix sub-panel no-close">
+                            <div class="form-group col-lg-6">
+                                <label>SSL Certificate Path</label>
+                                <input type="text" class="form-control" id="cert-path" placeholder="Certificate Path" data-bind="value: ssl_cert" />
+                                <p class="alert-danger" data-bind="validationMessage: ssl_cert"></p>
+                            </div>
+                            <div  class="form-group col-lg-6">
+                                <label>SSL Certificate Key File</label>
+                                <input type="text" class="form-control" id="cert-key" placeholder="SSL Certificate Key File" data-bind="value: ssl_key" />
+                                <p class="alert-danger" data-bind="validationMessage: ssl_key"></p>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>SSL Certificate Chain File Path</label>
+                                <input type="text" class="form-control" id="cert-chain" placeholder="SSL Certificate Chain File Path" data-bind="value: ssl_chain" />
+                                <p class="alert-danger" data-bind="validationMessage: ssl_chain"></p>
+                            </div>
+                            <div  class="form-group col-lg-6">
+                                <label>SSL CL Certificate Path</label>
+                                <input type="text" class="form-control" id="certs-dir" placeholder="SSL CL Certificate Path" data-bind="value: ssl_certs_dir" />
+                                <p class="alert-danger" data-bind="validationMessage: ssl_certs_dir"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="col-lg-12">
+                        <label>Directories:</label>
+                        <!-- ko foreach: directories -->
+                        <div class="form-group clearfix sub-panel">
+                            <div class="clearfix" style="margin: 5px 5px 0 5px">
+                                <a data-bind="click: $parent.removeDirectory"><i class="fa fa-times pull-right"></i></a>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Path</label>
+                                <input type="text" class="form-control" id="directory-path" placeholder="Directory Name" data-bind="value: path" />
+                                <p class="alert-danger" data-bind="validationMessage: path"></p>
+                            </div>
+                            <div  class="form-group col-lg-6">
+                                <label>Directory Options</label>
+                                <input type="text" class="form-control" id="directory-options" placeholder="Directory Options" data-bind="select2val: options, select2: $root.options_config" />
+                                <p class="alert-danger" data-bind="validationMessage: options"></p>
+                            </div>
+                            <div class="form-group col-lg-6" style="clear: left">
+                                <label>Allow Override</label>
+                                <input type="text" class="form-control" id="allow-override" placeholder="Allow Override" data-bind="select2val: allow_override, select2: $root.override_config" />
+                                <p class="alert-danger" data-bind="validationMessage: allow_override"></p>
+                            </div>
+                        </div>
+                        <!-- /ko -->
+                        <div class="row">
+                            <div class="form-group col-lg-12">
+                                <a class="btn btn-sm btn-default pull-right" data-bind="click: addDirectory"><i class="fa fa-plus"></i>  Add directory</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <label>Aliases:</label>
+                        <!-- ko foreach: aliases -->
+                        <div class="form-group clearfix sub-panel">
+                            <div class="clearfix" style="margin: 5px 5px 0 5px">
+                                <a data-bind="click: $parent.removeAlias"><i class="fa fa-times pull-right"></i></a>
+                            </div>
+                            <div class="form-group col-lg-4">
+                                <label>Directive</label>
+                                <select class="form-control" data-bind="value: type">
+                                    <option value="alias">Alias</option>
+                                    <option value="aliasmatch">Alias Match</option>
+                                    <option value="scriptaliasmatch">Script Alias Match</option>
+                                    <option value="scriptalias">Script Alias</option>
+                                </select>
+                                <p class="alert-danger" data-bind="validationMessage: name"></p>
+                            </div>
+                            <div class="form-group col-lg-4">
+                                <label>Url Path</label>
+                                <input type="text" class="form-control" id="alias-url-path" placeholder="Url Path" data-bind="value: url" />
+                                <p class="alert-danger" data-bind="validationMessage: name"></p>
+                            </div>
+                            <div  class="form-group col-lg-4">
+                                <label>File Path</label>
+                                <input type="text" class="form-control" id="alias-file-path" placeholder="File Path" data-bind="value: path" />
+                                <p class="alert-danger" data-bind="validationMessage: path"></p>
+                            </div>
+                        </div>
+                        <!-- /ko -->
+                        <div class="row">
+                            <div class="form-group col-lg-12">
+                                <a class="btn btn-sm btn-default pull-right" data-bind="click: addAlias"><i class="fa fa-plus"></i>  Add alias</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+                <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addVirtualHost"><i class="fa fa-plus"></i>  Add virtual host</a>
+            </div>
+        </div>
+    </div>
+</div>

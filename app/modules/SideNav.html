@@ -1,0 +1,61 @@
+<!-- ko text: ko.toJSON($data) --><!-- /ko -->
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a class="btn-block" data-toggle="collapse" data-parent="#sidebar" href="#target-machine">Deploy Target</a>
+    </h4>
+</div>
+<div id="target-machine" class="panel-collapse collapse" data-bind="css: targetCss, attr: targetAttr">
+    <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: targetMenu">
+        <li role="presentation" data-bind="css: { active: isActive }">
+            <a data-bind="text: title, attr: {href: dynamicHash}"></a>
+        </li>
+    </ul>
+</div>
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a class="btn-block" data-toggle="collapse" data-parent="#sidebar" href="#system">System</a>
+    </h4>
+</div>
+<div id="system" class="panel-collapse collapse" data-bind="css: systemCss, attr: systemAttr">
+    <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: systemMenu">
+        <li role="presentation" data-bind="css: { active: isActive }">
+            <a data-bind="text: title, attr: {href: dynamicHash}"></a>
+        </li>
+    </ul>
+</div>
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a class="btn-block" data-toggle="collapse" data-parent="#sidebar" href="#web-server">Web Server</a>
+    </h4>
+</div>
+<div id="web-server" class="panel-collapse collapse" data-bind="css: webServerCss, attr: webServerAttr">
+    <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: webServerMenu">
+        <li role="presentation" data-bind="css: { active: isActive }">
+            <a data-bind="text: title, attr: {href: dynamicHash}"></a>
+        </li>
+    </ul>
+</div>
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a class="btn-block" data-toggle="collapse" data-parent="#sidebar" href="#database">Databases</a>
+    </h4>
+</div>
+<div id="database" class="panel-collapse collapse" data-bind="css: databaseCss, attr: databaseAttr">
+    <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: databaseMenu">
+        <li role="presentation" data-bind="css: { active: isActive }">
+            <a data-bind="text: title, attr: {href: dynamicHash}"></a>
+        </li>
+    </ul>
+</div>
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a class="btn-block" data-toggle="collapse" data-parent="#sidebar" href="#language">Languages</a>
+    </h4>
+</div>
+<div id="language" class="panel-collapse collapse" data-bind="css: languageCss, attr: languageAttr">
+    <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: languageMenu">
+        <li role="presentation" data-bind="css: { active: isActive }">
+            <a data-bind="text: title, attr: {href: dynamicHash}"></a>
+        </li>
+    </ul>
+</div>

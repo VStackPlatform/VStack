@@ -1,0 +1,120 @@
+﻿/*!
+ * Durandal 2.1.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details
+ */
+
+.splash {
+    text-align: center;
+    margin: 10% 0 0 0;
+}
+
+.splash .message {
+    font-size: 5em;
+    line-height: 1.5em;
+    -webkit-text-shadow: rgba(0, 0, 0, 0.5) 0 0 15px;
+    text-shadow: rgba(0, 0, 0, 0.5) 0 0 15px;
+    text-transform: uppercase;
+}
+
+.splash .fa-spinner {
+    text-align: center;
+    display: inline-block;
+    font-size: 5em;
+    margin-top: 50px;
+}
+
+.page-host {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50px;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-bottom: 70px;
+}
+
+section {
+    margin: 0 20px;
+}
+
+.navbar-nav li.loader {
+    margin: 12px 6px 0 6px;
+    visibility: hidden;
+}
+
+.navbar-nav li.loader.active {
+    visibility: visible;
+}
+
+.pictureDetail {
+    max-width: 425px;
+}
+
+div.jumbo {
+    margin: 50px 15px;
+}
+
+.no-gutter > [class*='col-'] {
+    padding-right:0;
+    padding-left:0;
+}
+
+.sub-panel {
+    background-color: #2e3338;
+    border: 1px solid #3F4041;
+}
+
+.sub-panel.no-close {
+    padding-top: 14px;
+}
+
+.list-inline {
+    margin-left: 5px;
+}
+
+.list-inline .radio {
+    position: static;
+    margin-left: 0;
+}
+
+.list-inline .radio input[type=radio] {
+    position: static;
+    margin-left: 0;
+}
+
+.list-inline .radio label {
+    padding-left: 5px;
+}
+
+.label-lg {
+    font-size: 16px;
+}
+
+#terminal {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#terminal pre {
+    background: black;
+    color: white;
+    font-family: Courier, monospace;
+    display: block;
+    padding: 10px;
+    margin-bottom: 52px;
+    position: fixed !important;
+    top: auto !important;
+    width: 100%;
+    bottom: 0 !important;
+    border-radius: 0;
+    height: 200px;
+}
+
+/* handle on the bottom */
+.ui-resizable-n {
+    height: 10px !important;
+    background-color: white;
+}

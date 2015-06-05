@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+#^syntax detection
+
+forge "https://forgeapi.puppetlabs.com"
+
+{{#each modules}}
+mod '{{mod}}',
+    :git => 'https://github.com/{{mod}}.git',
+    :ref => '{{tag}}'
+{{/each}}

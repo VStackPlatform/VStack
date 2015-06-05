@@ -1,0 +1,111 @@
+<div class="row">
+    <div class="col-lg-12">
+        <a class="btn btn-default pull-left" data-bind="click: prev">&laquo; Last</a>
+        <a class="btn btn-default pull-right" data-bind="click: next">Next &raquo;</a>
+    </div>
+</div>
+<h2 class="radio radio-success large">
+    <input id="do" data-bind="checked: target" type="radio" value="do" />
+    <label for="do">Deploy on Digital Ocean</label>
+</h2>
+<div data-bind="visible: target()=='do', with: options">
+    <div class="row">
+        <div class="form-group col-lg-12">
+            <label for="distro-ubuntu140464">Select a distribution:</label>
+            <ul>
+                <li class="radio radio-success">
+                    <input id="distro-ubuntu140464" data-bind="checked: distribution" type="radio" value="ubuntu/trusty64" />
+                    <label for="distro-ubuntu140464">Ubuntu Trusty 14.04 LTS x64</label>
+                </li>
+                <li class="radio radio-success">
+                    <input id="distro-ubuntu140432" data-bind="checked: distribution" type="radio" value="ubuntu/trusty32" />
+                    <label for="distro-ubuntu140432">Ubuntu Trusty 14.04 LTS x32</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-12">
+            <label for="server-size">Server Size:</label>
+            <select id="server-size" data-bind="value: server_size" class="form-control">
+                <option value="512mb">512MB / 1 CPU / 20GB SSD DISK / 1TB TRANSFER</option>
+                <option value="1gb">1GB / 1 CPU / 30GB SSD DISK / 2TB TRANSFER</option>
+                <option value="2gb">2GB / 2 CPUS / 40GB SSD DISK / 3TB TRANSFER</option>
+                <option value="4gb">4GB / 2 CPUS / 60GB SSD DISK / 4TB TRANSFER</option>
+                <option value="8gb">8GB / 4 CPUS / 80GB SSD DISK / 5TB TRANSFER</option>
+                <option value="16gb">16GB / 8 CPUS / 160GB SSD DISK / 6TB TRANSFER</option>
+                <option value="32gb">32GB / 12 CPUS / 320GB SSD DISK / 7TB TRANSFER</option>
+                <option value="48gb">48GB / 16 CPUS / 480GB SSD DISK / 8TB TRANSFER</option>
+                <option value="64gb">64GB / 20 CPUS / 640GB SSD DISK / 9TB TRANSFER</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-6">
+            <label for="server-name">Server Name:</label>
+            <input type="text" class="form-control" id="server-name" placeholder="Enter Server Name" data-bind="value: server_name" />
+            <p class="alert-danger" data-bind="validationMessage: server_name"></p>
+        </div>
+        <div class="form-group col-lg-6">
+            <label for="datacenter">Datacenter Location:</label>
+            <select id="datacenter" data-bind="value: data_center" class="form-control">
+                <option value="nyc1">New York 1</option>
+                <option value="nyc2">New York 2</option>
+                <option value="nyc3">New York 3</option>
+                <option value="sfo1">San Francisco 1</option>
+                <option value="ams1">Amsterdam 1</option>
+                <option value="ams2">Amsterdam 2</option>
+                <option value="ams3">Amsterdam 3</option>
+                <option value="sgp1">Singapore 1</option>
+                <option value="lon1">London 1</option>
+                <option value="fra1">Frankfurt 1</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-6">
+            <label for="token">Digital Ocean Token:</label>
+            <input type="text" class="form-control" id="token" placeholder="Enter Digital Ocean Token" data-bind="value: token" />
+            <p class="alert-danger" data-bind="validationMessage: token"></p>
+        </div>
+        <div class="form-group col-lg-6">
+            <label for="ssh-key-name">SSH Key Name:</label>
+            <input type="text" class="form-control" id="ssh-key-name" placeholder="Enter SSH Key Name" data-bind="value: ssh_key_name" />
+            <p class="alert-danger" data-bind="validationMessage: ssh_key_name"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-6">
+            <label for="private-key-path">Local Private Key Path:</label>
+            <input type="text" class="form-control" id="private-key-path" placeholder="Enter Your Private Key Path" data-bind="value: private_key_path" />
+            <p class="alert-danger" data-bind="validationMessage: private_key_path"></p>
+        </div>
+        <div class="form-group col-lg-6">
+            <label for="private-key-user">Local Private Key User:</label>
+            <input type="text" class="form-control" id="private-key-user" placeholder="Enter Private Key User" data-bind="value: private_key_user" />
+            <p class="alert-danger" data-bind="validationMessage: private_key_user"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <label>Synced Folders:</label>
+            <!-- ko foreach: synced_folders -->
+            <div class="panel clearfix">
+                <div class="clearfix" style="margin: 5px 5px 0 5px">
+                    <a data-bind="click: $parents[1].removeSyncedFolder"><i class="fa fa-times pull-right"></i></a>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label for="from">Folder Source:</label>
+                    <input type="text" class="form-control" id="from" placeholder="Folder Source" data-bind="value: from" />
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label for="to">Folder Target:</label>
+                    <input type="text" class="form-control" id="to" placeholder="Folder Target" data-bind="value: to" />
+                </div>
+                <input data-bind="checked: type" type="hidden" value="rsync" />
+            </div>
+            <!-- /ko -->
+            <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addSyncedFolder"><i class="fa fa-plus"></i>  Add synced folder</a>
+        </div>
+    </div>
+</div>

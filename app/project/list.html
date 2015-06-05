@@ -1,0 +1,51 @@
+<section>
+    <div class="jumbo">
+        <h1>Projects</h1>
+        <em>List of all created projects.</em>
+    </div>
+    <div class="col-lg-12" data-bind="visible: projects().length == 0">
+        <p class="text-info">You currently have no projects. <a href="#project">Click here to create a new Project.</a></p>
+    </div>
+    <div style="padding-left: 20px;" data-bind="visible: projects().length > 0">
+        <p>
+            <a class="btn btn-success" href="#project">New Project</a>
+        </p>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th width="15%">Target</th>
+                <th width="15%">Status</th>
+                <th width="5%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- ko foreach: projects -->
+            <tr data-bind="css: statusCss">
+                <td data-bind="text: name"></td>
+                <td data-bind="text: targetMachine"></td>
+                <td data-bind="text: status"></td>
+                <td class="form-actions">
+                    <div class="btn-group drop">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" data-bind="attr: {disabled: $parent.commandRunning}">
+                            Actions <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a data-bind="click: $parent.up">Up</a></li>
+                            <li><a data-bind="click: $parent.provision">Provision</a></li>
+                            <li><a data-bind="click: $parent.reload">Reload</a></li>
+                            <li><a data-bind="click: $parent.halt">Halt</a></li>
+                            <li><a data-bind="click: $parent.destroy">Destroy</a></li>
+                            <li class="divider"></li>
+                            <li><a data-bind="attr: {href: editUrl, title: 'Edit'}">Edit</a></li>
+                            <li><a data-bind="click: $parent.copyProject">Copy</a></li>
+                            <li><a data-bind="click: $parent.deleteProject">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <!-- /ko -->
+            </tbody>
+        </table>
+    </div>
+</section>

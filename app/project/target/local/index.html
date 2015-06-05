@@ -1,0 +1,133 @@
+<div class="row">
+    <div class="col-lg-12">
+        <a class="btn btn-default pull-left" data-bind="click: prev">&laquo; Last</a>
+        <a class="btn btn-default pull-right" data-bind="click: next">Next &raquo;</a>
+    </div>
+</div>
+<h2 class="radio radio-success large">
+    <input id="locally" data-bind="checked: target" type="radio" value="locally" />
+    <label for="locally">Deploy Locally</label>
+</h2>
+<div data-bind="visible: target() == 'locally', with: options">
+    <div class="row">
+        <div class="form-group col-lg-6">
+            <label for="provider-virtualbox">Select a provider:</label>
+            <ul>
+                <li class="radio radio-success">
+                    <input id="provider-virtualbox" data-bind="checked: provider" type="radio" value="virtualbox" />
+                    <label for="provider-virtualbox">VirtualBox</label>
+                </li>
+            </ul>
+        </div>
+        <div class="form-group col-lg-6">
+            <label for="distro-ubuntu140464">Select a distribution:</label>
+            <ul>
+                <li class="radio radio-success">
+                    <input id="distro-ubuntu140464" data-bind="checked: distribution" type="radio" value="ubuntu/trusty64" />
+                    <label for="distro-ubuntu140464">Ubuntu Trusty 14.04 LTS x64</label>
+                </li>
+                <li class="radio radio-success">
+                    <input id="distro-ubuntu140432" data-bind="checked: distribution" type="radio" value="ubuntu/trusty32" />
+                    <label for="distro-ubuntu140432">Ubuntu Trusty 14.04 LTS x32</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-6">
+            <label for="ip-address">IP Address:</label>
+            <input type="text" class="form-control" id="ip-address" placeholder="Enter IPv4 Address" data-bind="value: ip" />
+            <p class="alert-danger" data-bind="validationMessage: ip"></p>
+        </div>
+        <div class="form-group col-lg-6">
+            <label for="hostname">Hostname:</label>
+            <input type="text" class="form-control" id="hostname" placeholder="Hostname" data-bind="value: hostname" />
+            <p class="alert-danger" data-bind="validationMessage: hostname"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-6">
+            <label for="memory">Memory:</label>
+            <input type="number" class="form-control" id="memory" placeholder="Enter Memory in MB" data-bind="value: memory" />
+            <p class="alert-danger" data-bind="validationMessage: memory"></p>
+        </div>
+        <div class="form-group col-lg-6">
+            <label for="cpu">CPU's:</label>
+            <input type="number" class="form-control" id="cpu" placeholder="Enter number of CPU's" data-bind="value: cpu_count" />
+            <p class="alert-danger" data-bind="validationMessage: cpu_count"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <label>Forward Ports:</label>
+            <!-- ko foreach: forward_ports -->
+            <div class="panel clearfix">
+                <div class="clearfix" style="margin: 5px 5px 0 5px">
+                    <a data-bind="click: $parents[1].removeForwardPort"><i class="fa fa-times pull-right"></i></a>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label for="host-port">Host port:</label>
+                    <input type="number" class="form-control" id="host-port" placeholder="Host port" data-bind="value: host" />
+                </div>
+                <div class="form-group col-lg-6">
+                    <label for="vm-port">VM port:</label>
+                    <input type="number" class="form-control" id="vm-port" placeholder="VM port" data-bind="value: vm" />
+                </div>
+            </div>
+            <!-- /ko -->
+            <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addForwardPort"><i class="fa fa-plus"></i>  Add forward port</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <label>Synced Folders:</label>
+            <!-- ko foreach: synced_folders -->
+            <div class="panel clearfix">
+                <div class="clearfix" style="margin: 5px 5px 0 5px">
+                    <a data-bind="click: $parents[1].removeSyncedFolder"><i class="fa fa-times pull-right"></i></a>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label for="from">Folder Source:</label>
+                    <input type="text" class="form-control" id="from" placeholder="Folder Source" data-bind="value: from" />
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label for="to">Folder Target:</label>
+                    <input type="text" class="form-control" id="to" placeholder="Folder Target" data-bind="value: to" />
+                </div>
+                <div class="col-lg-12 form-group">
+                    <div>
+                        <label for="type">Shared Folder Type</label>
+                    </div>
+                    <div class="clearfix">
+                        <div class="col-lg-3">
+                            <span class="radio radio-success">
+                                <input id="type" data-bind="checked: type" type="radio" value="default" />
+                                <label>Default</label>
+                            </span>
+                        </div>
+                        <div class="col-lg-3" data-bind="visible: !$root.isWindows()">
+                            <span class="radio radio-success">
+                                <input data-bind="checked: type" type="radio" value="nfs" />
+                                <label>NFS</label>
+                            </span>
+                        </div>
+                        <div class="col-lg-3" data-bind="visible: $root.isWindows">
+                            <span class="radio radio-success">
+                                <input data-bind="checked: type" type="radio" value="smb" />
+                                <label>Samba</label>
+                            </span>
+                        </div>
+                        <div class="col-lg-3">
+                            <span class="radio radio-success">
+                                <input data-bind="checked: type" type="radio" value="rsync" />
+                                <label>RSync</label>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /ko -->
+            <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addSyncedFolder"><i class="fa fa-plus"></i>  Add synced folder</a>
+        </div>
+    </div>
+</div>

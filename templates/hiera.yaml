@@ -1,0 +1,8 @@
+---
+:backends: json
+:json:
+    :datadir: '/vagrant'
+:hierarchy:
+    - config
+:merge_behavior: native
+:logger: console
