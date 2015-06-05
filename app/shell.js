@@ -2,7 +2,6 @@
 
     return {
         router: router,
-        line_ending: (process.platform === 'win32') ? '\\' : '/',
         activate: function () {
             router.map([
                 { route: ['projects'], title:'Projects', moduleId: 'project/list', nav: 2 },

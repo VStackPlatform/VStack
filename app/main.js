@@ -12,8 +12,7 @@
         'select2': '../node_modules/select2/select2.min',
         'ko-validation': '../node_modules/knockout.validation/dist/knockout.validation.min',
         'ko-mapping': '../node_modules/knockout.mapping/knockout.mapping',
-        'ko-postbox': '../node_modules/knockout-postbox/build/knockout-postbox',
-        'fs-extra': '../node_modules/fs-extra/index'
+        'ko-postbox': '../node_modules/knockout-postbox/build/knockout-postbox'
     },
     shim: {
         'bootstrap': {
