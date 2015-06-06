@@ -1,9 +1,16 @@
 {
   "name": "vstack",
   "description": "The VStack was built to improve upon the great work done already by puphpet.com and to build a more integrated environment.",
-  "keywords": ["vagrant", "puppet", "vagrant gui", "puphpet", "lamp", "local development"],
+  "keywords": [
+    "vagrant",
+    "puppet",
+    "vagrant gui",
+    "puphpet",
+    "lamp",
+    "local development"
+  ],
   "author": "Damian Dennis <damian@developingweb.com.au> (http://damiandennis.com)",
-  "license" : "BSD-3-Clause",
+  "license": "BSD-3-Clause",
   "main": "index.html",
   "version": "0.1.1",
   "window": {
@@ -12,14 +19,14 @@
     "height": 1200
   },
   "dependencies": {
-    "lodash": "~3.8.0",
-    "knockout": "~3.3.0",
-    "knockout.validation": "~2.0.2",
-    "knockout.contextmenu": "~0.3.1",
-    "handlebars": "~3.0.3",
+    "bootstrap": "git+https://github.com/twbs/bootstrap.git#v3.3.4",
     "colors": "~1.1.0",
-    "knockout.mapping": "~2.4.3",
+    "handlebars": "~3.0.3",
+    "knockout": "^3.3.0",
     "knockout-postbox": "~0.5.1",
+    "knockout.mapping": "~2.4.3",
+    "knockout.validation": "~2.0.2",
+    "lodash": "~3.8.0",
     "ncp": "~2.0.0",
     "q": "~1.3.0",
     "select2": "~3.5.2-browserify",

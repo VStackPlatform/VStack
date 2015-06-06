@@ -4,8 +4,8 @@
         'durandal':'../lib/durandal/js',
         'plugins' : '../lib/durandal/js/plugins',
         'transitions' : '../lib/durandal/js/transitions',
-        'knockout': '../lib/knockout/knockout-3.1.0',
-        'bootstrap': '../lib/bootstrap/js/bootstrap',
+        'knockout': '../node_modules/knockout/build/output/knockout-latest.debug',
+        'bootstrap': '../node_modules/bootstrap/dist/js/bootstrap',
         'jquery': '../lib/jquery/jquery-1.9.1',
         'jquery-ui': '../lib/jquery-ui/jquery-ui.min',
         'bootstrap-checkbox': 'lib/bootstrap-checkbox/js/bootstrap-checkbox',
@@ -27,7 +27,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'bootstrap'],
     system.debug(true);
     //>>excludeEnd("build");
 
-    app.title = 'LAMP Stack';
+    app.title = 'VStack';
 
     app.configurePlugins({
         router: true,
