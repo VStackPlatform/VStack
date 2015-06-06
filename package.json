@@ -32,5 +32,9 @@
     "select2": "~3.5.2-browserify",
     "stream": "~0.0.2",
     "terminal.js": "~1.0.5"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-less": "^3.0.3"
   }
 }

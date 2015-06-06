@@ -55,19 +55,19 @@ define([
                 });
             },
             up: function (model, event) {
-                vagrant.up(model.fullPath());
+                vagrant.up(model.fullPath(), model.updateStatus.bind(model));
             },
             provision: function (model, event) {
-                vagrant.provision(model.fullPath());
+                vagrant.provision(model.fullPath(), model.updateStatus.bind(model));
             },
             reload: function (model, event) {
-                vagrant.reload(model.fullPath());
+                vagrant.reload(model.fullPath(), model.updateStatus.bind(model));
             },
             halt: function (model, event) {
-                vagrant.halt(model.fullPath());
+                vagrant.halt(model.fullPath(), model.updateStatus.bind(model));
             },
             destroy: function (model, event) {
-                vagrant.destroy(model.fullPath());
+                vagrant.destroy(model.fullPath(), model.updateStatus.bind(model));
             }
         };
 

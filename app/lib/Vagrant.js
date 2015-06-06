@@ -12,7 +12,7 @@ define(['knockout', 'lib/Environment', 'ko-postbox'], function(ko, env, postbox)
         this.commandRunning = ko.observable(false).syncWith('vagrant.commandRunning');
     };
 
-    Vagrant.prototype.executeCommand = function(fullPath, command, args) {
+    Vagrant.prototype.executeCommand = function(fullPath, command, args, callback) {
         var self = this;
         this.commandRunning(true);
 
@@ -41,27 +41,30 @@ define(['knockout', 'lib/Environment', 'ko-postbox'], function(ko, env, postbox)
         process.on('close', function (code) {
             postbox.publish('Term.main', colors.rainbow('command completed.\r\n'));
             self.commandRunning(false);
+            if (typeof callback == 'function') {
+                callback();
+            }
         });
     };
 
-    Vagrant.prototype.up = function(fullPath) {
-        this.executeCommand(fullPath, 'up');
+    Vagrant.prototype.up = function(fullPath, callback) {
+        this.executeCommand(fullPath, 'up', [], callback);
     };
 
-    Vagrant.prototype.provision = function(fullPath) {
-        this.executeCommand(fullPath, 'provision');
+    Vagrant.prototype.provision = function(fullPath, callback) {
+        this.executeCommand(fullPath, 'provision', [], callback);
     };
 
-    Vagrant.prototype.halt = function(fullPath) {
-        this.executeCommand(fullPath, 'halt');
+    Vagrant.prototype.halt = function(fullPath, callback) {
+        this.executeCommand(fullPath, 'halt', [], callback);
     };
 
-    Vagrant.prototype.reload = function(fullPath) {
-        this.executeCommand(fullPath, 'reload');
+    Vagrant.prototype.reload = function(fullPath, callback) {
+        this.executeCommand(fullPath, 'reload', [], callback);
     };
 
-    Vagrant.prototype.destroy = function(fullPath) {
-        this.executeCommand(fullPath, 'destroy', ['-f']);
+    Vagrant.prototype.destroy = function(fullPath, callback) {
+        this.executeCommand(fullPath, 'destroy', ['-f'], callback);
     };
 
     Vagrant.prototype.getStatus = function(fullPath) {
@@ -70,16 +73,14 @@ define(['knockout', 'lib/Environment', 'ko-postbox'], function(ko, env, postbox)
         var deferred = q.defer();
         var path = fs.lstatSync(fullPath);
         if (path.isDirectory()) {
-            postbox.publish('Term.main', colors.green(env.exeFile('vagrant') + ' status' + '\r\n'));
             exec('cd ' + fullPath + ' && ' + env.exeFile('vagrant') + ' status', function (error, stdout, stderr) {
 
                 if (error) {
-                    postbox.publish('Term.main', colors.red(stderr + '\r\n'));
+                    console.error(stderr);
+                    self.commandRunning(false);
                     deferred.reject(error);
                 } else {
-                    stdout.split('\n').forEach(function(value, key) {
-                        postbox.publish('Term.main', colors.green(value + '\r\n'));
-                    });
+                    console.log(stdout);
                     var rows = stdout.split('\n');
                     for (var j = 0; j < rows.length; j++) {
                         var result = rows[j].split(/[ ]+/).filter(function (n) {
