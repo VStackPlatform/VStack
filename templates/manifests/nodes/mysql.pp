@@ -39,8 +39,7 @@ case $mysql['version'] {
 
 class { '::mysql::server':
   root_password => $mysql['root_password'],
-  package_name => sprintf("%s%s", 'mysql-server-', $mysql['version']),
-  require => Class['apt'],
+  package_name => sprintf("%s%s", 'mysql-server-', $mysql['version'])
 }
 
 each( $mysql['users'] ) |$user| {

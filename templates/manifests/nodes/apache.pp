@@ -1,9 +1,13 @@
 if $apache == undef { $apache = hiera('apache') }
+if $php == undef { $php = heira('php', false) }
 
 class { 'apache':
   default_vhost => true,
-  mpm_module => 'prefork',
-  require => Class['apt'],
+  mpm_module => 'prefork'
+}
+
+if $php != false {
+  class { "apache::mod::php": }
 }
 
 each( $apache['modules'] ) |$module| {

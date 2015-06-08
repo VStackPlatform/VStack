@@ -1,3 +1,1 @@
-class { 'redis':
-  require => Class['apt'],
-}
+class { 'redis': }
