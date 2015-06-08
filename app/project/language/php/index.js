@@ -103,7 +103,7 @@ define(['plugins/router', 'knockout', 'jquery', 'bindings/select2', 'ko-postbox'
          * Go to next screen.
          */
         obj.next = function () {
-            router.navigate(obj.project().editUrl() + '/nodejs');
+            router.navigate(obj.project().editUrl() + '/ruby');
         };
 
     } catch (e) {

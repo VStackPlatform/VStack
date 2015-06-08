@@ -12,6 +12,7 @@ exec { 'install_rvm_key':
   command => '/usr/bin/gpg --import /root/mpapis.asc',
   cwd => '/root',
   require => Exec['fetch_rvm_key'],
+  unless => '/usr/bin/gpg --list-keys D39DC0E3',
   before => Class['rvm::gnupg_key']
 }
 

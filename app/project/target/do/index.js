@@ -22,7 +22,7 @@ define(['plugins/router', 'knockout', 'jquery', 'lib/ProjectTemplate', 'ko-postb
         }
     }, obj);
     obj.prev = function() {
-        router.navigate(obj.project().editUrl() + '/php');
+        router.navigate(obj.project().editUrl() + '/nodejs');
     };
     obj.next = function() {
         router.navigate(obj.project().editUrl() + '/packages');

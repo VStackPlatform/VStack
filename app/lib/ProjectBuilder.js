@@ -360,6 +360,7 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             if (this.settings.language.nodejs == 1) {
                 configData.nodejs = this.settings.language.nodejs_options;
             }
+            configData.ruby = this.settings.language.ruby_options;
             fs.writeFile(configPath, JSON.stringify(configData, null, 4), function (err) {
                 if (err) {
                     deferred.reject(new Error(err));
