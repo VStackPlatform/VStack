@@ -32,6 +32,7 @@ exec{ 'nodejs_default':
   command => sprintf('. %s/nvm.sh && nvm alias default %s', $nvmInstall, $nodejs['version']),
   cwd => $home,
   provider    => shell,
+  unless      => "/usr/bin/test -e ${nvmInstall}/alias/default",
   environment => [ "HOME=${home}", "NVM_DIR=${nvmInstall}" ],
   require => Exec['nodejs_install']
 }
