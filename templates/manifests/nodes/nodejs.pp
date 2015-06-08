@@ -13,7 +13,8 @@ if ! defined(Package['curl']) {
 # Install NVM to manage nodejs installations.
 exec{ 'nvm_install':
   command => "/usr/bin/curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | NVM_DIR=${nvmInstall} bash",
-  creates     => "${nvmInstall}/.nvm/nvm.sh",
+  creates => "${nvmInstall}/.nvm/nvm.sh",
+  unless => "/usr/bin/test -e ${nvmInstall}/nvm.sh",
   environment => [ "HOME=${home}" ],
 }
 
@@ -22,9 +23,8 @@ exec{ 'nodejs_install':
   command => sprintf('. %s/nvm.sh && nvm install %s', $nvmInstall, $nodejs['version']),
   cwd => $home,
   provider    => shell,
-  unless      => "test -e ${nvmInstall}/v${version}/bin/node",
+  unless      => "/usr/bin/test -e ${nvmInstall}/versions/node/v${version}/bin/node",
   environment => [ "HOME=${home}", "NVM_DIR=${nvmInstall}" ],
-  logoutput => true,
   require => Exec['nvm_install']
 }
 
@@ -33,7 +33,6 @@ exec{ 'nodejs_default':
   cwd => $home,
   provider    => shell,
   environment => [ "HOME=${home}", "NVM_DIR=${nvmInstall}" ],
-  logoutput => true,
   require => Exec['nodejs_install']
 }
 
@@ -41,6 +40,7 @@ exec{ 'nodejs_default':
 each( $nodejs['npm'] ) |$module| {
   exec{ sprintf('npm_install_%s', $module):
     command => sprintf('%s/versions/node/v%s/bin/npm install -g %s', $nvmInstall, $version, $module),
+    unless => sprintf('%s/versions/node/v%s/bin/npm list -g %s', $nvmInstall, $version, $module),
     require => Exec['nodejs_default']
   }
 }

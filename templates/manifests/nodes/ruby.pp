@@ -26,7 +26,8 @@ if $ruby != false {
   each( $ruby['gems'] ) |$module| {
     exec { $module:
       command => sprintf('/usr/bin/gem install %s', $module),
-      require => Class['::rvm']
+      require => Class['::rvm'],
+      unless => sprintf('/usr/bin/gem list -i %s', $module)
     }
   }
 }
