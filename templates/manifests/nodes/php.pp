@@ -1,4 +1,6 @@
 if $php == undef { $php = hiera('php') }
+if $mysql == undef { $mysql = hiera('mysql', false) }
+
 $phpIni = '/etc/php5/apache2/conf.d/vstack.ini'
 
 package { 'augeas-tools':
@@ -35,6 +37,12 @@ if $php['xdebug'] == true {
       value       => $setting,
       target      => '/etc/php5/apache2/conf.d/20-xdebug.ini'
     }
+  }
+}
+
+if $mysql != false {
+  php::module { 'mysql':
+    module_prefix => "php5-"
   }
 }
 
