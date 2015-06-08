@@ -23,6 +23,7 @@
             {route: ['users'], moduleId: 'system/users/index', title: 'Users & Groups', nav: true, type: 'system'},
             {route: ['apache'], moduleId: 'webserver/apache/index', title: 'Apache', nav: true, type: 'webServer'},
             {route: ['php'], moduleId: 'language/php/index', title: 'PHP', nav: true, type: 'language'},
+            {route: ['nodejs'], moduleId: 'language/nodejs/index', title: 'NodeJS', nav: true, type: 'language'},
             {route: ['mysql'], moduleId: 'database/mysql/index', title: 'MySQL', nav: true, type: 'database'}
         ])
         .buildNavigationModel();

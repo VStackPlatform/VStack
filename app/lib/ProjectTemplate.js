@@ -123,6 +123,15 @@ define([], function() {
                         'xdebug.remote_port': 9000
                     }
                 }
+            },
+            nodejs: false,
+            nodejs_options: {
+                version: '0.12.4',
+                npm: ['bower', 'gulp']
+            },
+            ruby: true,
+            ruby_options: {
+                gems: []
             }
         }
     };

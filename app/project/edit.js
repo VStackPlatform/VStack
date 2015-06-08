@@ -84,6 +84,7 @@
             {route: ['users'], moduleId: 'system/users/index', title: 'Users & Groups', nav: true, type: 'system', 'hash': '#users'},
             {route: ['apache'], moduleId: 'webserver/apache/index', title: 'Apache', nav: true, type: 'webServer', 'hash': '#apache'},
             {route: ['php'], moduleId: 'language/php/index', title: 'PHP', nav: true, type: 'language', 'hash': '#php'},
+            {route: ['nodejs'], moduleId: 'language/nodejs/index', title: 'NodeJS', nav: true, type: 'language'},
             {route: ['mysql'], moduleId: 'database/mysql/index', title: 'MySQL', nav: true, type: 'database', 'hash': '#mysql'}
         ];
 

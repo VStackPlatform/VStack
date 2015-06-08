@@ -23,9 +23,7 @@ file { $phpIni:
   ensure => 'present'
 }
 
-class { 'php':
-  require => Class['apt'],
-}
+class { 'php': }
 
 if $php['xdebug'] == true {
   php::module { 'xdebug':
@@ -45,6 +43,16 @@ each( $php['modules'] ) |$module| {
   php::module { $module:
     module_prefix => "php5-", #All php packages are prefixed by php5 in ubuntu.
   }
+}
+
+## Install PEAR modules.
+each( $php['pear'] ) |$module| {
+  php::pear::module { $module: }
+}
+
+## Install PECL modules.
+each( $php['pecl'] ) |$module| {
+  php::pecl::module { $module: }
 }
 
 ## Add INI settings.

@@ -1,4 +1,5 @@
 if $projectName == undef { $projectName = hiera('projectName') }
+if $nodejs == undef { $nodejs = hiera('nodejs', false) }
 
 class { 'bash':
   config_file_template => "bash/${::lsbdistcodename}/etc/skel/bashrc.erb",

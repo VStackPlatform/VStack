@@ -253,6 +253,7 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
                 { mod: 'puppetlabs/puppetlabs-stdlib', tag: '4.6.0' },
                 { mod: 'puppetlabs/puppetlabs-ntp', tag: '3.3.0' },
                 { mod: 'puppetlabs/puppetlabs-apt', tag: '2.0.1' },
+                { mod: 'maestrodev/puppet-rvm', tag: 'v1.12.0' },
                 { mod: 'dhoppe/puppet-bash', tag: '1.0.4' },
                 { mod: 'damiandennis/vstack', tag: '0.0.2' }
             ]
@@ -265,7 +266,6 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             if (this.settings.language.php_options.composer == 1) {
                 data.modules.push({ mod: 'tPl0ch/puppet-composer', tag: '1.3.6' });
             }
-
         }
         if (this.settings.database.mysql) {
             data.modules.push({ mod: 'puppetlabs/puppetlabs-mysql', tag: '3.3.0' });
@@ -357,6 +357,9 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             if (this.settings.language.php == 1) {
                 configData.php = this.settings.language.php_options;
             }
+            if (this.settings.language.nodejs == 1) {
+                configData.nodejs = this.settings.language.nodejs_options;
+            }
             fs.writeFile(configPath, JSON.stringify(configData, null, 4), function (err) {
                 if (err) {
                     deferred.reject(new Error(err));
@@ -374,8 +377,8 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
         var deferred = q.defer();
 
         var nodes = [
-            'apt.pp',
-            'bash.pp'
+            'bash.pp',
+            'ruby.pp',
         ];
 
         if (this.settings.system.packages.length > 0) {
@@ -387,6 +390,10 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             if (this.settings.language.php_options.composer == 1) {
                 nodes.push(['composer.pp']);
             }
+        }
+
+        if (this.settings.language.nodejs) {
+            nodes.push(['nodejs.pp']);
         }
 
         if (this.settings.webServer.apache) {

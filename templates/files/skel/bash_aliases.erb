@@ -23,6 +23,7 @@ GIT_PS1_SHOWDIRTYSTATE=true
 # Nicely formatted terminal prompt
 export PS1='\n\[$bold\]\[$black\][\[$dk_blue\]\@\[$black\]]-[\[$green\]\u\[$yellow\]@\[$green\]\h\[$black\]]-[\[$pink\]\w\[$black\]]\[\033[0;33m\]$(__git_ps1) \[\033[00m\]\[$reset\]\n\[$reset\]\[$dk_blue\](<%= @projectName %>)\[$reset\]\$ '
 
+# Handy Aliases
 alias ls='ls -F --color=always'
 alias dir='dir -F --color=always'
 alias ll='ls -l'
@@ -37,3 +38,9 @@ alias fgrep='fgrep --color=auto'
 alias l='ls --color -l'
 alias la='ls --color -la'
 alias lh='ls --color -lh'
+
+<% if @nodejs %>
+# NVM for Nodejs management.
+export NVM_DIR="/usr/local/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+<% end %>
