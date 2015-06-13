@@ -131,7 +131,8 @@ define([], function() {
             },
             ruby: true,
             ruby_options: {
-                gems: []
+                gems: [],
+                versions: []
             }
         }
     };

@@ -29,5 +29,24 @@
                 </div>
             </div>
         </div>
+        <label>Extra Versions:</label>
+        <!-- ko foreach: versions -->
+        <div class="panel clearfix">
+            <div class="clearfix" style="margin: 5px 5px 0 5px">
+                <a data-bind="click: $parents[1].removeVersion"><i class="fa fa-times pull-right"></i></a>
+            </div>
+            <div class="clearfix">
+                <div class="form-group col-lg-12">
+                    <label>Version:</label>
+                    <select class="form-control" data-bind="options: $root.availableVersions, value: version, select2: $root.versionConfig"></select>
+                </div>
+                <div class="form-group col-lg-12">
+                    <label>Gems:</label>
+                    <input type="text" class="form-control" placeholder="Ruby Gems" data-bind="select2: $root.gemsConfig, select2val: gems" />
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+        <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addVersion"><i class="fa fa-plus"></i>  Add ruby version</a>
     </div>
 </div>

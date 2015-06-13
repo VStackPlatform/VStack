@@ -11,6 +11,8 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
     var ncp = require('ncp').ncp;
     var basePath = process.cwd();
     var tplPath = basePath + env.pathSeparator() + 'templates';
+    var exec = require('child_process').exec;
+    var rimraf = require('rimraf');
 
     handlebars.registerHelper('compare', function(lvalue, rvalue, options) {
 
@@ -66,6 +68,25 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             } else {
                 deferred.resolve(path);
             }
+        });
+        return deferred.promise;
+    };
+
+    /**
+     * Does a rm -rf on a directory (simplest solution)
+     * @param path The path to remove.
+     * @returns {*|promise}
+     */
+    var forceRemoveDirectory = function(path) {
+
+        var deferred = q.defer();
+        rimraf(path, function(err) {
+            console.log('removing directory recursively: ', path);
+            if (err) {
+                console.error(err);
+                deferred.reject('Unable to remove directory and files.');
+            }
+            deferred.resolve(path);
         });
         return deferred.promise;
     };
@@ -212,6 +233,15 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
         return deferred.promise;
     };
 
+    ProjectBuilder.prototype.removeNodesFolder = function(path) {
+        var deferred = q.defer();
+        forceRemoveDirectory(path + env.pathSeparator() + 'nodes')
+            .then(function() {
+                deferred.resolve(path);
+            });
+        return deferred.promise;
+    };
+
     /**
      * Creates the puppet file structure.
      *
@@ -227,6 +257,9 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             return self.copyScripts(path);
         }))
         .then(buildDirectory(this.fullPath + env.pathSeparator() + 'manifests')
+        .then(function(path) {
+            return self.removeNodesFolder(path)
+        })
         .then(function(path) {
             return q.all([
                 self.createLibrarianFile(path),
@@ -244,7 +277,11 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
         return deferred.promise;
     };
 
-
+    /**
+     * Creates Puppet librarian file.
+     * @param path
+     * @returns {*|promise}
+     */
     ProjectBuilder.prototype.createLibrarianFile = function(path) {
         var deferred = q.defer();
 

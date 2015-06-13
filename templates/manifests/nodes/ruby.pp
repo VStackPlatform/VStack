@@ -32,3 +32,18 @@ if $ruby != false {
   }
 }
 
+each( $ruby['versions'] ) |$module| {
+  rvm_system_ruby { $module['version']:
+    ensure      => 'present',
+    default_use => false
+  }
+  each( $module['gems'] ) |$gem| {
+    rvm_gem { sprintf('%s/%s', $module['version'], $gem):
+      name => $gem,
+      ruby_version => $module['version'],
+      ensure  => 'present'
+    }
+  }
+}
+
+

@@ -23,7 +23,7 @@ exec{ 'nodejs_install':
   command => sprintf('. %s/nvm.sh && nvm install %s', $nvmInstall, $nodejs['version']),
   cwd => $home,
   provider    => shell,
-  unless      => "/usr/bin/test -e ${nvmInstall}/versions/node/v${version}/bin/node",
+  unless      => sprintf("/usr/bin/test -e %s/versions/node/v%s/bin/node", $nvmInstall, $nodejs['version']),
   environment => [ "HOME=${home}", "NVM_DIR=${nvmInstall}" ],
   require => Exec['nvm_install']
 }
