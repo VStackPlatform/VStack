@@ -96,7 +96,7 @@ define(['plugins/router', 'knockout', 'jquery', 'bindings/select2', 'ko-postbox'
          * Go to previous screen.
          */
         obj.prev = function () {
-            router.navigate(obj.project().editUrl() + '/mysql');
+            router.navigate(obj.project().editUrl() + '/redis');
         };
 
         /**

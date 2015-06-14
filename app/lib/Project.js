@@ -1,6 +1,3 @@
-/**
- * Created by damian on 10/05/15.
- */
 define([
     'knockout',
     'ko-validation',
@@ -9,10 +6,12 @@ define([
     'lib/Environment',
     'lib/ProjectTemplate',
     'lib/VirtualBox',
-    'lib/VirtualHost'
+    'lib/VirtualHost',
+    'lib/databases/mysql/User'
 ],
 function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost) {
 
+    var MySQLUser = requirejs('lib/databases/mysql/User');
     var db = openDatabase('vstack', '1.0', 'VStack', 2 * 1024 * 1024);
     var q = require('q');
     var vagrant = new Vagrant();
@@ -54,7 +53,6 @@ function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost) {
     var Project = function(data) {
         try {
             data = data || {};
-
             this.isNewRecord = typeof data.id == 'undefined';
             this.id = ko.observable(data.id || undefined);
 
@@ -100,6 +98,22 @@ function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost) {
                         return new VirtualHost(options.data);
                     }
                 },
+                'mysql_options': {
+                    create: function (options) {
+                        return new function () {
+                            mapping.fromJS(options.data, {
+                                'users': {
+                                    "create": function (model) {
+                                        return new MySQLUser(model.data);
+                                    }
+                                }
+                            }, this);
+                            this.toJSON = function() {
+                                return mapping.toJS(this);
+                            };
+                        };
+                    }
+                },
                 'ini_settings': {
                     create: function (options) {
                         return ko.observable(options.data);
@@ -113,6 +127,7 @@ function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost) {
             };
 
             if (data.settings !== undefined) {
+                console.log(data.settings);
                 var settings = mapping.fromJS(template, jsonMap);
                 mapping.fromJS(mapping.fromJSON(data.settings), jsonMap, settings);
                 this.settings = ko.observable(settings);

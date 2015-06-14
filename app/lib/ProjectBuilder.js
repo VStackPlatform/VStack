@@ -233,6 +233,12 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
         return deferred.promise;
     };
 
+    /**
+     * Removes the node folder to repopulate modules.
+     *
+     * @param path The path where the node folder sits.
+     * @returns {*|promise}
+     */
     ProjectBuilder.prototype.removeNodesFolder = function(path) {
         var deferred = q.defer();
         forceRemoveDirectory(path + env.pathSeparator() + 'nodes')
@@ -279,6 +285,7 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
 
     /**
      * Creates Puppet librarian file.
+     *
      * @param path
      * @returns {*|promise}
      */
@@ -306,6 +313,9 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
         }
         if (this.settings.database.mysql) {
             data.modules.push({ mod: 'puppetlabs/puppetlabs-mysql', tag: '3.3.0' });
+        }
+        if (this.settings.database.redis) {
+            data.modules.push({ mod: 'echocat/puppet-redis', tag: 'v1.6.0' });
         }
 
         var libraryTpl = tplPath + env.pathSeparator() + 'manifests' + env.pathSeparator() + 'Puppetfile';
@@ -391,6 +401,9 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             if (this.settings.database.mysql == 1) {
                 configData.mysql = this.settings.database.mysql_options;
             }
+            if (this.settings.database.redis == 1) {
+                configData.redis = this.settings.database.redis_options;
+            }
             if (this.settings.language.php == 1) {
                 configData.php = this.settings.language.php_options;
             }
@@ -442,6 +455,9 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             nodes.push(['mysql.pp']);
         }
 
+        if (this.settings.database.redis) {
+            nodes.push(['redis.pp']);
+        }
 
         var nodePath = [tplPath, 'manifests', 'nodes'].join(env.pathSeparator());
         var count = 0;

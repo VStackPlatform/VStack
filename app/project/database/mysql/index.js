@@ -1,7 +1,16 @@
-/**
- * Created by damian on 9/05/15.
- */
-define(['plugins/router', 'knockout', 'ko-validation', 'bindings/select2', 'ko-postbox'], function(router, ko, validation) {
+define([
+    'plugins/router',
+    'knockout',
+    'ko-validation',
+    'bindings/select2',
+    'ko-postbox',
+    'lib/databases/mysql/User'
+], function() {
+
+    var router = requirejs('plugins/router');
+    var ko = requirejs('knockout');
+    var validation = requirejs('ko-validation');
+    var User = requirejs('lib/databases/mysql/User');
 
     try {
         var obj = {
@@ -50,15 +59,6 @@ define(['plugins/router', 'knockout', 'ko-validation', 'bindings/select2', 'ko-p
             }
         }, obj);
 
-        /*
-         * Make sure that first row has validators (could be the default).
-         */
-        if (obj.options().users().length) {
-            obj.options().users()[0].username.extend(requiredValidate());
-            obj.options().users()[0].host.extend(requiredValidate());
-            obj.options().users()[0].password.extend(requiredValidate());
-        }
-
         /**
          * Move to previous section.
          */
@@ -70,18 +70,14 @@ define(['plugins/router', 'knockout', 'ko-validation', 'bindings/select2', 'ko-p
          * move to next section
          */
         obj.next = function() {
-            router.navigate(obj.project().editUrl() + '/php');
+            router.navigate(obj.project().editUrl() + '/redis');
         };
 
         /**
          * Adds a new user to config.
          */
         obj.addUser = function() {
-            obj.project().settings().database.mysql_options.users.push({
-                username: ko.observable('').extend(requiredValidate()),
-                host: ko.observable('localhost').extend(requiredValidate()),
-                password: ko.observable('').extend(requiredValidate())
-            });
+            obj.project().settings().database.mysql_options.users.push(new User());
         };
 
         /**
@@ -98,7 +94,7 @@ define(['plugins/router', 'knockout', 'ko-validation', 'bindings/select2', 'ko-p
          * Only users that are fully validated.
          */
         obj.validUsers = ko.computed(function() {
-            return  ko.utils.arrayFilter(this.options().users(), function(user) {
+            return ko.utils.arrayFilter(this.options().users(), function(user) {
                 var group = validation.group(user);
                 return group().length == 0;
             });
@@ -122,6 +118,7 @@ define(['plugins/router', 'knockout', 'ko-validation', 'bindings/select2', 'ko-p
          * Adds a new grant to config.
          */
         obj.addGrant = function() {
+            console.log('grants:', obj.options().grants());
             obj.project().settings().database.mysql_options.grants.push({
                 username: '',
                 database: '',
@@ -129,6 +126,20 @@ define(['plugins/router', 'knockout', 'ko-validation', 'bindings/select2', 'ko-p
                 privileges: ko.observableArray(['ALL'])
             });
         };
+
+        obj.rootPassVisible = ko.observable(false);
+
+        obj.rootPassText = ko.computed(function() {
+            return this.rootPassVisible() ? 'Hide' : 'Show';
+        }, obj);
+
+        obj.rootPassType = ko.computed(function() {
+            return this.rootPassVisible() ? 'text' : 'password';
+        }, obj);
+
+        obj.toggleRootPassVisible = function(model, event) {
+            this.rootPassVisible(!this.rootPassVisible());
+        }.bind(obj);
 
         /**
          * Removes the specified grant.

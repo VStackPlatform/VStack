@@ -86,7 +86,8 @@
             {route: ['php'], moduleId: 'language/php/index', title: 'PHP', nav: true, type: 'language', 'hash': '#php'},
             {route: ['ruby'], moduleId: 'language/ruby/index', title: 'Ruby', nav: true, type: 'language', 'hash': '#ruby'},
             {route: ['nodejs'], moduleId: 'language/nodejs/index', title: 'NodeJS', nav: true, type: 'language', 'hash': '#nodejs'},
-            {route: ['mysql'], moduleId: 'database/mysql/index', title: 'MySQL', nav: true, type: 'database', 'hash': '#mysql'}
+            {route: ['mysql'], moduleId: 'database/mysql/index', title: 'MySQL', nav: true, type: 'database', 'hash': '#mysql'},
+            {route: ['redis'], moduleId: 'database/redis/index', title: 'Redis', nav: true, type: 'database', 'hash': '#redis'}
         ];
 
         // Push default routes depending on selection.

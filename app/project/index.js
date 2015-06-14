@@ -25,7 +25,8 @@
             {route: ['php'], moduleId: 'language/php/index', title: 'PHP', nav: true, type: 'language'},
             {route: ['ruby'], moduleId: 'language/ruby/index', title: 'Ruby', nav: true, type: 'language'},
             {route: ['nodejs'], moduleId: 'language/nodejs/index', title: 'NodeJS', nav: true, type: 'language'},
-            {route: ['mysql'], moduleId: 'database/mysql/index', title: 'MySQL', nav: true, type: 'database'}
+            {route: ['mysql'], moduleId: 'database/mysql/index', title: 'MySQL', nav: true, type: 'database'},
+            {route: ['redis'], moduleId: 'database/redis/index', title: 'Redis', nav: true, type: 'database'}
         ])
         .buildNavigationModel();
 
