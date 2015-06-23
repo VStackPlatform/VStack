@@ -118,7 +118,6 @@ define([
          * Adds a new grant to config.
          */
         obj.addGrant = function() {
-            console.log('grants:', obj.options().grants());
             obj.project().settings().database.mysql_options.grants.push({
                 username: '',
                 database: '',

@@ -10,6 +10,35 @@
             <label for="locally">Install Apache</label>
         </h2>
         <div data-bind="visible: apache(), with: options">
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label>Version:</label>
+                    <ul class="list-inline">
+                        <li class="radio radio-success">
+                            <input id="apache2-4" type="radio" value="2.4" checked="checked" disabled />
+                            <label for="apache2-4">2.4</label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>MPM:</label>
+                    <ul class="list-inline">
+                        <li class="radio radio-success">
+                            <input id="prefork" type="radio" value="prefork" data-bind="checked: mpm" />
+                            <label for="prefork">Prefork (DSO)</label>
+                        </li>
+                        <li class="radio radio-success">
+                            <input id="worker" type="radio" value="worker" data-bind="checked: mpm" />
+                            <label for="worker">Worker (FastCGI)</label>
+                        </li>
+                        <li class="radio radio-success">
+                            <input id="event" type="radio" value="event" data-bind="checked: mpm" />
+                            <label for="event">Event (FastCGI)</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="apache-modules">Apache Modules:</label>
                 <input type="text" id="apache-modules" class="form-control" data-bind="select2val: modules, select2: $parent.module_config" />

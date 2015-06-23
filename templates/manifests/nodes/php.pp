@@ -1,11 +1,25 @@
 if $php == undef { $php = hiera('php') }
+if $apache == undef { $apache = hiera('apache', false) }
 if $mysql == undef { $mysql = hiera('mysql', false) }
-
-$phpIni = '/etc/php5/apache2/conf.d/vstack.ini'
 
 package { 'augeas-tools':
   ensure => installed
 }
+
+if $apache != false and $apache['mpm'] == 'prefork' {
+  $phpPath = '/etc/php5/apache2/'
+} elsif $apache != false {
+  $phpPath = '/etc/php5/fpm/'
+} else {
+  $phpPath = '/etc/php5/cli/'
+}
+
+file { $phpPath:
+  replace => "yes",
+  ensure => 'present'
+}
+
+$phpIni = "${phpPath}/conf.d/vstack.ini"
 
 ## add repo for required PHP version.
 case $php['version'] {
@@ -25,7 +39,9 @@ file { $phpIni:
   ensure => 'present'
 }
 
-class { 'php': }
+class { 'php':
+  config_file => "${phpPath}/php.ini"
+}
 
 if $php['xdebug'] == true {
   php::module { 'xdebug':
@@ -35,7 +51,7 @@ if $php['xdebug'] == true {
     php::augeas { $key:
       entry       => "XDEBUG/${key}",
       value       => $setting,
-      target      => '/etc/php5/apache2/conf.d/20-xdebug.ini'
+      target      => "${phpPath}/conf.d/20-xdebug.ini"
     }
   }
 }

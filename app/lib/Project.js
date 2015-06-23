@@ -127,7 +127,6 @@ function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost) {
             };
 
             if (data.settings !== undefined) {
-                console.log(data.settings);
                 var settings = mapping.fromJS(template, jsonMap);
                 mapping.fromJS(mapping.fromJSON(data.settings), jsonMap, settings);
                 this.settings = ko.observable(settings);

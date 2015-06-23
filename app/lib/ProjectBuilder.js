@@ -303,10 +303,13 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             ]
         };
         if (this.settings.webServer.apache) {
-            data.modules.push({ mod: 'puppetlabs/puppetlabs-apache', tag: '1.4.1' });
+            data.modules.push({ mod: 'puppetlabs/puppetlabs-apache', tag: '1.5.0' });
         }
         if (this.settings.language.php) {
             data.modules.push({ mod: 'example42/puppet-php', tag: 'v2.0.20' });
+            if (this.settings.language.php_options.mpm != 'prefork') {
+                data.modules.push({mod: 'Slashbunny/puppet-phpfpm', tag: '0c268a93cc1f3415016a7008c0c0814ed28fa450'});
+            }
             if (this.settings.language.php_options.composer == 1) {
                 data.modules.push({ mod: 'tPl0ch/puppet-composer', tag: '1.3.6' });
             }

@@ -7,10 +7,11 @@
         'lib/ProjectBuilder',
         'modules/SideNav',
         'modules/Header',
+        'ko-mapping',
         'ko-postbox',
         'bindings/fadeaway'
     ],
-    function(router, ko, validation, Project, ProjectBuilder, SideNav, Header) {
+    function(router, ko, validation, Project, ProjectBuilder, SideNav, Header, mapping) {
 
     var childRouter = router.createChildRouter();
     var app = requirejs('durandal/app');
@@ -24,7 +25,9 @@
     obj.createProject = function() {
         if (this.project().validate()) {
             var fullPath = this.project().fullPath();
-            var settings = ko.toJS(this.project().settings());
+            var settings = mapping.toJS(this.project().settings());
+            delete (settings.__ko_mapping__);
+            console.log(settings);
             var builder = new ProjectBuilder(this.project().name(), fullPath, settings);
             builder.createProjectDirectory()
                 .then(

@@ -80,7 +80,6 @@ define(['knockout', 'lib/Environment', 'ko-postbox'], function(ko, env, postbox)
                     self.commandRunning(false);
                     deferred.reject(error);
                 } else {
-                    console.log(stdout);
                     var rows = stdout.split('\n');
                     for (var j = 0; j < rows.length; j++) {
                         var result = rows[j].split(/[ ]+/).filter(function (n) {

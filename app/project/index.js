@@ -7,9 +7,10 @@
         'lib/ProjectBuilder',
         'modules/Header',
         'modules/SideNav',
+        'ko-mapping',
         'ko-postbox'
     ],
-    function(router, ko, validation, Project, ProjectBuilder, Header, SideNav) {
+    function(router, ko, validation, Project, ProjectBuilder, Header, SideNav, mapping) {
 
     var childRouter = router.createChildRouter()
         .makeRelative({
@@ -46,7 +47,7 @@
     obj.createProject = function() {
         if (obj.project().validate()) {
             var fullPath = obj.project().fullPath();
-            var settings = ko.toJS(obj.project().settings());
+            var settings = mapping.toJS(obj.project().settings());
             var builder = new ProjectBuilder(this.project().name(), fullPath, settings);
             builder.createProjectDirectory()
                 .then(

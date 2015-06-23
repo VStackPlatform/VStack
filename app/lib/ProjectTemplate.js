@@ -50,7 +50,8 @@ define([], function() {
             webServer: {
                 apache: true,
                     apache_options: {
-                    modules: [],
+                        mpm: 'event',
+                        modules: [],
                         vhosts: [
                         {
                             name: 'localdev',
@@ -76,18 +77,18 @@ define([], function() {
             },
             database: {
                 mysql: true,
-                    mysql_options: {
-                        version: '5.5',
-                        root_password: '',
-                        databases: [],
-                        users: [
+                mysql_options: {
+                    version: '5.5',
+                    root_password: '',
+                    databases: [],
+                    users: [
                         {
                             username: '',
                             host: 'localhost',
                             password: ''
                         }
                     ],
-                        grants: [
+                    grants: [
                         {
                             username: '',
                             database: '',
