@@ -4,9 +4,9 @@ define([], function() {
             version: 2,
                 minVersion: '1.6.0',
             target: {
-            type: 'locally',
-                local_options: {
-                provider: 'virtualbox',
+                type: 'locally',
+                    local_options: {
+                    provider: 'virtualbox',
                     distribution: 'ubuntu/trusty64',
                     ip: '192.168.56.101',
                     hostname: 'localdev',
@@ -15,23 +15,23 @@ define([], function() {
                     checkForUpdates: true,
                     gui: false,
                     forward_ports: [
-                    {
-                        host: '8616',
-                        vm: '22'
-                    }
-                ],
-                synced_folders: [
-                    {
-                        from: './www',
-                        to: '/var/www',
-                        type: "default",
-                        owner: 'www-data',
-                        group: 'www-data'
-                    }
-                ]
-            },
-            do_options: {
-                distribution: 'ubuntu/trusty64',
+                        {
+                            host: '8616',
+                            vm: '22'
+                        }
+                    ],
+                    synced_folders: [
+                        {
+                            from: './www',
+                            to: '/var/www',
+                            type: "default",
+                            owner: 'www-data',
+                            group: 'www-data'
+                        }
+                    ]
+                },
+                do_options: {
+                    distribution: 'ubuntu/trusty64',
                     server_size: '512mb',
                     server_name: 'master',
                     data_center: 'nyc1',
@@ -40,19 +40,19 @@ define([], function() {
                     private_key_path: '~/.ssh/id_rsa',
                     private_key_user: 'PRIVATE_KEY_USER',
                     synced_folders: []
-            }
-        },
+                }
+            },
             system: {
                 packages: [],
-                    users: [],
-                    groups: []
+                users: [],
+                groups: []
             },
             webServer: {
                 apache: true,
-                    apache_options: {
-                        mpm: 'event',
-                        modules: [],
-                        vhosts: [
+                apache_options: {
+                    mpm: 'event',
+                    modules: [],
+                    vhosts: [
                         {
                             name: 'localdev',
                             serveraliases: ['www.localdev'],
@@ -69,6 +69,23 @@ define([], function() {
                                         'FollowSymLinks',
                                         'MultiViews'
                                     ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                nginx: false,
+                nginx_options: {
+                    upstreams: [],
+                    servers: [
+                        {
+                            server_name: 'localdev',
+                            listen: '80',
+                            directives: [],
+                            locations: [
+                                {
+                                    path: '',
+                                    directives: []
                                 }
                             ]
                         }

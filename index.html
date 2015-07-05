@@ -37,6 +37,33 @@
             var win = gui.Window.get();
             win.showDevTools('', true);
 
+            // Create a tray icon
+            var tray = new gui.Tray({ title: 'VStack', icon: 'images/stack.png' });
+
+            // Get the minimize event
+            win.on('close', function() {
+                this.hide();
+            });
+
+            tray.on('click', function() {
+                win.show();
+            });
+
+            // Give it a menu
+            var menu = new gui.Menu();
+            menu.append(new gui.MenuItem({ label: 'Open VStack' }));
+            menu.append(new gui.MenuItem({ type: 'separator' }));
+            menu.append(new gui.MenuItem({ label: 'Projects' }));
+            menu.append(new gui.MenuItem({ type: 'separator' }));
+            menu.append(new gui.MenuItem({ label: 'Quit VStack' }));
+            tray.menu = menu;
+            menu.items[0].click = function() {
+                win.show();
+            };
+            menu.items[4].click = function() {
+                win.close(true);
+            };
+
         </script>
     </head>
     <body>

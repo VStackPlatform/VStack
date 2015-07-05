@@ -63,7 +63,7 @@ define([
          * Move to previous section.
          */
         obj.prev = function() {
-            router.navigate(obj.project().editUrl() + '/apache');
+            router.navigate(obj.project().editUrl() + '/nginx');
         };
 
         /**

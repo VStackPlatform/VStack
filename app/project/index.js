@@ -23,6 +23,7 @@
             {route: ['packages'], moduleId: 'system/packages/index', title: 'Packages', nav: true, type: 'system'},
             {route: ['users'], moduleId: 'system/users/index', title: 'Users & Groups', nav: true, type: 'system'},
             {route: ['apache'], moduleId: 'webserver/apache/index', title: 'Apache', nav: true, type: 'webServer'},
+            {route: ['nginx'], moduleId: 'webserver/nginx/index', title: 'Nginx', nav: true, type: 'webServer'},
             {route: ['php'], moduleId: 'language/php/index', title: 'PHP', nav: true, type: 'language'},
             {route: ['ruby'], moduleId: 'language/ruby/index', title: 'Ruby', nav: true, type: 'language'},
             {route: ['nodejs'], moduleId: 'language/nodejs/index', title: 'NodeJS', nav: true, type: 'language'},

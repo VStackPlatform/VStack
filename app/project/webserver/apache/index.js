@@ -77,7 +77,7 @@ define([
      * Go on to next node.
      */
     obj.next = function() {
-        router.navigate(obj.project().editUrl() + '/mysql');
+        router.navigate(obj.project().editUrl() + '/nginx');
     };
 
     /**

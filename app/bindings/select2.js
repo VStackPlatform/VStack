@@ -1,6 +1,3 @@
-/**
- * Created by damian on 8/05/15.
- */
 define(['jquery', 'knockout', 'select2'], function($, ko) {
     ko.bindingHandlers.select2 = {
         update: function(element, valueAccessor, allBindingsAccessor) {
@@ -20,7 +17,7 @@ define(['jquery', 'knockout', 'select2'], function($, ko) {
             } else {
                 $el.select2(options())
                     .on("select2-removed", function(event) {
-                        if (all.select2val.peek() !== undefined) {
+                        if (all.select2val != undefined && all.select2val.peek() !== undefined) {
                             // Long way around in case its a computed not array.
                             all.select2val(all.select2val().filter(function(value) { return value !== event.val }));
                         }

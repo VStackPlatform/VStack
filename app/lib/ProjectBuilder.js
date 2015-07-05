@@ -305,6 +305,9 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
         if (this.settings.webServer.apache) {
             data.modules.push({ mod: 'puppetlabs/puppetlabs-apache', tag: '1.5.0' });
         }
+        if (this.settings.webServer.nginx) {
+            data.modules.push({ mod: 'damiandennis/pp-nginx' });
+        }
         if (this.settings.language.php) {
             data.modules.push({ mod: 'example42/puppet-php', tag: 'v2.0.20' });
             if (this.settings.language.php_options.mpm != 'prefork') {
@@ -401,6 +404,35 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             if (this.settings.webServer.apache == 1) {
                 configData.apache = this.settings.webServer.apache_options;
             }
+            if (this.settings.webServer.nginx == 1) {
+                try {
+                    var nginx_data = this.settings.webServer.nginx_options;
+                    // Need to put content in format for nginx puppet configuration.
+                    // TODO: change puppet module to suit per directive instead of block of code.
+                    nginx_data.servers.forEach(function (server, key) {
+                        nginx_data.servers[key].dire = 'server_name ' + server.server_name + ';\n';
+                        nginx_data.servers[key].content += 'listen ' + server.listen + ';\n';
+                        delete nginx_data.servers[key].listen;
+                        server.directives.forEach(function (directive) {
+                            nginx_data.servers[key].content += directive.directive[0] + ' ' + directive.value + ';\n';
+                        });
+                        server.locations.forEach(function (location, index) {
+                            nginx_data.servers[key].locations[index].content = '';
+                            if (location.directives !== undefined) {
+                                location.directives.forEach(function (l_directive) {
+                                    nginx_data.servers[key].locations[index].content += l_directive.directive[0] + ' ' + l_directive.value + ';\n';
+                                });
+                                delete nginx_data.servers[key].locations[index].directives;
+                            }
+                        });
+                        delete nginx_data.servers[key].directives;
+                        });
+                    configData.nginx = nginx_data;
+                } catch (e) {
+                    console.error(e);
+                    console.error(e.stack);
+                }
+            }
             if (this.settings.database.mysql == 1) {
                 configData.mysql = this.settings.database.mysql_options;
             }
@@ -452,6 +484,10 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
 
         if (this.settings.webServer.apache) {
             nodes.push(['apache.pp']);
+        }
+
+        if (this.settings.webServer.nginx) {
+            nodes.push(['nginx.pp']);
         }
 
         if (this.settings.database.mysql) {

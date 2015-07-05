@@ -86,6 +86,7 @@
             {route: ['packages'], moduleId: 'system/packages/index', title: 'Packages', nav: true, type: 'system', 'hash': '#packages'},
             {route: ['users'], moduleId: 'system/users/index', title: 'Users & Groups', nav: true, type: 'system', 'hash': '#users'},
             {route: ['apache'], moduleId: 'webserver/apache/index', title: 'Apache', nav: true, type: 'webServer', 'hash': '#apache'},
+            {route: ['nginx'], moduleId: 'webserver/nginx/index', title: 'Nginx', nav: true, type: 'webServer', 'hash': '#nginx'},
             {route: ['php'], moduleId: 'language/php/index', title: 'PHP', nav: true, type: 'language', 'hash': '#php'},
             {route: ['ruby'], moduleId: 'language/ruby/index', title: 'Ruby', nav: true, type: 'language', 'hash': '#ruby'},
             {route: ['nodejs'], moduleId: 'language/nodejs/index', title: 'NodeJS', nav: true, type: 'language', 'hash': '#nodejs'},

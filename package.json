@@ -16,7 +16,8 @@
   "window": {
     "toolbar": false,
     "width": 1400,
-    "height": 1200
+    "height": 1200,
+    "icon": "images/stack.png"
   },
   "dependencies": {
     "bootstrap": "git+https://github.com/twbs/bootstrap.git#v3.3.4",

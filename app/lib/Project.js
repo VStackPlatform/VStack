@@ -7,9 +7,11 @@ define([
     'lib/ProjectTemplate',
     'lib/VirtualBox',
     'lib/VirtualHost',
-    'lib/databases/mysql/User'
+    'lib/databases/mysql/User',
+    'lib/webserver/nginx/Server',
+    'lib/webserver/nginx/Stream'
 ],
-function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost) {
+function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost, User, Server, Stream) {
 
     var MySQLUser = requirejs('lib/databases/mysql/User');
     var db = openDatabase('vstack', '1.0', 'VStack', 2 * 1024 * 1024);
@@ -96,6 +98,27 @@ function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost) {
                 'vhosts': {
                     create: function (options) {
                         return new VirtualHost(options.data);
+                    }
+                },
+                'nginx_options': {
+                    create: function (options) {
+                        return new function () {
+                            mapping.fromJS(options.data, {
+                                'upstreams': {
+                                    "create": function (model) {
+                                        return new Stream(model.data);
+                                    }
+                                },
+                                'servers': {
+                                    "create": function (model) {
+                                        return new Server(model.data);
+                                    }
+                                }
+                            }, this);
+                            this.toJSON = function() {
+                                return mapping.toJS(this);
+                            };
+                        };
                     }
                 },
                 'mysql_options': {
