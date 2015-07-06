@@ -78,38 +78,15 @@ define([
     };
 
     /**
-     * Add a new server.
-     */
-    obj.addServer = function() {
-        obj.options().servers.push(new Server());
-    };
-
-    /**
-     * Remove a server.
-     *
-     * @param model The server to remove.
-     */
-    obj.removeServer = function(model) {
-        obj.options().servers.remove(model);
-    };
-
-    /**
-     * Adds a stream.
      *
      */
-    obj.addStream = function() {
-        obj.options().upstreams.push(new Stream());
-    }.bind(this);
+    obj.addSite = function() {
 
-    /**
-     * Remove a stream.
-     *
-     * @param model The stream to remove.
-     */
-    obj.removeStream = function(model) {
-        obj.options().upstreams.remove(model);
     };
 
+    obj.removeSite = function() {
+
+    };
 
     return obj;
 });

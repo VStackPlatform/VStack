@@ -410,23 +410,23 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
                     // Need to put content in format for nginx puppet configuration.
                     // TODO: change puppet module to suit per directive instead of block of code.
                     nginx_data.servers.forEach(function (server, key) {
-                        nginx_data.servers[key].dire = 'server_name ' + server.server_name + ';\n';
-                        nginx_data.servers[key].content += 'listen ' + server.listen + ';\n';
-                        delete nginx_data.servers[key].listen;
+                        var directives = [];
+                        directives.push('server_name ' + server.server_name);
+                        directives.push('listen ' + server.listen);
                         server.directives.forEach(function (directive) {
-                            nginx_data.servers[key].content += directive.directive[0] + ' ' + directive.value + ';\n';
+                            directives.push(directive.directive[0] + ' ' + directive.value);
                         });
+                        nginx_data.servers[key].directives = directives;
                         server.locations.forEach(function (location, index) {
-                            nginx_data.servers[key].locations[index].content = '';
                             if (location.directives !== undefined) {
+                                var location_directives = [];
                                 location.directives.forEach(function (l_directive) {
-                                    nginx_data.servers[key].locations[index].content += l_directive.directive[0] + ' ' + l_directive.value + ';\n';
+                                    location_directives.push(l_directive.directive[0] + ' ' + l_directive.value);
                                 });
-                                delete nginx_data.servers[key].locations[index].directives;
+                                nginx_data.servers[key].locations[index].directives = location_directives;
                             }
                         });
-                        delete nginx_data.servers[key].directives;
-                        });
+                    });
                     configData.nginx = nginx_data;
                 } catch (e) {
                     console.error(e);

@@ -76,16 +76,20 @@ define([], function() {
                 },
                 nginx: false,
                 nginx_options: {
-                    upstreams: [],
-                    servers: [
+                    sites: [
                         {
-                            server_name: 'localdev',
-                            listen: '80',
-                            directives: [],
-                            locations: [
+                            upstreams: [],
+                            servers: [
                                 {
-                                    path: '',
-                                    directives: []
+                                    server_name: 'localdev',
+                                    listen: '80',
+                                    directives: [],
+                                    locations: [
+                                        {
+                                            path: '',
+                                            directives: []
+                                        }
+                                    ]
                                 }
                             ]
                         }
