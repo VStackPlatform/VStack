@@ -78,6 +78,7 @@ define([], function() {
                 nginx_options: {
                     sites: [
                         {
+                            site_name: '',
                             upstreams: [],
                             servers: [
                                 {

@@ -105,6 +105,9 @@ function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost, User,
                             mapping.fromJS(options.data, {
                                 'sites': {
                                     "create": function (model) {
+                                        if (model.data.site_name == undefined) {
+                                            model.data.site_name = '';
+                                        }
                                         return new Site(model.data);
                                     }
                                 }

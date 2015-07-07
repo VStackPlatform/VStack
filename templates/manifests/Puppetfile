@@ -5,6 +5,8 @@ forge "https://forgeapi.puppetlabs.com"
 
 {{#each modules}}
 mod '{{mod}}',
-    :git => 'https://github.com/{{mod}}.git',
+    :git => 'https://github.com/{{mod}}.git'{{#if tag}},{{/if}}
+    {{#if tag}}
     :ref => '{{tag}}'
+    {{/if}}
 {{/each}}

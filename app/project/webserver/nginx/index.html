@@ -24,6 +24,16 @@
             <label>Sites:</label>
             <!-- ko foreach: sites -->
             <div class="col-lg-12 panel">
+                <div class="clearfix" style="margin: 5px 5px 0 5px">
+                    <a data-bind="click: $root.removeSite"><i class="fa fa-times pull-right"></i></a>
+                </div>
+                <div class="row">
+                    <div class="form-group col-lg-12">
+                        <label>Site Name</label>
+                        <input type="text" class="form-control" id="site-name" placeholder="Site Name" data-bind="value: site_name" />
+                        <p class="alert-danger" data-bind="validationMessage: site_name"></p>
+                    </div>
+                </div>
                 <label data-bind="visible: upstreams().length > 0">Upstreams:</label>
                 <!-- ko foreach: upstreams -->
                 <div class="clearfix sub-panel">

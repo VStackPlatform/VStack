@@ -306,7 +306,7 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             data.modules.push({ mod: 'puppetlabs/puppetlabs-apache', tag: '1.5.0' });
         }
         if (this.settings.webServer.nginx) {
-            data.modules.push({ mod: 'damiandennis/pp-nginx' });
+            data.modules.push({ mod: 'damiandennis/pp-nginx', tag: 'a09be7bd607582bf2e53e93ec9b2f628c1ed2f07' });
         }
         if (this.settings.language.php) {
             data.modules.push({ mod: 'example42/puppet-php', tag: 'v2.0.20' });
@@ -409,22 +409,31 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
                     var nginx_data = this.settings.webServer.nginx_options;
                     // Need to put content in format for nginx puppet configuration.
                     // TODO: change puppet module to suit per directive instead of block of code.
-                    nginx_data.servers.forEach(function (server, key) {
-                        var directives = [];
-                        directives.push('server_name ' + server.server_name);
-                        directives.push('listen ' + server.listen);
-                        server.directives.forEach(function (directive) {
-                            directives.push(directive.directive[0] + ' ' + directive.value);
+                    nginx_data.sites.forEach(function (site, sitekey) {
+                        site.upstreams.forEach(function (server, key) {
+                            var directives = [];
+                            server.directives.forEach(function (directive) {
+                                directives.push(directive.directive[0] + ' ' + directive.value);
+                            });
+                            nginx_data.sites[sitekey].upstreams[key].directives = directives;
                         });
-                        nginx_data.servers[key].directives = directives;
-                        server.locations.forEach(function (location, index) {
-                            if (location.directives !== undefined) {
-                                var location_directives = [];
-                                location.directives.forEach(function (l_directive) {
-                                    location_directives.push(l_directive.directive[0] + ' ' + l_directive.value);
-                                });
-                                nginx_data.servers[key].locations[index].directives = location_directives;
-                            }
+                        site.servers.forEach(function (server, key) {
+                            var directives = [];
+                            directives.push('server_name ' + server.server_name);
+                            directives.push('listen ' + server.listen);
+                            server.directives.forEach(function (directive) {
+                                directives.push(directive.directive[0] + ' ' + directive.value);
+                            });
+                            nginx_data.sites[sitekey].servers[key].directives = directives;
+                            server.locations.forEach(function (location, index) {
+                                if (location.directives !== undefined) {
+                                    var location_directives = [];
+                                    location.directives.forEach(function (l_directive) {
+                                        location_directives.push(l_directive.directive[0] + ' ' + l_directive.value);
+                                    });
+                                    nginx_data.sites[sitekey].servers[key].locations[index].directives = location_directives;
+                                }
+                            });
                         });
                     });
                     configData.nginx = nginx_data;

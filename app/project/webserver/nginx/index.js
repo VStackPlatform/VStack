@@ -7,10 +7,11 @@ define([
     'jquery',
     'lib/webserver/nginx/Server',
     'lib/webserver/nginx/Stream',
+    'lib/webserver/nginx/Site',
     'lib/webserver/nginx/directives',
     'ko-postbox',
     'bindings/select2'
-], function(router, ko, $, Server, Stream, directives) {
+], function(router, ko, $, Server, Stream, Site, directives) {
     var obj = {
         project: ko.observable().syncWith('project.main', true),
         serveraliases_config: {
@@ -81,11 +82,16 @@ define([
      *
      */
     obj.addSite = function() {
-
+        obj.options().sites.push(new Site({
+            site_name: '',
+            upstreams: [],
+            servers: []
+        }));
     };
 
-    obj.removeSite = function() {
-
+    obj.removeSite = function(model) {
+        console.log('removing: ', model);
+        obj.options().sites.remove(model);
     };
 
     return obj;
