@@ -241,7 +241,7 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
      */
     ProjectBuilder.prototype.removeNodesFolder = function(path) {
         var deferred = q.defer();
-        forceRemoveDirectory(path + env.pathSeparator() + 'nodes')
+        forceRemoveDirectory(path + env.pathSeparator() + 'manifests')
             .then(function() {
                 deferred.resolve(path);
             });
@@ -262,15 +262,14 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
         .then(function(path) {
             return self.copyScripts(path);
         }))
-        .then(buildDirectory(this.fullPath + env.pathSeparator() + 'manifests')
+        .then(buildDirectory(this.fullPath + env.pathSeparator() + 'puppet')
         .then(function(path) {
             return self.removeNodesFolder(path)
         })
         .then(function(path) {
             return q.all([
                 self.createLibrarianFile(path),
-                self.copySite(path),
-                buildDirectory(path + env.pathSeparator() + 'nodes')
+                buildDirectory(path + env.pathSeparator() + 'manifests')
                     .then(function(path) {
                         return self.copyNodes(path);
                     }),
@@ -309,7 +308,7 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             data.modules.push({ mod: 'damiandennis/pp-nginx', tag: 'a09be7bd607582bf2e53e93ec9b2f628c1ed2f07' });
         }
         if (this.settings.language.php) {
-            data.modules.push({ mod: 'example42/puppet-php', tag: 'v2.0.20' });
+            data.modules.push({ mod: 'damiandennis/puppet-php', tag: '2.0.24' });
             if (this.settings.language.php_options.mpm != 'prefork') {
                 data.modules.push({mod: 'Slashbunny/puppet-phpfpm', tag: '0c268a93cc1f3415016a7008c0c0814ed28fa450'});
             }
@@ -324,7 +323,7 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
             data.modules.push({ mod: 'echocat/puppet-redis', tag: 'v1.6.0' });
         }
 
-        var libraryTpl = tplPath + env.pathSeparator() + 'manifests' + env.pathSeparator() + 'Puppetfile';
+        var libraryTpl = tplPath + env.pathSeparator() + 'puppet' + env.pathSeparator() + 'Puppetfile';
         var libraryPath = path + env.pathSeparator() + 'Puppetfile';
 
         //Create Puppetfile from template.
@@ -338,21 +337,6 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
         );
 
 
-        return deferred.promise;
-    };
-
-    ProjectBuilder.prototype.copySite = function(path) {
-        var deferred = q.defer();
-        var siteFile = tplPath + env.pathSeparator() + 'manifests' + env.pathSeparator() + 'site.pp';
-        var sitePath = path + env.pathSeparator() + 'site.pp';
-        copyFile(siteFile, sitePath).then(
-            function(success) {
-                deferred.resolve(success);
-            },
-            function(err) {
-                deferred.reject(new Error(err));
-            }
-        );
         return deferred.promise;
     };
 
@@ -472,42 +456,51 @@ define(['lib/Vagrant', 'lib/Environment', 'durandal/app'], function(Vagrant, env
         var deferred = q.defer();
 
         var nodes = [
-            'bash.pp',
-            'ruby.pp',
+            '01_apt.pp',
+            '02_bash.pp',
+            '06_ruby.pp'
         ];
 
+        if (this.settings.system.users.length > 0) {
+            nodes.push(['03_users.pp']);
+        }
+
+        if (this.settings.system.groups.length > 0) {
+            nodes.push(['04_groups.pp']);
+        }
+
         if (this.settings.system.packages.length > 0) {
-            nodes.push(['packages.pp']);
+            nodes.push(['05_packages.pp']);
         }
 
         if (this.settings.language.php) {
-            nodes.push(['php.pp']);
+            nodes.push(['09_php.pp']);
             if (this.settings.language.php_options.composer == 1) {
-                nodes.push(['composer.pp']);
+                nodes.push(['10_composer.pp']);
             }
         }
 
         if (this.settings.language.nodejs) {
-            nodes.push(['nodejs.pp']);
+            nodes.push(['12_nodejs.pp']);
         }
 
         if (this.settings.webServer.apache) {
-            nodes.push(['apache.pp']);
+            nodes.push(['07_apache.pp']);
         }
 
         if (this.settings.webServer.nginx) {
-            nodes.push(['nginx.pp']);
+            nodes.push(['08_nginx.pp']);
         }
 
         if (this.settings.database.mysql) {
-            nodes.push(['mysql.pp']);
+            nodes.push(['11_mysql.pp']);
         }
 
         if (this.settings.database.redis) {
-            nodes.push(['redis.pp']);
+            nodes.push(['13_redis.pp']);
         }
 
-        var nodePath = [tplPath, 'manifests', 'nodes'].join(env.pathSeparator());
+        var nodePath = [tplPath, 'puppet', 'manifests'].join(env.pathSeparator());
         var count = 0;
         for (var i in nodes) {
             copyFile(nodePath + env.pathSeparator() + nodes[i], path + env.pathSeparator() + nodes[i]).then(

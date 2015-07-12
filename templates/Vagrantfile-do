@@ -34,13 +34,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   {{/with}}
 
-  config.vm.provision "shell", path: "scripts/pre-puppet.sh"
+  config.vm.provision "shell" do |shell|
+      shell.path = "scripts/pre-puppet.sh"
+      shell.args = ['remote']
+  end
   config.vm.provision "puppet" do |puppet|
-     puppet.manifests_path = "manifests"
-     puppet.manifest_file  = "site.pp"
-     puppet.module_path    = "manifests/modules"
+     puppet.manifests_path = "puppet"
+     puppet.manifest_file  = "manifests"
      puppet.hiera_config_path = "hiera.yaml"
-     puppet.options = "--parser=future"
+     puppet.options = "--parser=future --modulepath=~/.vstack/modules"
   end
   config.vm.provision "shell", path: "scripts/post-puppet.sh"
 

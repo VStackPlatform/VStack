@@ -47,8 +47,17 @@ define(['knockout', 'lib/Environment', 'ko-postbox'], function(ko, env, postbox)
         });
     };
 
-    Vagrant.prototype.up = function(fullPath, callback) {
-        this.executeCommand(fullPath, 'up', [], callback);
+    Vagrant.prototype.installPlugin = function(plugin, fullPath, callback) {
+        this.executeCommand(fullPath, 'plugin', ['install', plugin], callback);
+    };
+
+    Vagrant.prototype.addBox = function(name, box, fullPath, callback) {
+        this.executeCommand(fullPath, 'box', ['add', name, box, '-f'], callback);
+    };
+
+    Vagrant.prototype.up = function(fullPath, callback, args) {
+        args = args || [];
+        this.executeCommand(fullPath, 'up', args, callback);
     };
 
     Vagrant.prototype.provision = function(fullPath, callback) {

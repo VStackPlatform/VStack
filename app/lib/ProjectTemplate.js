@@ -2,7 +2,7 @@ define([], function() {
     var Template = function() {
         return {
             version: 2,
-                minVersion: '1.6.0',
+                minVersion: '1.7.3',
             target: {
                 type: 'locally',
                     local_options: {

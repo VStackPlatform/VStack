@@ -23,15 +23,22 @@ define([
         var vagrant = new Vagrant();
 
         var obj = {
+            loading: ko.observable(true),
             projects: ko.observableArray(),
             activate: function () {
                 project.findAll().then(function (results) {
                     obj.projects(results);
                     for (var i in obj.projects()) {
-                        obj.projects()[i].updateStatus();
+                        (function(current) {
+                            setTimeout(function() {
+                                obj.projects()[current].updateStatus();
+                            }, Math.random() * 10000);
+                        })(i);
                     }
                 }, function (error) {
                     console.error(error);
+                }).then(function() {
+                    obj.loading(false);
                 });
             },
             copyProject: function (model, event) {
@@ -53,21 +60,6 @@ define([
                         console.error(error);
                     });
                 });
-            },
-            up: function (model, event) {
-                vagrant.up(model.fullPath(), model.updateStatus.bind(model));
-            },
-            provision: function (model, event) {
-                vagrant.provision(model.fullPath(), model.updateStatus.bind(model));
-            },
-            reload: function (model, event) {
-                vagrant.reload(model.fullPath(), model.updateStatus.bind(model));
-            },
-            halt: function (model, event) {
-                vagrant.halt(model.fullPath(), model.updateStatus.bind(model));
-            },
-            destroy: function (model, event) {
-                vagrant.destroy(model.fullPath(), model.updateStatus.bind(model));
             }
         };
 

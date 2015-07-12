@@ -72,6 +72,7 @@ function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost, User,
                 var color = 'active';
                 switch (this.status()) {
                     case 'running':
+                    case 'active':
                         return 'success';
                         break;
                     case 'poweroff':
@@ -294,6 +295,39 @@ function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost, User,
         vagrant.getStatus(fullPath).then(function(result) {
             this.status(result);
         }.bind(this));
+    };
+
+    Project.prototype.up = function() {
+        switch (this.targetMachine()) {
+            case 'Digital Ocean':
+                vagrant.installPlugin('vagrant-digitalocean', this.fullPath(), function() {
+                    vagrant.addBox(
+                        'dummy',
+                        'https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box',
+                        this.fullPath(),
+                        function() {
+                            vagrant.up(this.fullPath(), this.updateStatus.bind(this), ['--provider=digital_ocean']);
+                        }.bind(this)
+                    );
+                }.bind(this));
+                break;
+            default:
+                vagrant.up(this.fullPath(), this.updateStatus.bind(this));
+                break;
+        }
+    };
+
+    Project.prototype.provision = function () {
+        vagrant.provision(this.fullPath(), this.updateStatus.bind(this));
+    };
+    Project.prototype.reload = function () {
+        vagrant.reload(this.fullPath(), this.updateStatus.bind(this));
+    };
+    Project.prototype.halt = function () {
+        vagrant.halt(this.fullPath(), this.updateStatus.bind(this));
+    };
+    Project.prototype.destroy = function () {
+        vagrant.destroy(this.fullPath(), this.updateStatus.bind(this));
     };
 
     /**

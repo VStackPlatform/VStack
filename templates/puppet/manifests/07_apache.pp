@@ -1,5 +1,5 @@
 if $apache == undef { $apache = hiera('apache') }
-if $php == undef { $php = heira('php', false) }
+if $php == undef { $php = hiera('php', false) }
 
 class { 'apache':
   default_vhost => true,

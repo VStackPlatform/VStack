@@ -3,7 +3,7 @@
         <h1>Projects</h1>
         <em>List of all created projects.</em>
     </div>
-    <div class="col-lg-12" data-bind="visible: projects().length == 0">
+    <div class="col-lg-12" data-bind="visible: projects().length == 0 && !loading">
         <p class="text-info">You currently have no projects. <a href="#project">Click here to create a new Project.</a></p>
     </div>
     <div style="padding-left: 20px;" data-bind="visible: projects().length > 0">
@@ -27,16 +27,18 @@
                 <td data-bind="text: status"></td>
                 <td class="form-actions">
                     <div class="btn-group drop">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" data-bind="attr: {disabled: $parent.commandRunning}">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             Actions <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a data-bind="click: $parent.up">Up</a></li>
-                            <li><a data-bind="click: $parent.provision">Provision</a></li>
-                            <li><a data-bind="click: $parent.reload">Reload</a></li>
-                            <li><a data-bind="click: $parent.halt">Halt</a></li>
-                            <li><a data-bind="click: $parent.destroy">Destroy</a></li>
+                            <!-- ko if: !$parent.commandRunning() -->
+                            <li><a data-bind="click: up">Up</a></li>
+                            <li><a data-bind="click: provision">Provision</a></li>
+                            <li><a data-bind="click: reload">Reload</a></li>
+                            <li><a data-bind="click: halt">Halt</a></li>
+                            <li><a data-bind="click: destroy">Destroy</a></li>
                             <li class="divider"></li>
+                            <!-- /ko -->
                             <li><a data-bind="attr: {href: editUrl, title: 'Edit'}">Edit</a></li>
                             <li><a data-bind="click: $parent.copyProject">Copy</a></li>
                             <li><a data-bind="click: $parent.deleteProject">Delete</a></li>
