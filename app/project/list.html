@@ -3,14 +3,14 @@
         <h1>Projects</h1>
         <em>List of all created projects.</em>
     </div>
-    <div class="col-lg-12" data-bind="visible: projects().length == 0 && !loading">
-        <p class="text-info">You currently have no projects. <a href="#project">Click here to create a new Project.</a></p>
-    </div>
-    <div style="padding-left: 20px;" data-bind="visible: projects().length > 0">
+    <div class="col-lg-12">
         <p>
             <a class="btn btn-success" href="#project">New Project</a>
         </p>
-        <table class="table table-bordered">
+        <div data-bind="visible: projects().length == 0 && !loading()">
+            <p class="text-info">You currently have no projects. <a href="#project">Click here to create a new Project.</a></p>
+        </div>
+        <table class="table table-bordered" data-bind="visible: projects().length > 0">
             <thead>
             <tr>
                 <th>Name</th>

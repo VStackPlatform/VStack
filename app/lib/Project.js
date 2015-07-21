@@ -204,7 +204,7 @@ function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost, User,
     };
 
     Project.prototype.validate = function() {
-        var group = validation.group(this);
+        var group = validation.group([this.name, this.path]);
         group.showAllMessages();
         return group().length == 0;
     };

@@ -1,0 +1,13 @@
+{
+  "title": "Firewall",
+  "route": "firewall",
+  "category": "System",
+  "priority": 5,
+  "modules": {
+    "puppetlabs/puppetlabs-firewall": {
+      "git": "https://github.com/puppetlabs/puppetlabs-firewall.git",
+      "ref": "1.6"
+    }
+  },
+  "data" : {}
+}
