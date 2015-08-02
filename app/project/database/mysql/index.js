@@ -4,13 +4,13 @@ define([
     'ko-validation',
     'bindings/select2',
     'ko-postbox',
-    'lib/databases/mysql/User'
+    'addons/mysql/lib/models/User'
 ], function() {
 
     var router = requirejs('plugins/router');
     var ko = requirejs('knockout');
     var validation = requirejs('ko-validation');
-    var User = requirejs('lib/databases/mysql/User');
+    var User = requirejs('addons/mysql/lib/models/User');
 
     try {
         var obj = {

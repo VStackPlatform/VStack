@@ -1,7 +1,7 @@
 /**
  * Created by damian on 8/05/15.
  */
-define(['plugins/router', 'knockout', 'jquery', 'lib/ProjectTemplate', 'ko-postbox'], function(router, ko, $, template) {
+define(['plugins/router', 'knockout', 'jquery', 'lib/projectTemplate', 'ko-postbox'], function(router, ko, $, template) {
     var obj = {
         project: ko.observable().syncWith('project.main', true)
     };

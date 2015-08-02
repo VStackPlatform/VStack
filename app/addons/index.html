@@ -1,0 +1,62 @@
+<section>
+    <div class="jumbo">
+        <h1>Addons</h1>
+        <em>List of all addons and their statuses.</em>
+    </div>
+    <div class="col-lg-12">
+        <table class="table table-bordered table-condensed">
+            <tbody>
+            <!-- ko foreach: types -->
+                <tr data-bind="
+                    dragZone: {
+                        name: 'sortable',
+                        dragStart: $parent.dragStart,
+                        dragEnd: $parent.dragEnd
+                    },
+                    dragEvents: {
+                        accepts: 'sortable',
+                        dragOver: $parent.reorder,
+                        data: {
+                            items: $parent.types,
+                            item: $data
+                        }
+                    }">
+                    <td class="handle">
+                        <span class="drag-handle"></span>
+                        <h4 data-bind="text: title"></h4>
+                        <table class="table table-bordered table-condensed" data-bind="visible: addons().length > 0">
+                            <tbody>
+                            <!-- ko foreach: addons -->
+                            <tr class="active draggable" data-bind="
+                                dragZone: {
+                                    name: 'sortable',
+                                    dragStart: $parent.dragStart,
+                                    dragEnd: $parent.dragEnd
+                                },
+                                dragEvents: {
+                                    accepts: 'sortable',
+                                    dragOver: $parent.reorder,
+                                    data: {
+                                        items: $parent.addons,
+                                        item: $data
+                                    }
+                                }">
+                                <td width="100%" class="handle">
+                                    <span class="drag-handle"></span>
+                                    <!-- ko text: title --><!-- /ko -->
+                                </td>
+                                <td width="0%" data-bind="text: version"></td>
+                                <td width="0%" class="form-actions">
+                                    <input type="checkbox" data-bind="checked: enabled, event: {change: save}" />
+                                </td>
+                            </tr>
+                            <!-- /ko -->
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            <!-- /ko -->
+            </tbody>
+        </table>
+    </div>
+</section>

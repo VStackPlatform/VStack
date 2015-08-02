@@ -1,16 +1,18 @@
-<!-- ko text: ko.toJSON($data) --><!-- /ko -->
-<div class="panel-heading">
-    <h4 class="panel-title">
-        <a class="btn-block" data-toggle="collapse" data-parent="#sidebar" href="#target-machine">Deploy Target</a>
-    </h4>
+<div data-bind="foreach: types">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="btn-block" data-toggle="collapse" data-parent="#sidebar" data-bind="text: name, attr: {href: '#' + nameToID()}"></a>
+        </h4>
+    </div>
+    <div class="panel-collapse collapse" data-bind="css: css, attr: attr">
+        <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: menu">
+            <li role="presentation" data-bind="css: { active: isActive }">
+                <a data-bind="text: title, attr: {href: dynamicHash}"></a>
+            </li>
+        </ul>
+    </div>
 </div>
-<div id="target-machine" class="panel-collapse collapse" data-bind="css: targetCss, attr: targetAttr">
-    <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: targetMenu">
-        <li role="presentation" data-bind="css: { active: isActive }">
-            <a data-bind="text: title, attr: {href: dynamicHash}"></a>
-        </li>
-    </ul>
-</div>
+<!--
 <div class="panel-heading">
     <h4 class="panel-title">
         <a class="btn-block" data-toggle="collapse" data-parent="#sidebar" href="#system">System</a>
@@ -19,7 +21,7 @@
 <div id="system" class="panel-collapse collapse" data-bind="css: systemCss, attr: systemAttr">
     <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: systemMenu">
         <li role="presentation" data-bind="css: { active: isActive }">
-            <a data-bind="text: title, attr: {href: dynamicHash}"></a>
+            <a data-bind="text: title, attr: {href: dynamicHash != undefined ? dynamicHash : hash}"></a>
         </li>
     </ul>
 </div>
@@ -31,7 +33,7 @@
 <div id="web-server" class="panel-collapse collapse" data-bind="css: webServerCss, attr: webServerAttr">
     <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: webServerMenu">
         <li role="presentation" data-bind="css: { active: isActive }">
-            <a data-bind="text: title, attr: {href: dynamicHash}"></a>
+            <a data-bind="text: title, attr: {href: dynamicHash != undefined ? dynamicHash : hash}"></a>
         </li>
     </ul>
 </div>
@@ -43,7 +45,7 @@
 <div id="database" class="panel-collapse collapse" data-bind="css: databaseCss, attr: databaseAttr">
     <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: databaseMenu">
         <li role="presentation" data-bind="css: { active: isActive }">
-            <a data-bind="text: title, attr: {href: dynamicHash}"></a>
+            <a data-bind="text: title, attr: {href: dynamicHash != undefined ? dynamicHash : hash}"></a>
         </li>
     </ul>
 </div>
@@ -55,7 +57,8 @@
 <div id="language" class="panel-collapse collapse" data-bind="css: languageCss, attr: languageAttr">
     <ul class="panel-body nav nav-pills nav-stacked" role="tablist" data-bind="foreach: languageMenu">
         <li role="presentation" data-bind="css: { active: isActive }">
-            <a data-bind="text: title, attr: {href: dynamicHash}"></a>
+            <a data-bind="text: title, attr: {href: dynamicHash != undefined ? dynamicHash : hash}"></a>
         </li>
     </ul>
 </div>
+-->

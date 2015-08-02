@@ -1,0 +1,16 @@
+{
+  "name": "ruby",
+  "title": "Ruby",
+  "type": "Language",
+  "priority": 5,
+  "modules": [
+    { "mod": "maestrodev/puppet-rvm", "tag": "v1.12.0" }
+  ],
+  "data": {
+    "ruby": true,
+    "ruby_options": {
+      "gems": [],
+      "versions": []
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "redis",
+  "title": "Redis",
+  "type": "Database",
+  "priority": 5,
+  "modules": [
+    { "mod": "echocat/puppet-redis", "tag": "v1.6.0" }
+  ],
+  "data": {
+    "redis": false,
+    "redis_options": {
+      "port": 6379
+    }
+  }
+}

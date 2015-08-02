@@ -1,0 +1,33 @@
+{
+  "name": "local",
+  "title": "Locally",
+  "type": "Target",
+  "priority": 1,
+  "data": {
+    "local_options": {
+      "provider": "virtualbox",
+      "distribution": "ubuntu/trusty64",
+      "ip": "192.168.56.101",
+      "hostname": "localdev",
+      "memory": "512",
+      "cpu_count": "1",
+      "checkForUpdates": true,
+      "gui": false,
+      "forward_ports": [
+        {
+          "host": "8616",
+          "vm": "22"
+        }
+      ],
+      "synced_folders": [
+        {
+          "from": "./www",
+          "to": "/var/www",
+          "type": "default",
+          "owner": "www-data",
+          "group": "www-data"
+        }
+      ]
+    }
+  }
+}

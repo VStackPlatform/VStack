@@ -12,7 +12,8 @@
         'select2': '../node_modules/select2/select2.min',
         'ko-validation': '../node_modules/knockout.validation/dist/knockout.validation.min',
         'ko-mapping': '../node_modules/knockout.mapping/knockout.mapping',
-        'ko-postbox': '../node_modules/knockout-postbox/build/knockout-postbox'
+        'ko-postbox': '../node_modules/knockout-postbox/build/knockout-postbox',
+        'ko-dragdrop': '../node_modules/knockout-dragdrop/lib/knockout.dragdrop'
     },
     shim: {
         'bootstrap': {
@@ -22,7 +23,18 @@
     }
 });
 
-define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'bootstrap', 'lib/TaskMenu'],  function (system, app, viewLocator) {
+define([
+    'durandal/system',
+    'durandal/app',
+    'durandal/viewLocator',
+    'lib/vstack',
+    'bootstrap',
+    'lib/taskMenu',
+    'extensions/asyncComputed'
+], function (system, app, viewLocator, vstack) {
+
+    vstack.createTables();
+
     //>>excludeStart("build", true);
     system.debug(true);
     //>>excludeEnd("build");

@@ -1,6 +1,3 @@
-/**
- * Created by damian on 21/05/15.
- */
 define(['knockout'], function(ko) {
     var Header = function(title) {
 

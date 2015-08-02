@@ -1,7 +1,7 @@
 /**
  * Created by damian on 8/05/15.
  */
-define(['plugins/router', 'knockout', 'jquery', 'lib/VirtualBox',  'ko-postbox', 'lib/Environment'], function(router, ko, $, vb, env) {
+define(['plugins/router', 'knockout', 'jquery', 'lib/virtualBox',  'ko-postbox', 'lib/environment'], function(router, ko, $, vb, env) {
     var obj = {
         project: ko.observable().syncWith('project.main', true),
         isWindows: ko.observable(env.isWindows)

@@ -1,0 +1,33 @@
+{
+  "name": "nginx",
+  "title": "Nginx",
+  "type": "Web Server",
+  "priority": 5,
+  "modules": [
+    { "mod": "damiandennis/pp-nginx", "tag": "a09be7bd607582bf2e53e93ec9b2f628c1ed2f07" }
+  ],
+  "data": {
+    "nginx": false,
+    "nginx_options": {
+      "sites": [
+        {
+          "site_name": "",
+          "upstreams": [],
+          "servers": [
+            {
+              "server_name": "localdev",
+              "listen": "80",
+              "directives": [],
+              "locations": [
+                {
+                  "path": "",
+                  "directives": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

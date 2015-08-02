@@ -1,3 +1,28 @@
 @import "../node_modules/bootstrap/less/bootstrap.less";
 @import "bootswatch.less";
 @import "variables.less";
+
+.navbar-right {
+  margin-right: 0;
+}
+
+.drag-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 20px;
+  margin: 6px 0;
+  background-image: url("../images/drag-handle.png");
+  background-repeat: repeat-y;
+  background-position: center center;
+  cursor: move;
+  z-index: 1;
+}
+
+.table {
+  td.handle {
+    position: relative;
+    padding-left: 20px;
+  }
+}

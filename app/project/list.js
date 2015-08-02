@@ -1,14 +1,11 @@
-/**
- * Created by damian on 9/05/15.
- */
 define([
     'plugins/router',
     'shell',
     'knockout',
-    'lib/Project',
+    'lib/models/Project',
     'ko-postbox',
     'ko-mapping',
-    'lib/Vagrant'
+    'lib/models/Vagrant'
 ], function(
     router,
     shell,

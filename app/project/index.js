@@ -1,49 +1,29 @@
-﻿define(
-    [
-        'plugins/router',
-        'knockout',
-        'ko-validation',
-        'lib/Project',
-        'lib/ProjectBuilder',
-        'modules/Header',
-        'modules/SideNav',
-        'ko-mapping',
-        'ko-postbox'
-    ],
-    function(router, ko, validation, Project, ProjectBuilder, Header, SideNav, mapping) {
-
-    var childRouter = router.createChildRouter()
-        .makeRelative({
-            moduleId: 'project',
-            fromParent: true
-        })
-        .map([
-            {route: ['local', ''], moduleId: 'target/local/index', title: 'Locally', nav: true, type: 'target', hash: '#project/local'},
-            {route: ['do'], moduleId: 'target/do/index', title: 'Digital Ocean', nav: true, type: 'target'},
-            {route: ['packages'], moduleId: 'system/packages/index', title: 'Packages', nav: true, type: 'system'},
-            {route: ['users'], moduleId: 'system/users/index', title: 'Users & Groups', nav: true, type: 'system'},
-            {route: ['apache'], moduleId: 'webserver/apache/index', title: 'Apache', nav: true, type: 'webServer'},
-            {route: ['nginx'], moduleId: 'webserver/nginx/index', title: 'Nginx', nav: true, type: 'webServer'},
-            {route: ['php'], moduleId: 'language/php/index', title: 'PHP', nav: true, type: 'language'},
-            {route: ['ruby'], moduleId: 'language/ruby/index', title: 'Ruby', nav: true, type: 'language'},
-            {route: ['nodejs'], moduleId: 'language/nodejs/index', title: 'NodeJS', nav: true, type: 'language'},
-            {route: ['mysql'], moduleId: 'database/mysql/index', title: 'MySQL', nav: true, type: 'database'},
-            {route: ['redis'], moduleId: 'database/redis/index', title: 'Redis', nav: true, type: 'database'}
-        ])
-        .buildNavigationModel();
+﻿define([
+    'plugins/router',
+    'knockout',
+    'ko-validation',
+    'lib/models/Project',
+    'lib/models/ProjectBuilder',
+    'modules/Header',
+    'modules/SideNav',
+    'ko-mapping',
+    'lib/models/Addon',
+    'lib/environment',
+    'ko-postbox',
+    'bindings/fadeaway'
+],
+function(router, ko, validation, Project, ProjectBuilder, Header, SideNav, mapping, Addon, env, postbox) {
 
     var app = requirejs('durandal/app');
     var q = require('q');
+    var fs = require('fs');
 
-    var obj = {
-        router: childRouter
-    };
-
+    var obj = {};
+    obj.router =  router.createChildRouter();
     obj.project = ko.observable(new Project()).syncWith('project.main', true);
     obj.allowCopy = ko.observable(false).syncWith('project.allowCopy', true);
-    obj.saveText = 'Create Project';
     obj.header = new Header();
-    obj.sideNav = new SideNav(childRouter);
+    obj.saveText = 'Create Project';
 
     obj.createProject = function() {
         if (obj.project().validate()) {
@@ -78,7 +58,6 @@
                 }
             })
             .finally(function () {
-                console.log('success...');
                 if (obj.project().save()) {
                     obj.project(new Project());
                     router.navigate('#projects');
@@ -87,21 +66,53 @@
         }
     };
 
-    obj.resetProject = function() {
-        obj.project(new Project());
-    };
-
     obj.setPath = function(model, event) {
         obj.project().path($(event.currentTarget).val());
     };
+
 
     obj.activate = function() {
 
         if (!obj.project().isNewRecord) {
             obj.project(new Project());
         }
+
+        var menu = [];
+
+        return Addon.findEnabled().then(function(addons) {
+
+            addons.forEach(function(row, key) {
+                var route = [row.name];
+                if (key == 0) {
+                    route.push('');
+                }
+                menu.push({
+                    route: route,
+                    moduleId: ['..', 'addons', row.name, 'index'].join(env.pathSeparator()),
+                    title: row.title,
+                    nav: true,
+                    type: row.type
+                });
+                postbox.publish('addon.' + row.name, row);
+            });
+            obj.router.reset();
+            obj.router.makeRelative({
+                moduleId: 'project',
+                fromParent: true
+            })
+            .map(menu)
+            .buildNavigationModel();
+            obj.sideNav = new SideNav(obj.router);
+
+        });
+
+    };
+
+    obj.resetProject = function() {
+        obj.project(new Project());
     };
 
     return obj;
+
 });
 

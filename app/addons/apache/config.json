@@ -1,0 +1,42 @@
+{
+  "name": "apache",
+  "title": "Apache",
+  "type": "Web Server",
+  "priority": 5,
+  "modules": [
+    {
+      "mod": "puppetlabs/puppetlabs-apache",
+      "tag": "1.5.0"
+    }
+  ],
+  "data": {
+    "install": true,
+    "options": {
+      "mpm": "event",
+      "modules": [],
+      "vhosts": [
+        {
+          "name": "localdev",
+          "serveraliases": [
+            "www.localdev"
+          ],
+          "docroot": "/var/www",
+          "port": "80",
+          "directories": [
+            {
+              "path": "/var/www",
+              "allow_override": [
+                "All"
+              ],
+              "options": [
+                "Indexes",
+                "FollowSymLinks",
+                "MultiViews"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

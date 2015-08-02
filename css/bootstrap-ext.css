@@ -6969,3 +6969,23 @@ a.list-group-item-danger.active:focus {
 .panel-info .panel-heading {
   border-color: #000;
 }
+.navbar-right {
+  margin-right: 0;
+}
+.drag-handle {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 20px;
+  margin: 6px 0px;
+  background-image: url("../images/drag-handle.png");
+  background-repeat: repeat-y;
+  background-position: center center;
+  cursor: move;
+  z-index: 1;
+}
+.table td.handle {
+  position: relative;
+  padding-left: 20px;
+}

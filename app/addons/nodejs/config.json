@@ -1,0 +1,14 @@
+{
+  "name": "nodejs",
+  "title": "NodeJS",
+  "type": "Language",
+  "priority": 5,
+  "modules": [],
+  "data": {
+    "nodejs": false,
+    "nodejs_options": {
+      "version": "0.12.4",
+      "npm": ["bower", "gulp"]
+    }
+  }
+}

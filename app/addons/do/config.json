@@ -1,0 +1,19 @@
+{
+  "name": "do",
+  "title": "Digital Ocean",
+  "type": "Target",
+  "priority": 2,
+  "data": {
+    "do_options": {
+      "distribution": "ubuntu/trusty64",
+      "server_size": "512mb",
+      "server_name": "master",
+      "data_center": "nyc1",
+      "token": "DIGITAL_OCEAN_TOKEN",
+      "ssh_key_name": "Vagrant",
+      "private_key_path": "~/.ssh/id_rsa",
+      "private_key_user": "PRIVATE_KEY_USER",
+      "synced_folders": []
+    }
+  }
+}

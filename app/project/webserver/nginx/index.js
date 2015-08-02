@@ -5,10 +5,10 @@ define([
     'plugins/router',
     'knockout',
     'jquery',
-    'lib/webserver/nginx/Server',
-    'lib/webserver/nginx/Stream',
-    'lib/webserver/nginx/Site',
-    'lib/webserver/nginx/directives',
+    'addons/nginx/lib/models/Server',
+    'addons/nginx/lib/models/Stream',
+    'addons/nginx/lib/models/Site',
+    'addons/nginx/lib/directives',
     'ko-postbox',
     'bindings/select2'
 ], function(router, ko, $, Server, Stream, Site, directives) {

@@ -1,0 +1,32 @@
+{
+  "name": "mysql",
+  "title": "MySQL",
+  "type": "Database",
+  "priority": 5,
+  "modules": [
+    { "mod": "puppetlabs/puppetlabs-mysql", "tag": "3.3.0" }
+  ],
+  "data": {
+    "install": true,
+    "options": {
+      "version": "5.5",
+      "root_password": "",
+      "databases": [],
+      "users": [
+        {
+          "username": "",
+          "host": "localhost",
+          "password": ""
+        }
+      ],
+      "grants": [
+        {
+          "username": "",
+          "database": "",
+          "table": "*",
+          "privileges": ["ALL"]
+        }
+      ]
+    }
+  }
+}

@@ -1,33 +1,34 @@
-﻿define(
-    [
-        'plugins/router',
-        'knockout',
-        'ko-validation',
-        'lib/Project',
-        'lib/ProjectBuilder',
-        'modules/SideNav',
-        'modules/Header',
-        'ko-mapping',
-        'ko-postbox',
-        'bindings/fadeaway'
-    ],
-    function(router, ko, validation, Project, ProjectBuilder, SideNav, Header, mapping) {
+﻿define([
+    'plugins/router',
+    'knockout',
+    'ko-validation',
+    'lib/models/Project',
+    'lib/models/ProjectBuilder',
+    'modules/Header',
+    'modules/SideNav',
+    'ko-mapping',
+    'lib/models/Addon',
+    'lib/environment',
+    'ko-postbox',
+    'bindings/fadeaway'
+],
+function(router, ko, validation, Project, ProjectBuilder, Header, SideNav, mapping, Addon, env, postbox) {
 
-    var childRouter = router.createChildRouter();
     var app = requirejs('durandal/app');
     var q = require('q');
+    var fs = require('fs');
 
-    var obj = {
-        displayName: 'Welcome to the VStack.',
-        router: childRouter
-    };
+    var obj = {};
+    obj.router =  router.createChildRouter();
+    obj.project = ko.observable(new Project()).syncWith('project.main', true);
+    obj.allowCopy = ko.observable(false).syncWith('project.allowCopy', true);
+    obj.header = new Header();
+    obj.saveText = 'Update Project';
 
     obj.createProject = function() {
-        if (this.project().validate()) {
-            var fullPath = this.project().fullPath();
-            var settings = mapping.toJS(this.project().settings());
-            delete (settings.__ko_mapping__);
-            console.log(settings);
+        if (obj.project().validate()) {
+            var fullPath = obj.project().fullPath();
+            var settings = mapping.toJS(obj.project().settings());
             var builder = new ProjectBuilder(this.project().name(), fullPath, settings);
             builder.createProjectDirectory()
                 .then(
@@ -57,7 +58,6 @@
                 }
             })
             .finally(function () {
-                console.log('success...');
                 if (obj.project().save()) {
                     obj.project(new Project());
                     router.navigate('#projects');
@@ -70,61 +70,40 @@
         obj.project().path($(event.currentTarget).val());
     };
 
-    obj.project = ko.observable(new Project()).syncWith('project.main', true);
+    obj.activate = function(id) {
 
-    obj.allowCopy = ko.observable(false).syncWith('project.allowCopy', true);
+        var menu = [];
 
-    obj.saveText = ko.computed(function() {
-        return obj.project().isNewRecord ? 'Create Project' : 'Update Project';
-    }, obj);
+        return Addon.findEnabled().then(function(addons) {
 
-    obj.resetNavigation = function() {
-        childRouter.reset();
-        var childRouterMap = [
-            {route: ['local'], moduleId: 'target/local/index', title: 'Locally', nav: true, type: 'target', 'hash': '#local'},
-            {route: ['do'], moduleId: 'target/do/index', title: 'Digital Ocean', nav: true, type: 'target', 'hash': '#do'},
-            {route: ['packages'], moduleId: 'system/packages/index', title: 'Packages', nav: true, type: 'system', 'hash': '#packages'},
-            {route: ['users'], moduleId: 'system/users/index', title: 'Users & Groups', nav: true, type: 'system', 'hash': '#users'},
-            {route: ['apache'], moduleId: 'webserver/apache/index', title: 'Apache', nav: true, type: 'webServer', 'hash': '#apache'},
-            {route: ['nginx'], moduleId: 'webserver/nginx/index', title: 'Nginx', nav: true, type: 'webServer', 'hash': '#nginx'},
-            {route: ['php'], moduleId: 'language/php/index', title: 'PHP', nav: true, type: 'language', 'hash': '#php'},
-            {route: ['ruby'], moduleId: 'language/ruby/index', title: 'Ruby', nav: true, type: 'language', 'hash': '#ruby'},
-            {route: ['nodejs'], moduleId: 'language/nodejs/index', title: 'NodeJS', nav: true, type: 'language', 'hash': '#nodejs'},
-            {route: ['mysql'], moduleId: 'database/mysql/index', title: 'MySQL', nav: true, type: 'database', 'hash': '#mysql'},
-            {route: ['redis'], moduleId: 'database/redis/index', title: 'Redis', nav: true, type: 'database', 'hash': '#redis'}
-        ];
+            addons.forEach(function(row, key) {
+                var route = [row.name];
+                if (key == 0) {
+                    route.push('');
+                }
+                menu.push({
+                    route: route,
+                    moduleId: ['..', 'addons', row.name, 'index'].join(env.pathSeparator()),
+                    title: row.title,
+                    nav: true,
+                    type: row.type,
+                    hash: '#' + row.name
+                });
+                postbox.publish('addon.' + row.name, row);
+            });
+            obj.router.reset();
+            obj.router.makeRelative({
+                moduleId: 'project',
+                fromParent: true,
+                dynamicHash: ':id'
+            })
+            .map(menu)
+            .buildNavigationModel();
+            obj.sideNav = new SideNav(obj.router);
 
-        // Push default routes depending on selection.
-        switch (obj.project().settings().target.type()) {
-            case 'do':
-                childRouterMap[1].route.push('');
-                break;
-            case 'locally':
-            default:
-                childRouterMap[0].route.push('');
-                break;
-        }
+        });
 
-        childRouter.makeRelative({
-            moduleId: 'project',
-            fromParent: true,
-            dynamicHash: ':id'
-        })
-        .map(childRouterMap)
-        .buildNavigationModel();
-
-        obj.header = new Header();
-        obj.sideNav = new SideNav(childRouter);
     };
-
-    obj.disableExisting = ko.computed(function() {
-        if (!obj.project().isNewRecord) {
-            return {
-                disabled: 'disabled'
-            };
-        }
-        return {};
-    });
 
     obj.canActivate = function(id) {
 
@@ -148,10 +127,7 @@
         }
     };
 
-    obj.activate = function(id) {
-        obj.resetNavigation();
-    };
-
     return obj;
+
 });
 

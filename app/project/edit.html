@@ -13,7 +13,7 @@
             <div class="row" data-bind="with: project">
                 <div class="form-group col-lg-6">
                     <label for="project-name">Project Name:</label>
-                    <input type="text" class="form-control" id="project-name" placeholder="Enter a project name" data-bind="value: name, attr: $parent.disableExisting" />
+                    <input type="text" class="form-control" id="project-name" placeholder="Enter a project name" data-bind="value: name" disabled="disabled" />
                     <p class="alert-danger" data-bind="validationMessage: name"></p>
                 </div>
                 <div class="form-group col-lg-6">

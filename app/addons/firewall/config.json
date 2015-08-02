@@ -1,7 +1,8 @@
 {
+  "name": "firewall",
   "title": "Firewall",
   "route": "firewall",
-  "category": "System",
+  "type": "System",
   "priority": 5,
   "modules": {
     "puppetlabs/puppetlabs-firewall": {
