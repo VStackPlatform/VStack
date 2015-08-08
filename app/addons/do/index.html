@@ -12,7 +12,7 @@
     <input id="do" data-bind="checked: target" type="radio" value="do" />
     <label for="do">Deploy on Digital Ocean</label>
 </h2>
-<div data-bind="visible: target()=='do', with: options">
+<div data-bind="visible: target()=='do', with: data().options">
     <div class="row">
         <div class="form-group col-lg-12">
             <label for="distro-ubuntu140464">Select a distribution:</label>
@@ -109,7 +109,7 @@
                 <input data-bind="checked: type" type="hidden" value="rsync" />
             </div>
             <!-- /ko -->
-            <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addSyncedFolder"><i class="fa fa-plus"></i>  Add synced folder</a>
+            <a class="btn btn-sm btn-default pull-right" data-bind="click: $root.addSyncedFolder"><i class="fa fa-plus"></i>  Add synced folder</a>
         </div>
     </div>
 </div>

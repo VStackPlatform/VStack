@@ -4,7 +4,7 @@
   "type": "Target",
   "priority": 2,
   "data": {
-    "do_options": {
+    "options": {
       "distribution": "ubuntu/trusty64",
       "server_size": "512mb",
       "server_name": "master",

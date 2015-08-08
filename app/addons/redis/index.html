@@ -1,5 +1,5 @@
 
-<div class="row">
+<div class="row" data-bind="with: data">
     <div class="col-lg-12">
         <!-- ko if: $data.prev -->
         <a class="btn btn-default pull-left" data-bind="click: prev">&laquo; Prev</a>
@@ -10,10 +10,10 @@
     </div>
     <div class="col-lg-12">
         <h2 class="checkbox checkbox-success large">
-            <input id="redis" data-bind="checked: redis" type="checkbox" value="redis" />
+            <input id="redis" data-bind="checked: install" type="checkbox" value="redis" />
             <label for="redis">Install Redis</label>
         </h2>
-        <div data-bind="visible: redis(), with: options">
+        <div data-bind="visible: install, with: options">
             <div class="row">
                 <div class="form-group col-lg-12">
                     <label for="port">Port:</label>

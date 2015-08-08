@@ -1,8 +1,17 @@
-define(['plugins/router', 'knockout', 'jquery', 'ko-postbox', 'lib/models/Addon', 'bindings/select2'], function(router, ko, $, postbox, Addon) {
+define([
+    'plugins/router',
+    'knockout',
+    'jquery',
+    'ko-postbox',
+    'lib/models/Addon',
+    'bindings/select2'
+],
+function(router, ko, $, postbox, Addon) {
 
     var Packages = Addon.extend({
         init: function () {
             this._super('packages');
+            this.enableLiveUpdates();
         },
         packages_config: {
             placeholder: 'Enter system packages',
@@ -11,16 +20,5 @@ define(['plugins/router', 'knockout', 'jquery', 'ko-postbox', 'lib/models/Addon'
         }
     });
 
-    var obj = new Packages();
-
-    obj.packages = ko.computed({
-        read: function() {
-            return this.project().settings().system.packages();
-        },
-        write: function(val) {
-            this.project().settings().system.packages(val);
-        }
-    }, obj);
-
-    return obj;
+    return new Packages();
 });

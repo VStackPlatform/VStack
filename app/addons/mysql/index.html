@@ -7,7 +7,7 @@
         <a class="btn btn-default pull-right" data-bind="click: next">Next &raquo;</a>
         <!-- /ko -->
     </div>
-    <div class="col-lg-12">
+    <div class="col-lg-12" data-bind="with: data">
         <h2 class="checkbox checkbox-success large">
             <input id="mysql" data-bind="checked: install" type="checkbox" value="mysql" />
             <label for="mysql">Install MySQL</label>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="form-group col-lg-6">
                     <label>Databases:</label>
-                    <input type="text" class="form-control" id="database" placeholder="Databases" data-bind="select2: $parent.database_config, select2val: databases" />
+                    <input type="text" class="form-control" id="database" placeholder="Databases" data-bind="select2: $root.database_config, select2val: databases" />
                     <p class="alert-danger" data-bind="validationMessage: databases"></p>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                     <!-- ko foreach: users -->
                     <div class="panel clearfix">
                         <div class="clearfix" style="margin: 5px 5px 0 5px">
-                            <a data-bind="click: $parents[1].removeUser"><i class="fa fa-times pull-right"></i></a>
+                            <a data-bind="click: $root.removeUser"><i class="fa fa-times pull-right"></i></a>
                         </div>
                         <div class="col-lg-7">
                             <label for="username">Username:</label>
@@ -75,10 +75,10 @@
                         </div>
                     </div>
                     <!-- /ko -->
-                    <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addUser"><i class="fa fa-plus"></i>  Add user</a>
+                    <a class="btn btn-sm btn-default pull-right" data-bind="click: $root.addUser"><i class="fa fa-plus"></i>  Add user</a>
                 </div>
             </div>
-            <div class="row" data-bind="visible: $parent.showGrants">
+            <div class="row" data-bind="visible: $root.showGrants">
                 <div class="col-lg-12">
                     <label>Grants:</label>
                     <!-- ko foreach: grants -->
@@ -94,7 +94,7 @@
                             <label>Database:</label>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <select class="form-control" data-bind="options: $parent.databases, value: database, optionsCaption: '*'"></select>
+                                    <select class="form-control" data-bind="value: database, options: $parent.databases, optionsCaption: '*'"></select>
                                     <span class="input-group-addon">.</span>
                                     <input type="text" class="form-control" id="table" placeholder="Table" data-bind="value: table" />
                                 </div>
@@ -137,7 +137,7 @@
                         </div>
                     </div>
                     <!-- /ko -->
-                    <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addGrant"><i class="fa fa-plus"></i>  Add grant</a>
+                    <a class="btn btn-sm btn-default pull-right" data-bind="click: $root.addGrant"><i class="fa fa-plus"></i>  Add grant</a>
                 </div>
             </div>
         </div>

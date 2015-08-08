@@ -7,7 +7,8 @@ define([
     'lib/models/Addon',
     'ko-mapping',
     'bindings/select2'
-], function(router, ko, validation, postbox, User, Addon, mapping) {
+],
+function(router, ko, validation, postbox, User, Addon, mapping) {
 
     try {
         var MySQL = Addon.extend({
@@ -31,36 +32,12 @@ define([
                     }
                 });
 
-                /**
-                 * Whether to install this node or not.
-                 */
-                if (this.settings().install !== undefined) {
-                    this.install = ko.computed({
-                        read: function () {
-                            return this.settings().install();
-                        }.bind(this),
-                        write: function (val) {
-                            this.settings().install(val);
-                        }.bind(this)
-                    });
-                }
-
-                /**
-                 * Options for configuring this node.
-                 */
-                this.options = ko.computed({
-                    read: function() {
-                        return this.settings().options;
-                    }.bind(this),
-                    write: function(val) {
-                        this.settings().options = val;
-                    }.bind(this)
-                });
+                this.enableLiveUpdates();
 
                 /**
                  * If we are installing mysql then validate conditions are true.
                  */
-                var requiredValidate = function (target) {
+                var requiredValidate = function () {
                     return {
                         required: {
                             onlyIf: function () {
@@ -74,7 +51,7 @@ define([
                  * Adds a new user to config.
                  */
                 this.addUser = function() {
-                    this.options().users.push(new User());
+                    this.data().options.users.push(new User());
                 }.bind(this);
 
                 /**
@@ -84,14 +61,14 @@ define([
                  * @param event The event
                  */
                 this.removeUser = function(model, event) {
-                    this.options().users.remove(model);
+                    this.data().options.users.remove(model);
                 }.bind(this);
 
                 /**
                  * Only users that are fully validated.
                  */
                 this.validUsers = ko.computed(function() {
-                    return ko.utils.arrayFilter(this.options().users(), function(user) {
+                    return ko.utils.arrayFilter(this.data().options.users(), function(user) {
                         var group = validation.group(user);
                         return group().length == 0;
                     });
@@ -106,7 +83,7 @@ define([
                  */
                 this.showGrants = ko.computed(function() {
                     var users = this.validUsers().length;
-                    var databases = this.options().databases().length;
+                    var databases = this.data().options.databases().length;
                     return databases > 0 && users > 0;
                 }, this);
 
@@ -115,10 +92,10 @@ define([
                  * Adds a new grant to config.
                  */
                 this.addGrant = function() {
-                    this.options().grants.push({
-                        username: '',
-                        database: '',
-                        table: '*',
+                    this.data().options.grants.push({
+                        username: ko.observable(''),
+                        database: ko.observable(''),
+                        table: ko.observable('*'),
                         privileges: ko.observableArray(['ALL'])
                     });
                 }.bind(this);
@@ -144,16 +121,8 @@ define([
                  * @param event The event
                  */
                 this.removeGrant = function(model, event) {
-                    this.options().grants.remove(model);
+                    this.data().options.grants.remove(model);
                 }.bind(this);
-
-                /**
-                 * Save back to main project on change.
-                 */
-                ko.computed(function() {
-                    this.project().settings.peek()[this.name] = mapping.toJS(this.settings());
-                    console.log(this.project().settings());
-                }, this);
 
             },
             database_config: {

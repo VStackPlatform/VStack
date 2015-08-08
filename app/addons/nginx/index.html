@@ -8,12 +8,12 @@
         <a class="btn btn-default pull-right" data-bind="click: next">Next &raquo;</a>
         <!-- /ko -->
     </div>
-    <div class="col-lg-12">
+    <div class="col-lg-12" data-bind="with: data">
         <h2 class="checkbox checkbox-success large">
-            <input id="locally" data-bind="checked: nginx" type="checkbox" value="nginx" />
+            <input id="locally" data-bind="checked: install" type="checkbox" value="nginx" />
             <label for="locally">Install Nginx</label>
         </h2>
-        <div data-bind="visible: nginx(), with: options">
+        <div data-bind="visible: install, with: options">
             <div class="row">
                 <div class="form-group col-lg-6">
                     <label>Version:</label>

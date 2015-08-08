@@ -7,12 +7,12 @@
         <a class="btn btn-default pull-right" data-bind="click: next">Next &raquo;</a>
         <!-- /ko -->
     </div>
-    <div class="col-lg-12">
+    <div class="col-lg-12" data-bind="with: data">
         <h2 class="checkbox checkbox-success large">
-            <input id="nodejs" data-bind="checked: nodejs" type="checkbox" value="nodejs" />
+            <input id="nodejs" data-bind="checked: install" type="checkbox" value="nodejs" />
             <label for="nodejs">Install NodeJS</label>
         </h2>
-        <div data-bind="visible: nodejs(), with: options">
+        <div data-bind="visible: install, with: options">
             <div class="row">
                 <div class="form-group col-lg-12">
                     <label for="latest">Version:</label>
@@ -23,7 +23,7 @@
                         </li>
                         <li class="radio radio-success">
                             <input id="node-12-3" data-bind="checked: version" type="radio" value="0.12.3" />
-                            <label for="node-12-4">0.12.3</label>
+                            <label for="node-12-3">0.12.3</label>
                         </li>
                         <li class="radio radio-success">
                             <input id="node-12-2" data-bind="checked: version" type="radio" value="0.12.2" />

@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" data-bind="with: data">
     <div class="col-lg-12">
         <!-- ko if: $data.prev -->
         <a class="btn btn-default pull-left" data-bind="click: prev">&laquo; Prev</a>
@@ -51,6 +51,6 @@
             </div>
         </div>
         <!-- /ko -->
-        <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addVersion"><i class="fa fa-plus"></i>  Add ruby version</a>
+        <a class="btn btn-sm btn-default pull-right" data-bind="click: $root.addVersion"><i class="fa fa-plus"></i>  Add ruby version</a>
     </div>
 </div>

@@ -4,51 +4,63 @@ define([
     'ko-mapping',
     'lib/models/Class',
     'lib/environment',
-    'lib/vstack'
+    'lib/vstack',
+    'ko-postbox'
 ],
-function (router, ko, mapping, Class, env, vstack) {
+function (router, ko, mapping, Class, env, vstack, postbox) {
 
     var fs = require('fs');
     var q = require('q');
+    var colors = require('colors/safe');
 
     var Addon = Class.extend({
-        init: function(data, jsonMap) {
+        init: function(data, dataMap) {
             this.identifier = 'Addon';
             if (typeof data == 'string') {
-                this.initFromConfig(data, jsonMap || {});
+                this.initFromConfig(data, dataMap || {});
             } else {
-                this.initFromArray(data, jsonMap || {});
+                this.initFromArray(data, dataMap || {});
             }
         },
-        initFromArray: function(data, jsonMap) {
-            mapping.fromJS({
-                id: '',
-                name: '',
-                title: '',
-                type: '',
-                version: '',
-                enabled: ko.observable(0),
-                priority: ko.observable(0)
-            }, {}, this);
-
-            mapping.fromJS(data, {
-                'copy': ["id", "name", "title", "type", "version"]
-            }, this);
+        initFromArray: function(data, dataMap) {
 
             this.dragging = ko.observable(false);
-
             this.project = ko.observable().syncWith('project.main', true);
             this.sideNavTypes = ko.observableArray().subscribeTo('project.sideNavTypes', true);
-
             var settings = this.project().settings()[this.name];
-            if (settings == undefined) {
-                //Load default data
-                this.project().settings().apache = this.data;
-                this.settings = ko.observable(mapping.fromJS(this.data, jsonMap));
-            } else {
-                var template = mapping.fromJS(this.data, jsonMap);
-                this.settings = ko.observable(mapping.fromJS(mapping.fromJSON(settings), jsonMap, template));
+
+            if (settings !== undefined) {
+                data.data = settings;
             }
+
+            var addonMap = {
+                'copy': ["id", "name", "title", "type", "version"],
+                'data': {
+                    create: function (options) {
+                        if (typeof options.data == 'string') {
+                            options.data = JSON.parse(options.data);
+                        }
+                        return ko.observable(new function () {
+                            mapping.fromJS(options.data, dataMap, this);
+                        });
+                    }
+                },
+                'modules': {
+                    create: function (options) {
+                        if (typeof options.data == 'string') {
+                            return JSON.parse(options.data);
+                        } else {
+                            return options.data;
+                        }
+                    }
+                }
+            };
+
+            data.enabled = data.enabled || 0;
+            data.data = data.data || {};
+            data.modules = data.modules || {};
+
+            mapping.fromJS(data, addonMap, this);
 
             //@todo: clean this up as this is a hacky bit of code.
             ko.computed(function() {
@@ -63,24 +75,26 @@ function (router, ko, mapping, Class, env, vstack) {
                             }
                         }.bind(this));
 
+                        var project = this.project.peek();
+
                         if (menuItem.menu()[moduleKey - 1] !== undefined) {
                             this.prev = function () {
-                                router.navigate(this.project.peek().editUrl() + '/' + menuItem.menu()[moduleKey - 1].route);
+                                router.navigate(project.editUrl() + '/' + menuItem.menu()[moduleKey - 1].route);
                             };
                         } else if (this.sideNavTypes()[key - 1] != undefined) {
                             this.prev = function () {
-                                router.navigate(this.project.peek().editUrl() + '/' + this.sideNavTypes()[key - 1].menu().pop().route);
+                                router.navigate(project.editUrl() + '/' + this.sideNavTypes()[key - 1].menu().pop().route);
                             };
                         } else {
                             this.prev = undefined
                         }
                         if (menuItem.menu()[moduleKey + 1] !== undefined) {
                             this.next = function () {
-                                router.navigate(this.project.peek().editUrl() + '/' + menuItem.menu()[moduleKey + 1].route);
+                                router.navigate(project.editUrl() + '/' + menuItem.menu()[moduleKey + 1].route);
                             };
                         } else if (this.sideNavTypes()[key + 1] != undefined) {
                             this.next = function () {
-                                router.navigate(this.project.peek().editUrl() + '/' + this.sideNavTypes()[key + 1].menu()[0].route);
+                                router.navigate(project.editUrl() + '/' + this.sideNavTypes()[key + 1].menu()[0].route);
                             };
                         } else {
                             this.prev = undefined
@@ -88,11 +102,12 @@ function (router, ko, mapping, Class, env, vstack) {
                     }
                 }.bind(this));
             }, this);
+
         },
-        initFromConfig: function(name, jsonMap) {
+        initFromConfig: function(name, dataMap) {
             var basePath = process.cwd();
             var config = JSON.parse(fs.readFileSync([basePath, 'app', 'addons', name, 'config.json'].join(env.pathSeparator()), 'utf8'));
-            this.initFromArray(config, jsonMap);
+            this.initFromArray(config, dataMap);
         },
         save: function() {
             var deferred = q.defer();
@@ -114,6 +129,16 @@ function (router, ko, mapping, Class, env, vstack) {
                 });
             }.bind(this));
             return deferred.promise;
+        },
+        enableLiveUpdates: function() {
+            /**
+             * Save back to main project on change.
+             */
+            ko.computed(function () {
+                this.project.peek().settings.peek(); // Block change on project.
+                this.project().settings()[this.name] = mapping.toJS(this.data(), {});
+                console.log(this.project().settings());
+            }, this);
         }
     });
 

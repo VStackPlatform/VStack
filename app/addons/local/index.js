@@ -12,39 +12,40 @@ function(router, ko, $, vb, postbox, env, Addon) {
     var Local = Addon.extend({
         init: function () {
             this._super('local');
+            this.enableLiveUpdates();
+
+            this.target = ko.computed({
+                read: function() {
+                    return this.project().settings().target.type();
+                },
+                write: function(val) {
+                    this.project().settings().target.type(val);
+                }
+            }, this);
+
+            this.addForwardPort = function() {
+                this.data().options.forward_ports.push({host: '', vm: ''});
+            }.bind(this);
+            this.removeForwardPort = function(model) {
+                this.data().options.forward_ports.remove(model);
+            }.bind(this);
+            this.addSyncedFolder = function() {
+                this.data().options.synced_folders.push({
+                    from: '',
+                    to: '',
+                    type: "default",
+                    owner: 'www-data',
+                    group: 'www-data'
+                });
+            }.bind(this);
+            this.removeSyncedFolder = function(model) {
+                this.data().options.synced_folders.remove(model);
+            }.bind(this);
+
         },
         isWindows: ko.observable(env.isWindows)
     });
 
-    var obj =  new Local();
+    return new Local();
 
-    obj.target = ko.computed({
-        read: function() {
-            return this.project().settings().target.type();
-        },
-        write: function(val) {
-            this.project().settings().target.type(val);
-        }
-    }, obj);
-    obj.options = ko.computed({
-        read: function() {
-            return this.project().settings().target.local_options;
-        },
-        write: function(val) {
-            this.project().settings().target.local_options = val;
-        }
-    }, obj);
-    obj.addForwardPort = function() {
-        obj.options().forward_ports.push({host: '', vm: ''});
-    };
-    obj.removeForwardPort = function(model) {
-        obj.options().forward_ports.remove(model);
-    };
-    obj.addSyncedFolder = function() {
-        obj.options().synced_folders.push({from: '', to: '', type: "default", owner: 'www-data', group: 'www-data'});
-    };
-    obj.removeSyncedFolder = function(model) {
-        obj.options().synced_folders.remove(model);
-    };
-    return obj;
 });

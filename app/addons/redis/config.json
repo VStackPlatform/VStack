@@ -7,8 +7,8 @@
     { "mod": "echocat/puppet-redis", "tag": "v1.6.0" }
   ],
   "data": {
-    "redis": false,
-    "redis_options": {
+    "install": false,
+    "options": {
       "port": 6379
     }
   }

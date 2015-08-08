@@ -12,7 +12,7 @@
     <input id="locally" data-bind="checked: target" type="radio" value="locally" />
     <label for="locally">Deploy Locally</label>
 </h2>
-<div data-bind="visible: target() == 'locally', with: options">
+<div data-bind="visible: target() == 'locally', with: data().options">
     <div class="row">
         <div class="form-group col-lg-6">
             <label for="provider-virtualbox">Select a provider:</label>

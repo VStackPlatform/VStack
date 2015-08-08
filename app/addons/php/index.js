@@ -1,102 +1,96 @@
-define(['plugins/router', 'knockout', 'jquery', 'ko-postbox', 'lib/models/Addon', 'bindings/select2'], function(router, ko, $, postbox, Addon) {
-
-    var PHP = Addon.extend({
-        init: function () {
-            this._super('php');
-        },
-        ini_config: {
-            placeholder: 'Ini Settings',
-            tags: [''],
-            tokenSeparators: [',']
-        },
-        modules_config: {
-            placeholder: 'PHP Modules',
-            tags: [''],
-            tokenSeparators: [',', ' ']
-        },
-        pear_config: {
-            placeholder: 'PEAR Modules',
-            tags: [''],
-            tokenSeparators: [',', ' ']
-        },
-        pecl_config: {
-            placeholder: 'PECL Modules',
-            tags: [''],
-            tokenSeparators: [',', ' ']
-        },
-        xdebug_config: {
-            placeholder: 'XDebug Settings',
-            tags: [''],
-            tokenSeparators: [',', ' ']
-        }
-    });
-
-    var obj = new PHP();
+define([
+    'plugins/router',
+    'knockout',
+    'jquery',
+    'ko-postbox',
+    'lib/models/Addon',
+    'bindings/select2'
+], function(router, ko, $, postbox, Addon) {
 
     try {
+        var PHP = Addon.extend({
+            init: function () {
+                this._super('php', {
+                    "ini_settings": {
+                        create: function (options) {
+                            return ko.observable(options.data);
+                        }
+                    },
+                    "settings": {
+                        create: function (options) {
+                            return ko.observable(options.data);
+                        }
+                    }
+                });
 
-        /**
-         * Whether to install php or not.
-         */
-        obj.php = ko.computed({
-            read: function () {
-                return this.project().settings().language.php();
+                this.enableLiveUpdates();
+
+                /**
+                 * For general settings to save as an array.
+                 */
+                var settings = [];
+                ko.utils.objectForEach(this.data().options.ini_settings(), function (key, value) {
+                    settings.push(key + "=" + value);
+                });
+                this.tempSettings = ko.observableArray(settings);
+                this.settingToArray = ko.computed(function () {
+                    var settings = {};
+                    ko.utils.arrayForEach(this.tempSettings(), function (value) {
+                        var temp = value.split('=');
+                        settings[temp[0]] = temp[1];
+                    });
+                    this.data.peek().options.ini_settings(settings);
+                }, this);
+
+
+                /**
+                 * For XDebug settings to save as an array.
+                 */
+                var xDebugSettings = [];
+                ko.utils.objectForEach(this.data().options.xdebug_options.settings(), function (key, value) {
+                    xDebugSettings.push(key + "=" + value);
+                });
+                this.xDebugSettings = ko.observableArray(xDebugSettings);
+                this.xDebugSettingsToArray = ko.computed(function () {
+                    var settings = {};
+                    ko.utils.arrayForEach(this.xDebugSettings(), function (value) {
+                        var temp = value.split('=');
+                        settings[temp[0]] = temp[1];
+                    });
+                    this.data.peek().options.xdebug_options.settings(settings);
+                }, this);
+
             },
-            write: function (val) {
-                this.project().settings().language.php(val);
-            }
-        }, obj);
-
-        /**
-         * Various php options.
-         */
-        obj.options = ko.computed({
-            read: function () {
-                return this.project().settings().language.php_options;
+            ini_config: {
+                placeholder: 'Ini Settings',
+                tags: [''],
+                tokenSeparators: [',']
             },
-            write: function (val) {
-                this.project().settings().language.php_options = val;
+            modules_config: {
+                placeholder: 'PHP Modules',
+                tags: [''],
+                tokenSeparators: [',', ' ']
+            },
+            pear_config: {
+                placeholder: 'PEAR Modules',
+                tags: [''],
+                tokenSeparators: [',', ' ']
+            },
+            pecl_config: {
+                placeholder: 'PECL Modules',
+                tags: [''],
+                tokenSeparators: [',', ' ']
+            },
+            xdebug_config: {
+                placeholder: 'XDebug Settings',
+                tags: [''],
+                tokenSeparators: [',', ' ']
             }
-        }, obj);
-
-
-        /**
-         * For general settings to save as an array.
-         */
-        var settings = [];
-        ko.utils.objectForEach(obj.options().ini_settings(), function (key, value) {
-            settings.push(key + "=" + value);
         });
-        obj.tempSettings = ko.observableArray(settings);
-        obj.settingToArray = ko.computed(function () {
-            var settings = {};
-            ko.utils.arrayForEach(obj.tempSettings(), function (value) {
-                var temp = value.split('=');
-                settings[temp[0]] = temp[1];
-            });
-            obj.options.peek().ini_settings(settings);
-        }, obj);
 
-
-        /**
-         * For XDebug settings to save as an array.
-         */
-        var xDebugSettings = [];
-        ko.utils.objectForEach(obj.options().xdebug_options.settings(), function (key, value) {
-            xDebugSettings.push(key + "=" + value);
-        });
-        obj.xDebugSettings = ko.observableArray(xDebugSettings);
-        obj.xDebugSettingsToArray = ko.computed(function () {
-            var settings = {};
-            ko.utils.arrayForEach(obj.xDebugSettings(), function (value) {
-                var temp = value.split('=');
-                settings[temp[0]] = temp[1];
-            });
-            obj.options.peek().xdebug_options.settings(settings);
-        }, obj);
+        return new PHP();
 
     } catch (e) {
         console.error(e.stack);
     }
-    return obj;
 });

@@ -8,12 +8,46 @@ define([
     'addons/nginx/lib/directives',
     'ko-postbox',
     'lib/models/Addon',
+    'ko-mapping',
     'bindings/select2'
-], function(router, ko, $, Server, Stream, Site, directives, postbox, Addon) {
+], function(router, ko, $, Server, Stream, Site, directives, postbox, Addon, mapping) {
 
     var Nginx = Addon.extend({
         init: function () {
-            this._super('nginx');
+            this._super('nginx', {
+                "options": {
+                    create: function (options) {
+                        return new function () {
+                            mapping.fromJS(options.data, {
+                                "sites": {
+                                    "create": function (model) {
+                                        if (model.data.site_name == undefined) {
+                                            model.data.site_name = '';
+                                        }
+                                        return new Site(model.data);
+                                    }
+                                }
+                            }, this);
+                            this.toJSON = function() {
+                                return mapping.toJS(this);
+                            };
+                        };
+                    }
+                }
+            });
+            this.enableLiveUpdates();
+
+            this.addSite = function() {
+                this.data().options.sites.push(new Site({
+                    site_name: '',
+                    upstreams: [],
+                    servers: []
+                }));
+            }.bind(this);
+
+            this.removeSite = function(model) {
+                this.data().options.sites.remove(model);
+            }.bind(this);
         },
         serveraliases_config: {
             placeholder: 'Enter Aliases',
@@ -41,44 +75,5 @@ define([
         }
     });
 
-    var obj =  new Nginx();
-
-    /**
-     * Whether to install this node or not.
-     */
-    obj.nginx = ko.computed({
-        read: function() {
-            return this.project().settings().webServer.nginx();
-        },
-        write: function(val) {
-            this.project().settings().webServer.nginx(val);
-        }
-    }, obj);
-
-    /**
-     * Options for configuring this node.
-     */
-    obj.options = ko.computed({
-        read: function() {
-            return this.project().settings().webServer.nginx_options;
-        },
-        write: function(val) {
-            this.project().settings().webServer.nginx_options = val;
-        }
-    }, obj);
-
-    obj.addSite = function() {
-        obj.options().sites.push(new Site({
-            site_name: '',
-            upstreams: [],
-            servers: []
-        }));
-    };
-
-    obj.removeSite = function(model) {
-        console.log('removing: ', model);
-        obj.options().sites.remove(model);
-    };
-
-    return obj;
+    return new Nginx();
 });

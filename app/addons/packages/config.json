@@ -3,5 +3,8 @@
   "title": "Packages",
   "type": "System",
   "priority": 5,
-  "modules": []
+  "modules": [],
+  "data": {
+    "packages": []
+  }
 }

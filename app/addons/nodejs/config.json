@@ -5,8 +5,8 @@
   "priority": 5,
   "modules": [],
   "data": {
-    "nodejs": false,
-    "nodejs_options": {
+    "install": false,
+    "options": {
       "version": "0.12.4",
       "npm": ["bower", "gulp"]
     }

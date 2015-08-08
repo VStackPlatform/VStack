@@ -11,7 +11,7 @@ define([
     'addons/nginx/lib/models/Site',
     'lib/models/Addon'
 ],
-function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost, MySQLUser, Site, Addon) {
+function(ko, validation, mapping, Vagrant, env, template, vb) {
 
     var db = openDatabase('vstack', '1.0', 'VStack', 2 * 1024 * 1024);
     var q = require('q');
@@ -94,37 +94,7 @@ function(ko, validation, mapping, Vagrant, env, template, vb, VirtualHost, MySQL
                 return this.path() + env.pathSeparator() + this.name();
             }, this);
 
-            var jsonMap = {
-                'nginx_options': {
-                    create: function (options) {
-                        return new function () {
-                            mapping.fromJS(options.data, {
-                                'sites': {
-                                    "create": function (model) {
-                                        if (model.data.site_name == undefined) {
-                                            model.data.site_name = '';
-                                        }
-                                        return new Site(model.data);
-                                    }
-                                }
-                            }, this);
-                            this.toJSON = function() {
-                                return mapping.toJS(this);
-                            };
-                        };
-                    }
-                },
-                'ini_settings': {
-                    create: function (options) {
-                        return ko.observable(options.data);
-                    }
-                },
-                'settings': {
-                    create: function (options) {
-                        return ko.observable(options.data);
-                    }
-                }
-            };
+            var jsonMap = {};
 
             if (data.settings !== undefined) {
                 var settings = mapping.fromJS(template, jsonMap);

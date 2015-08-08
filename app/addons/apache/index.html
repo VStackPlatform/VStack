@@ -8,7 +8,7 @@
         <a class="btn btn-default pull-right" data-bind="click: next">Next &raquo;</a>
         <!-- /ko -->
     </div>
-    <div class="col-lg-12">
+    <div class="col-lg-12" data-bind="with: data">
         <h2 class="checkbox checkbox-success large">
             <input id="locally" data-bind="checked: install" type="checkbox" value="apache" />
             <label for="locally">Install Apache</label>
@@ -45,14 +45,14 @@
 
             <div class="form-group">
                 <label for="apache-modules">Apache Modules:</label>
-                <input type="text" id="apache-modules" class="form-control" data-bind="select2val: modules, select2: $parent.module_config" />
+                <input type="text" id="apache-modules" class="form-control" data-bind="select2val: modules, select2: $root.module_config" />
             </div>
             <div class="form-group clearfix">
                 <label>Virtual Hosts:</label>
                 <!-- ko foreach: vhosts -->
                 <div class="panel clearfix">
                     <div class="clearfix" style="margin: 5px 5px 0 5px">
-                        <a data-bind="click: $parents[1].removeVirtualHost"><i class="fa fa-times pull-right"></i></a>
+                        <a data-bind="click: $root.removeVirtualHost"><i class="fa fa-times pull-right"></i></a>
                     </div>
                     <div class="clearfix">
                         <div class="form-group col-lg-6">
@@ -62,7 +62,7 @@
                         </div>
                         <div  class="form-group col-lg-6">
                             <label>Server Aliases</label>
-                            <input type="text" class="form-control" id="server-alias" placeholder="Server Alias" data-bind="select2val: serveraliases, select2: $parents[1].serveraliases_config" />
+                            <input type="text" class="form-control" id="server-alias" placeholder="Server Alias" data-bind="select2val: serveraliases, select2: $root.serveraliases_config" />
                             <p class="alert-danger" data-bind="validationMessage: serveraliases"></p>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                     </div>
                     <div class="form-group col-lg-12">
                         <label>Environment</label>
-                        <input type="text" class="form-control" id="environment" placeholder="Environment Variables" data-bind="select2val: setEnv, select2: $parents[1].env_config" />
+                        <input type="text" class="form-control" id="environment" placeholder="Environment Variables" data-bind="select2val: setEnv, select2: $root.env_config" />
                         <p class="alert-danger" data-bind="validationMessage: setEnv"></p>
                     </div>
                     <div class="form-group col-lg-12">
@@ -182,7 +182,7 @@
                     </div>
                 </div>
                 <!-- /ko -->
-                <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addVirtualHost"><i class="fa fa-plus"></i>  Add virtual host</a>
+                <a class="btn btn-sm btn-default pull-right" data-bind="click: $root.addVirtualHost"><i class="fa fa-plus"></i>  Add virtual host</a>
             </div>
         </div>
     </div>

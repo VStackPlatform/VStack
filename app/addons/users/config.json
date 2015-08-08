@@ -3,5 +3,9 @@
   "title": "Users",
   "type": "System",
   "priority": 5,
-  "modules": []
+  "modules": [],
+  "data": {
+    "users": [],
+    "groups": []
+  }
 }

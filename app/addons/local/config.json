@@ -4,7 +4,7 @@
   "type": "Target",
   "priority": 1,
   "data": {
-    "local_options": {
+    "options": {
       "provider": "virtualbox",
       "distribution": "ubuntu/trusty64",
       "ip": "192.168.56.101",

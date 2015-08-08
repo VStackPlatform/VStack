@@ -7,8 +7,8 @@
     { "mod": "maestrodev/puppet-rvm", "tag": "v1.12.0" }
   ],
   "data": {
-    "ruby": true,
-    "ruby_options": {
+    "install": true,
+    "options": {
       "gems": [],
       "versions": []
     }

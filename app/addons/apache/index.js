@@ -12,45 +12,22 @@ define([
         var Apache = Addon.extend({
             init: function() {
                 this._super('apache', {
-                    "vhosts": {
+                    "options": {
                         create: function (options) {
-                            return new VirtualHost(options.data);
+                            var Option = function() {
+                                mapping.fromJS(options.data, {
+                                    "vhosts": {
+                                        create: function (options) {
+                                            return new VirtualHost(options.data);
+                                        }
+                                    }
+                                }, this);
+                            };
+                            return new Option();
                         }
                     }
                 });
-
-                /**
-                 * Whether to install this node or not.
-                 */
-                if (this.settings().install !== undefined) {
-                    this.install = ko.computed({
-                        read: function () {
-                            return this.settings().install();
-                        }.bind(this),
-                        write: function (val) {
-                            this.settings().install(val);
-                        }.bind(this)
-                    });
-                }
-
-                /**
-                 * Options for configuring this node.
-                 */
-                this.options = ko.computed({
-                    read: function() {
-                        return this.settings().options;
-                    }.bind(this),
-                    write: function(val) {
-                        this.settings().options = val;
-                    }.bind(this)
-                });
-
-                /**
-                 * Save back to main project on change.
-                 */
-                ko.computed(function() {
-                    this.project().settings.peek()[this.name] = mapping.toJS(this.settings());
-                }, this);
+                this.enableLiveUpdates();
 
                 /**
                  * Remove a virtual host.
