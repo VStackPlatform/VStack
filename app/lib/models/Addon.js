@@ -135,9 +135,9 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
              * Save back to main project on change.
              */
             ko.computed(function () {
-                this.project.peek().settings.peek(); // Block change on project.
-                this.project().settings()[this.name] = mapping.toJS(this.data(), {});
-                console.log(this.project().settings());
+                ko.toJS(this.data()); //Needed to trigger change as mapping does not trigger on sub changes but is need for conversion.
+                this.project.peek().settings.peek()[this.name] = mapping.toJS(this.data(), {}); // Block change on project.
+                console.log(this.project.peek().settings.peek());
             }, this);
         }
     });
