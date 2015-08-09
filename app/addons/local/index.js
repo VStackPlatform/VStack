@@ -16,10 +16,10 @@ function(router, ko, $, vb, postbox, env, Addon) {
 
             this.target = ko.computed({
                 read: function() {
-                    return this.project().settings().target.type();
+                    return this.project().settings().target();
                 },
                 write: function(val) {
-                    this.project().settings().target.type(val);
+                    this.project().settings().target(val);
                 }
             }, this);
 

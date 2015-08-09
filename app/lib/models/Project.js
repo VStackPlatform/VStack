@@ -4,14 +4,9 @@ define([
     'ko-mapping',
     'lib/models/Vagrant',
     'lib/environment',
-    'lib/projectTemplate',
-    'lib/virtualBox',
-    'addons/apache/lib/models/VirtualHost',
-    'addons/mysql/lib/models/User',
-    'addons/nginx/lib/models/Site',
-    'lib/models/Addon'
+    'lib/virtualBox'
 ],
-function(ko, validation, mapping, Vagrant, env, template, vb) {
+function(ko, validation, mapping, Vagrant, env, vb) {
 
     var db = openDatabase('vstack', '1.0', 'VStack', 2 * 1024 * 1024);
     var q = require('q');
@@ -96,26 +91,16 @@ function(ko, validation, mapping, Vagrant, env, template, vb) {
 
             var jsonMap = {};
 
+            var settings = {};
             if (data.settings !== undefined) {
-                var settings = mapping.fromJS(template, jsonMap);
                 mapping.fromJS(mapping.fromJSON(data.settings), jsonMap, settings);
-                this.settings = ko.observable(settings);
             } else {
-                this.settings = ko.observable(mapping.fromJS(template, jsonMap));
+                settings.target = ko.observable('locally');
             }
-
-            var requiredValidate = function (target) {
-                return {
-                    required: {
-                        onlyIf: function () {
-                            return this.settings().target.type() == target;
-                        }.bind(this)
-                    }
-                };
-            }.bind(this);
+            this.settings = ko.observable(settings);
 
             this.targetMachine = ko.computed(function () {
-                return this.settings().target.type() == 'locally' ? 'Virtualbox' : 'Digital Ocean';
+                return this.settings().target() == 'locally' ? 'Virtualbox' : 'Digital Ocean';
             }, this);
 
 
@@ -129,7 +114,7 @@ function(ko, validation, mapping, Vagrant, env, template, vb) {
                 vbExists: {
                     onlyIf: function () {
                         if (this.isNewRecord == 1) {
-                            return this.settings().target.type() == 'locally' &&
+                            return this.settings().target() == 'locally' &&
                                 this.targetMachine() == 'Virtualbox';
                         } else {
                             return false;
@@ -138,15 +123,6 @@ function(ko, validation, mapping, Vagrant, env, template, vb) {
                 }
             });
 
-            this.settings().target.local_options.ip.extend(requiredValidate('locally'));
-            this.settings().target.local_options.hostname.extend(requiredValidate('locally'));
-            this.settings().target.local_options.memory.extend(requiredValidate('locally'));
-            this.settings().target.local_options.cpu_count.extend(requiredValidate('locally'));
-            this.settings().target.do_options.server_name.extend(requiredValidate('do'));
-            this.settings().target.do_options.token.extend(requiredValidate('do'));
-            this.settings().target.do_options.ssh_key_name.extend(requiredValidate('do'));
-            this.settings().target.do_options.private_key_path.extend(requiredValidate('do'));
-            this.settings().target.do_options.private_key_user.extend(requiredValidate('do'));
         } catch (e) {
             console.error(e.stack);
         }
@@ -210,7 +186,7 @@ function(ko, validation, mapping, Vagrant, env, template, vb) {
                 deferred.resolve(model || null);
             });
         }, function(error) {
-            console.log(error);
+            console.error(error);
         });
         return deferred.promise;
     };

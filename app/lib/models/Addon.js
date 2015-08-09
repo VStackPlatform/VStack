@@ -97,7 +97,7 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
                                 router.navigate(project.editUrl() + '/' + this.sideNavTypes()[key + 1].menu()[0].route);
                             };
                         } else {
-                            this.prev = undefined
+                            this.next = undefined
                         }
                     }
                 }.bind(this));

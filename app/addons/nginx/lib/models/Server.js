@@ -27,7 +27,6 @@ define(['ko-mapping', 'addons/nginx/lib/models/Location', 'knockout'], function(
          *
          */
         this.addDirective = function() {
-            console.log(ko);
             this.directives.push({
                 directive: ko.observableArray([]),
                 value: ''
