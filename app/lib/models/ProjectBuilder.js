@@ -3,7 +3,13 @@
  *
  * Created by damian on 15/05/15.
  */
-define(['lib/models/Vagrant', 'lib/environment', 'durandal/app'], function(Vagrant, env, app) {
+define([
+    'lib/models/Vagrant',
+    'lib/environment',
+    'durandal/app',
+    'lib/Addon'
+],
+function(Vagrant, env, app, Addon) {
 
     var fs = require('fs');
     var q = require('q');
@@ -203,6 +209,13 @@ define(['lib/models/Vagrant', 'lib/environment', 'durandal/app'], function(Vagra
      */
     ProjectBuilder.prototype.createVagrantFile = function() {
         var deferred = q.defer();
+
+        Addon.findEnabled().then(function(addons) {
+            addons.forEach(function(addon) {
+
+            });
+        });
+
         var vagrantTpl = tplPath + env.pathSeparator() + 'Vagrantfile';
         var vagrantPath = this.fullPath + env.pathSeparator() + 'Vagrantfile';
         var self = this;

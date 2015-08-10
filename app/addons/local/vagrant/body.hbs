@@ -1,0 +1,42 @@
+config.vm.define "local", primary: false, autostart: false do |web|
+  {{#with local.options}}
+  local.vm.box = "{{distribution}}"
+  local.vm.network "private_network", ip: "{{ip}}"
+  local.vm.box_check_update = {{checkForUpdates}}
+  local.vm.hostname = "{{hostname}}"
+  {{#each forward_ports}}
+  local.vm.network "forwarded_port", guest: {{host}}, host: {{vm}}
+  {{/each}}
+  {{#each synced_folders}}
+  {{#compare type "nfs" operator="!="}}
+  local.vm.synced_folder "{{from}}", "{{to}}", owner: "{{owner}}", group: "{{group}}"{{#compare type "default" operator="!="}}, type: "{{type}}"{{/compare}}
+  {{/compare}}
+  {{#compare type "nfs" operator="=="}}
+  local.vm.synced_folder "{{from}}", "{{to}}", owner: nil, group: nil, type: "{{type}}"
+  {{/compare}}
+  {{/each}}
+
+  {{#compare provider "virtualbox"}}
+  local.vm.provider "virtualbox" do |vb|
+    vb.gui = {{gui}}
+    vb.memory = {{memory}}
+    vb.cpus = {{cpu_count}}
+    vb.customize ['modifyvm', :id, '--name', "{{../../projectName}}"]
+  end
+  {{/compare}}
+  {{/with}}
+
+  local.vm.provision "shell" do |shell|
+      shell.path = "scripts/pre-puppet.sh"
+      shell.args = ['local']
+  end
+  local.vm.provision "puppet" do |puppet|
+     puppet.manifests_path = "puppet"
+     puppet.manifest_file  = "manifests"
+     puppet.hiera_config_path = "hiera.yaml"
+     puppet.options = "--parser=future --modulepath=/vagrant/puppet/modules"
+  end
+  local.vm.provision "shell", path: "scripts/post-puppet.sh"
+end
+
+

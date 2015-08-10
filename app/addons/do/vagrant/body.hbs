@@ -1,0 +1,37 @@
+config.vm.define "do", primary: false, autostart: false do |web|
+  unless Vagrant.has_plugin?("vagrant-digitalocean")
+    raise 'vagrant-digitalocean plugin is not installed!'
+  end
+
+  {{#with do.options}}
+  do.vm.box               = "dummy"
+  do.vm.hostname          = "{{server_name}}"
+  do.nfs.functional       = false
+  do.ssh.private_key_path = "{{private_key_path}}"
+  do.ssh.username         = "{{private_key_user}}"
+  {{#each synced_folders}}
+  do.vm.synced_folder "{{from}}", "{{to}}", owner: "{{owner}}", group: "{{group}}", type: "rsync"
+  {{/each}}
+
+  do.vm.provider :digital_ocean do |provider|
+    provider.token        = "{{token}}"
+    provider.image        = "{{distribution}}"
+    provider.region       = "{{data_center}}"
+    provider.size         = "{{server_size}}"
+    provider.ssh_key_name = "{{ssh_key_name}}"
+  end
+  {{/with}}
+
+  do.vm.provision "shell" do |shell|
+      shell.path = "scripts/pre-puppet.sh"
+      shell.args = ['remote']
+  end
+  do.vm.provision "puppet" do |puppet|
+     puppet.manifests_path = "puppet"
+     puppet.manifest_file  = "manifests"
+     puppet.hiera_config_path = "hiera.yaml"
+     puppet.options = "--parser=future --modulepath=~/.vstack/modules"
+  end
+  do.vm.provision "shell", path: "scripts/post-puppet.sh"
+end
+
