@@ -1,6 +1,6 @@
 if $users == undef { $users = hiera('users') }
 
-each( $users ) |$user| {
+each( $users['users'] ) |$user| {
   if ! defined(User[$user]) {
     user { $user:
       ensure     => present,

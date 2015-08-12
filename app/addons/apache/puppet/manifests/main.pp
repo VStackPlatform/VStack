@@ -1,21 +1,18 @@
 if $apache == undef { $apache = hiera('apache') }
 if $php == undef { $php = hiera('php', false) }
 
-class { 'apache':
-  ensure => $apache['install'] ? {
-    true => present,
-    default => absent
-  },
-  default_vhost => true,
-  mpm_module => $apache['options']['mpm'], #prefork event or worker
-  require => [
-    Apt::Source['trusty_multiverse'],
-    Apt::Source['trusty_multiverse_updates'],
-    Exec['apt_update']
-  ]
-}
-
 if ($apache['install'] == true) {
+
+  class { 'apache':
+    default_vhost => true,
+    mpm_module => $apache['options']['mpm'], #prefork event or worker
+    require => [
+      Apt::Source['trusty_multiverse'],
+      Apt::Source['trusty_multiverse_updates'],
+      Exec['apt_update']
+    ]
+  }
+
   if $php != false {
     if $apache['options']['mpm'] == 'prefork' {
       class { "apache::mod::php": }

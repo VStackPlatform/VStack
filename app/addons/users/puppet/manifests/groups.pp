@@ -1,6 +1,6 @@
-if $groups == undef { $groups = hiera('groups') }
+if $users == undef { $users = hiera('users') }
 
-each( $groups ) |$group| {
+each( $users['groups'] ) |$group| {
   if ! defined(Group[$group]) {
     group { $group:
       ensure => present
