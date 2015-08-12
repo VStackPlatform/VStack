@@ -591,12 +591,12 @@ function(Vagrant, env, app, Addon, mapping) {
 
         var nodes = [
             {
-                from: env.buildPath([nodePath, '01_apt.pp']),
-                to: env.buildPath([path, '01_apt.pp'])
+                from: env.buildPath([nodePath, 'core_apt.pp']),
+                to: env.buildPath([path, 'core_apt.pp'])
             },
             {
-                from: env.buildPath([nodePath, '02_bash.pp']),
-                to: env.buildPath([path, '02_bash.pp'])
+                from: env.buildPath([nodePath, 'core_bash.pp']),
+                to: env.buildPath([path, 'core_bash.pp'])
             }
         ];
 
