@@ -7,16 +7,18 @@ define([
     'lib/models/Vagrant',
     'lib/environment',
     'durandal/app',
-    'lib/Addon'
+    'lib/models/Addon',
+    'ko-mapping'
 ],
-function(Vagrant, env, app, Addon) {
+function(Vagrant, env, app, Addon, mapping) {
 
     var fs = require('fs');
     var q = require('q');
     var handlebars = require('handlebars');
     var ncp = require('ncp').ncp;
     var basePath = process.cwd();
-    var tplPath = basePath + env.pathSeparator() + 'templates';
+    var tplPath = env.buildPath([basePath,'templates']);
+    var addonPath = env.buildPath([basePath, 'app', 'addons']);
     var exec = require('child_process').exec;
     var rimraf = require('rimraf');
 
@@ -97,6 +99,19 @@ function(Vagrant, env, app, Addon) {
         return deferred.promise;
     };
 
+    var fetchTemplateData = function(tpl, data) {
+        var deferred = q.defer();
+        fs.readFile(tpl, function (err, source) {
+            if (err) {
+                deferred.reject(new Error(err));
+            } else {
+                var template = handlebars.compile(source.toString('utf8'));
+                deferred.resolve(template(data));
+            }
+        });
+        return deferred.promise;
+    };
+
     /**
      * Creates a file generated from a template using handlebars.
      * @param {string} tpl The path to the template.
@@ -105,21 +120,15 @@ function(Vagrant, env, app, Addon) {
      */
     var createFileFromTemplate = function(tpl, dest, data) {
         var deferred = q.defer();
-        fs.readFile(tpl, function (err, source) {
-            if (err) {
-                deferred.reject(new Error(err));
-            } else {
-                var template = handlebars.compile(source.toString('utf8'));
-                var doc = template(data);
-                fs.writeFile(dest, doc, function(err) {
-                    if (err) {
-                        deferred.reject(new Error(err));
-                    } else {
-                        console.log('created from template: ', dest);
-                        deferred.resolve(true);
-                    }
-                });
-            }
+        fetchTemplateData(tpl, data).then(function(tplData){
+            fs.writeFile(dest, tplData, function(err) {
+                if (err) {
+                    deferred.reject(new Error(err));
+                } else {
+                    console.log('created from template: ', dest);
+                    deferred.resolve(true);
+                }
+            });
         });
         return deferred.promise;
     };
@@ -166,7 +175,7 @@ function(Vagrant, env, app, Addon) {
     /**
      * Creates the main project directory.
      *
-     * @returns {bool}
+     * @returns {function}
      */
     ProjectBuilder.prototype.createProjectDirectory = function() {
         var deferred = q.defer();
@@ -202,46 +211,118 @@ function(Vagrant, env, app, Addon) {
         return deferred.promise;
     };
 
-    /**
-     * Creates the Vagrantfile for vagrant.
-     *
-     * @returns {bool}
-     */
-    ProjectBuilder.prototype.createVagrantFile = function() {
+    ProjectBuilder.prototype.getVagrantTemplates = function() {
         var deferred = q.defer();
+        var self = this;
+        var files = {
+            headers: [],
+            bodies: [],
+            footers: []
+        };
+        fetchTemplateData(env.buildPath([tplPath, 'vagrant', 'header.hbs']), {
+            version: 2,
+            minVersion: '1.7.3'
+        }).then(function(data) {
+            files.headers.push(data);
+            fetchTemplateData(env.buildPath([tplPath, 'vagrant', 'footer.hbs']), self.settings).then(function(data) {
+                files.footers.push(data);
+                Addon.findEnabled().then(function(addons) {
+                    var count = 0;
+                    addons.forEach(function(addon) {
+                        var vagrantPath = env.buildPath([addonPath, addon.name, 'vagrant']);
+                        fs.exists(vagrantPath, function (folderExists) {
+                            if (folderExists) {
+                                var headerFile = env.buildPath([vagrantPath, 'header.hbs']);
+                                fs.exists(headerFile, function(headerExists) {
+                                    if (headerExists) {
+                                        fetchTemplateData(headerFile, self.settings).then(function(data) {
+                                            files.headers.push(data);
+                                            count++;
+                                            if (addons.length * 3 == count) {
+                                                deferred.resolve(files);
+                                            }
+                                        });
+                                    } else {
+                                        count++;
+                                        if (addons.length * 3 == count) {
+                                            deferred.resolve(files);
+                                        }
+                                    }
+                                });
+                                var bodyFile = env.buildPath([vagrantPath, 'body.hbs']);
+                                fs.exists(bodyFile, function(bodyExists) {
+                                    if (bodyExists) {
+                                        fetchTemplateData(bodyFile, self.settings).then(function(data) {
+                                            files.bodies.push(data);
+                                            count++;
+                                            if (addons.length * 3 == count) {
+                                                deferred.resolve(files);
+                                            }
+                                        });
+                                    } else {
+                                        count++;
+                                        if (addons.length * 3 == count) {
+                                            deferred.resolve(files);
+                                        }
+                                    }
+                                });
+                                var footerFile = env.buildPath([vagrantPath, 'footer.hbs']);
+                                fs.exists(footerFile, function(footerExists) {
+                                    if (footerExists) {
+                                        files.footers.push(footerFile);
+                                        fetchTemplateData(footerFile, self.settings).then(function(data) {
+                                            files.footers.push(data);
+                                            count++;
+                                            if (addons.length * 3 == count) {
+                                                deferred.resolve(files);
+                                            }
+                                        });
+                                    } else {
+                                        count++;
+                                        if (addons.length * 3 == count) {
+                                            deferred.resolve(files);
+                                        }
+                                    }
+                                });
 
-        Addon.findEnabled().then(function(addons) {
-            addons.forEach(function(addon) {
-
+                            } else {
+                                count += 3; //Add on three to account for the three checks above.
+                            }
+                        });
+                    });
+                });
             });
         });
 
-        var vagrantTpl = tplPath + env.pathSeparator() + 'Vagrantfile';
-        var vagrantPath = this.fullPath + env.pathSeparator() + 'Vagrantfile';
+        return deferred.promise;
+    };
+
+    /**
+     * Creates the Vagrantfile for vagrant.
+     *
+     * @returns {function}
+     */
+    ProjectBuilder.prototype.createVagrantFile = function() {
+        var deferred = q.defer();
+        var vagrantPath = env.buildPath([this.fullPath, 'Vagrantfile']);
         var self = this;
-
-        //Select the template according to the type selected and any extra settings needed.
-        switch (this.settings.target.type) {
-            case 'do':
-                vagrantTpl += '-do';
-                break;
-            case 'locally':
-            default:
-                vagrantTpl += '-local';
-                break;
-        }
-
         self.settings.projectName = this.projectName;
 
-        //Create Vagrantfile from template.
-        createFileFromTemplate(vagrantTpl, vagrantPath, self.settings).then(
-            function(success) {
-                deferred.resolve(success);
-            },
-            function(err) {
-                deferred.reject(new Error(err));
-            }
-        );
+        this.getVagrantTemplates().then(function(files) {
+            var vagrantFile = '';
+            vagrantFile += files.headers.join("\n") + "\n";
+            vagrantFile += files.bodies.join("\n") + "\n";
+            vagrantFile += files.footers.join("\n") + "\n";
+            fs.writeFile(vagrantPath, vagrantFile, function(err) {
+                if (err) {
+                    deferred.reject(new Error(err));
+                } else {
+                    console.log('created Vagrantfile..');
+                    deferred.resolve(true);
+                }
+            });
+
+        }.bind(this));
 
         return deferred.promise;
     };
@@ -254,17 +335,23 @@ function(Vagrant, env, app, Addon) {
      */
     ProjectBuilder.prototype.removeNodesFolder = function(path) {
         var deferred = q.defer();
-        forceRemoveDirectory(path + env.pathSeparator() + 'manifests')
-            .then(function() {
-                deferred.resolve(path);
-            });
+        try {
+            console.log('removing old nodes...');
+            forceRemoveDirectory(path + env.pathSeparator() + 'manifests')
+                .then(function() {
+                    deferred.resolve(path);
+                });
+        } catch (e) {
+            console.error(e);
+            deferred.reject(e);
+        }
         return deferred.promise;
     };
 
     /**
      * Creates the puppet file structure.
      *
-     * @returns {bool}
+     * @returns {function}
      */
     ProjectBuilder.prototype.createPuppetFiles = function() {
         var deferred = q.defer();
@@ -282,7 +369,7 @@ function(Vagrant, env, app, Addon) {
         .then(function(path) {
             return q.all([
                 self.createLibrarianFile(path),
-                buildDirectory(path + env.pathSeparator() + 'manifests')
+                buildDirectory(env.buildPath([path, 'manifests']))
                     .then(function(path) {
                         return self.copyNodes(path);
                     }),
@@ -302,18 +389,51 @@ function(Vagrant, env, app, Addon) {
      * @returns {*|promise}
      */
     ProjectBuilder.prototype.createLibrarianFile = function(path) {
+
         var deferred = q.defer();
 
-        var data = {
-            modules: [
-                { mod: 'puppetlabs/puppetlabs-stdlib', tag: '4.6.0' },
-                { mod: 'puppetlabs/puppetlabs-ntp', tag: '3.3.0' },
-                { mod: 'puppetlabs/puppetlabs-apt', tag: '2.0.1' },
-                { mod: 'maestrodev/puppet-rvm', tag: 'v1.12.0' },
-                { mod: 'dhoppe/puppet-bash', tag: '1.0.4' },
-                { mod: 'damiandennis/vstack', tag: '0.0.2' }
-            ]
-        };
+        console.log('creating librarian file...');
+        try {
+            var libraryTpl = env.buildPath([tplPath, 'puppet', 'Puppetfile']);
+            var libraryPath = env.buildPath([path, 'Puppetfile']);
+            var data = {
+                modules: [
+                    { mod: 'puppetlabs/puppetlabs-stdlib', tag: '4.6.0' },
+                    { mod: 'puppetlabs/puppetlabs-ntp', tag: '3.3.0' },
+                    { mod: 'puppetlabs/puppetlabs-apt', tag: '2.0.1' },
+                    { mod: 'maestrodev/puppet-rvm', tag: 'v1.12.0' },
+                    { mod: 'dhoppe/puppet-bash', tag: '1.0.4' },
+                    { mod: 'damiandennis/vstack', tag: '0.0.2' }
+                ]
+            };
+
+            Addon.findEnabled().then(function(addons) {
+                addons.forEach(function(addon) {
+
+                    console.log(addon.modules);
+                    addon.modules.forEach(function(module) {
+                        data.modules.push(module);
+                    });
+                });
+
+                console.log('data:', data);
+
+                //Create Puppetfile from template.
+                createFileFromTemplate(libraryTpl, libraryPath, data).then(
+                    function(success) {
+                        deferred.resolve(success);
+                    },
+                    function(err) {
+                        deferred.reject(new Error(err));
+                    }
+                );
+            });
+        } catch (e) {
+           console.error(e);
+           deferred.reject(e);
+        }
+
+        /*
         if (this.settings.webServer.apache) {
             data.modules.push({ mod: 'puppetlabs/puppetlabs-apache', tag: '1.5.0' });
         }
@@ -335,21 +455,7 @@ function(Vagrant, env, app, Addon) {
         if (this.settings.database.redis) {
             data.modules.push({ mod: 'echocat/puppet-redis', tag: 'v1.6.0' });
         }
-
-        var libraryTpl = tplPath + env.pathSeparator() + 'puppet' + env.pathSeparator() + 'Puppetfile';
-        var libraryPath = path + env.pathSeparator() + 'Puppetfile';
-
-        //Create Puppetfile from template.
-        createFileFromTemplate(libraryTpl, libraryPath, data).then(
-            function(success) {
-                deferred.resolve(success);
-            },
-            function(err) {
-                deferred.reject(new Error(err));
-            }
-        );
-
-
+        */
         return deferred.promise;
     };
 
@@ -389,6 +495,24 @@ function(Vagrant, env, app, Addon) {
             var configData = {
                 projectName: this.projectName
             };
+            Addon.findEnabled().then(function(addons) {
+                addons.forEach(function(addon) {
+                    if (this.settings[addon.name] == undefined) {
+                        this.settings[addon.name] = mapping.toJS(addon.data());
+                    }
+                }.bind(this));
+                $.extend(configData, this.settings);
+                fs.writeFile(configPath, JSON.stringify(configData, null, 4), function (err) {
+                    if (err) {
+                        deferred.reject(new Error(err));
+                    } else {
+                        console.log('created config file...');
+                        deferred.resolve(true);
+                    }
+                });
+            }.bind(this));
+
+            /*
             if (this.settings.system.packages.length > 0) {
                 configData.packages = this.settings.system.packages;
             }
@@ -452,13 +576,8 @@ function(Vagrant, env, app, Addon) {
                 configData.nodejs = this.settings.language.nodejs_options;
             }
             configData.ruby = this.settings.language.ruby_options;
-            fs.writeFile(configPath, JSON.stringify(configData, null, 4), function (err) {
-                if (err) {
-                    deferred.reject(new Error(err));
-                } else {
-                    deferred.resolve(true);
-                }
-            });
+            */
+
         } catch (err) {
             deferred.reject(err);
         }
@@ -467,67 +586,69 @@ function(Vagrant, env, app, Addon) {
 
     ProjectBuilder.prototype.copyNodes = function(path) {
         var deferred = q.defer();
+        var nodePath = env.buildPath([tplPath, 'puppet', 'manifests']);
+        var count = 0;
 
         var nodes = [
-            '01_apt.pp',
-            '02_bash.pp',
-            '06_ruby.pp'
+            {
+                from: env.buildPath([nodePath, '01_apt.pp']),
+                to: env.buildPath([path, '01_apt.pp'])
+            },
+            {
+                from: env.buildPath([nodePath, '02_bash.pp']),
+                to: env.buildPath([path, '02_bash.pp'])
+            }
         ];
 
-        if (this.settings.system.users.length > 0) {
-            nodes.push(['03_users.pp']);
-        }
-
-        if (this.settings.system.groups.length > 0) {
-            nodes.push(['04_groups.pp']);
-        }
-
-        if (this.settings.system.packages.length > 0) {
-            nodes.push(['05_packages.pp']);
-        }
-
-        if (this.settings.language.php) {
-            nodes.push(['09_php.pp']);
-            if (this.settings.language.php_options.composer == 1) {
-                nodes.push(['10_composer.pp']);
-            }
-        }
-
-        if (this.settings.language.nodejs) {
-            nodes.push(['12_nodejs.pp']);
-        }
-
-        if (this.settings.webServer.apache) {
-            nodes.push(['07_apache.pp']);
-        }
-
-        if (this.settings.webServer.nginx) {
-            nodes.push(['08_nginx.pp']);
-        }
-
-        if (this.settings.database.mysql) {
-            nodes.push(['11_mysql.pp']);
-        }
-
-        if (this.settings.database.redis) {
-            nodes.push(['13_redis.pp']);
-        }
-
-        var nodePath = [tplPath, 'puppet', 'manifests'].join(env.pathSeparator());
-        var count = 0;
-        for (var i in nodes) {
-            copyFile(nodePath + env.pathSeparator() + nodes[i], path + env.pathSeparator() + nodes[i]).then(
-                function(success) {
-                    count++;
-                    if (count == nodes.length) {
-                        deferred.resolve(success);
+        Addon.findEnabled().then(function(addons) {
+            var addonDeferred = q.defer();
+            var addonCount = 0;
+            addons.forEach(function(addon) {
+                var manifestsPath = env.buildPath([addonPath, addon.name, 'puppet', 'manifests']);
+                fs.exists(manifestsPath, function(exists) {
+                    if (exists) {
+                        fs.readdir(manifestsPath, function(err, files) {
+                            if (err) {
+                                console.error(err);
+                            }
+                            files.forEach(function(file) {
+                                nodes.push({
+                                    from: env.buildPath([manifestsPath, file]),
+                                    to: env.buildPath([path, addon.name + '_' + file])
+                                });
+                            });
+                            addonCount++;
+                            if (addonCount == addons.length) {
+                                addonDeferred.resolve(true);
+                            }
+                        })
+                    } else {
+                        addonCount++;
+                        if (addonCount == addons.length) {
+                            addonDeferred.resolve(true);
+                        }
                     }
-                },
-                function(err) {
-                    deferred.reject(new Error(err));
-                }
-            );
-        }
+                });
+            });
+            if (addons.length == 0) {
+                addonDeferred.resolve(true);
+            }
+            return addonDeferred.promise;
+        }).then(function() {
+            for (var i in nodes) {
+                copyFile(nodes[i].from, nodes[i].to).then(
+                    function(success) {
+                        count++;
+                        if (count == nodes.length) {
+                            deferred.resolve(success);
+                        }
+                    },
+                    function(err) {
+                        deferred.reject(new Error(err));
+                    }
+                );
+            }
+        });
 
         return deferred.promise;
     };

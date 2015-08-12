@@ -28,9 +28,6 @@ define([
                                     }
                                 }
                             }, this);
-                            this.toJSON = function() {
-                                return mapping.toJS(this);
-                            };
                         };
                     }
                 }

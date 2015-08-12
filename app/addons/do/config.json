@@ -4,6 +4,7 @@
   "type": "Target",
   "priority": 2,
   "data": {
+    "install": false,
     "options": {
       "distribution": "ubuntu/trusty64",
       "server_size": "512mb",

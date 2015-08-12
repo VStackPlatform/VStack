@@ -1,4 +1,10 @@
-define(['ko-mapping', 'addons/nginx/lib/models/Location', 'knockout'], function(mapping, Location, ko) {
+define([
+    'ko-mapping',
+    'addons/nginx/lib/models/Location',
+    'knockout',
+    'addons/nginx/lib/models/Directive'
+],
+function(mapping, Location, ko, Directive) {
     var Server = function(data) {
 
         var jsonMap = {
@@ -27,10 +33,7 @@ define(['ko-mapping', 'addons/nginx/lib/models/Location', 'knockout'], function(
          *
          */
         this.addDirective = function() {
-            this.directives.push({
-                directive: ko.observableArray([]),
-                value: ''
-            });
+            this.directives.push(new Directive());
         }.bind(this);
 
         /**

@@ -1,4 +1,4 @@
-config.vm.define "local", primary: false, autostart: false do |web|
+config.vm.define "local", primary: false, autostart: false do |local|
   {{#with local.options}}
   local.vm.box = "{{distribution}}"
   local.vm.network "private_network", ip: "{{ip}}"

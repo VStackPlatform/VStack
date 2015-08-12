@@ -8,11 +8,11 @@
         <!-- /ko -->
     </div>
 </div>
-<h2 class="radio radio-success large">
-    <input id="locally" data-bind="checked: target" type="radio" value="locally" />
+<h2 class="checkbox checkbox-success large">
+    <input id="locally" data-bind="checked: data().install" type="checkbox" value="locally" />
     <label for="locally">Deploy Locally</label>
 </h2>
-<div data-bind="visible: target() == 'locally', with: data().options">
+<div data-bind="visible: data().install, with: data().options">
     <div class="row">
         <div class="form-group col-lg-6">
             <label for="provider-virtualbox">Select a provider:</label>

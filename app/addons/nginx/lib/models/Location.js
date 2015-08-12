@@ -1,4 +1,9 @@
-define(['knockout', 'ko-mapping'], function(ko, mapping) {
+define([
+    'knockout',
+    'ko-mapping',
+    'addons/nginx/lib/models/Directive'
+],
+function(ko, mapping, Directive) {
 
     var Location = function(data) {
 
@@ -13,10 +18,7 @@ define(['knockout', 'ko-mapping'], function(ko, mapping) {
          *
          */
         this.addDirective = function() {
-            this.directives.push({
-                directive: ko.observableArray(),
-                value: ''
-            });
+            this.directives.push(new Directive());
         }.bind(this);
 
         /**

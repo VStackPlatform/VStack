@@ -20,10 +20,6 @@ define([
             }
         }, this);
 
-        this.toJSON = function() {
-            return mapping.toJS(this);
-        };
-
         /**
          * Add a new server.
          */
@@ -56,6 +52,7 @@ define([
         this.removeStream = function(model) {
             this.upstreams.remove(model);
         }.bind(this);
+
     };
     return Site;
 });

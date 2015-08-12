@@ -4,11 +4,8 @@
   "route": "firewall",
   "type": "System",
   "priority": 5,
-  "modules": {
-    "puppetlabs/puppetlabs-firewall": {
-      "git": "https://github.com/puppetlabs/puppetlabs-firewall.git",
-      "ref": "1.6"
-    }
-  },
+  "modules": [
+    { "mod": "puppetlabs/puppetlabs-firewall", "tag": "1.7.0" }
+  ],
   "data" : {}
 }

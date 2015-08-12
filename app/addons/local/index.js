@@ -14,16 +14,6 @@ function(router, ko, $, vb, postbox, env, Addon) {
             init: function () {
                 this._super('local');
                 this.enableLiveUpdates();
-
-                this.target = ko.computed({
-                    read: function () {
-                        return this.project().settings().target();
-                    },
-                    write: function (val) {
-                        this.project().settings().target(val);
-                    }
-                }, this);
-
                 this.addForwardPort = function () {
                     this.data().options.forward_ports.push({host: '', vm: ''});
                 }.bind(this);

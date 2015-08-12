@@ -4,6 +4,7 @@
   "type": "Target",
   "priority": 1,
   "data": {
+    "install": true,
     "options": {
       "provider": "virtualbox",
       "distribution": "ubuntu/trusty64",

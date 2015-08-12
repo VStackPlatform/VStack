@@ -94,14 +94,8 @@ function(ko, validation, mapping, Vagrant, env, vb) {
             var settings = {};
             if (data.settings !== undefined) {
                 mapping.fromJS(mapping.fromJSON(data.settings), jsonMap, settings);
-            } else {
-                settings.target = ko.observable('locally');
             }
             this.settings = ko.observable(settings);
-
-            this.targetMachine = ko.computed(function () {
-                return this.settings().target() == 'locally' ? 'Virtualbox' : 'Digital Ocean';
-            }, this);
 
 
             this.name.extend({
@@ -109,16 +103,6 @@ function(ko, validation, mapping, Vagrant, env, vb) {
                 nameExists: {
                     onlyIf: function () {
                         return this.isNewRecord == 1;
-                    }.bind(this)
-                },
-                vbExists: {
-                    onlyIf: function () {
-                        if (this.isNewRecord == 1) {
-                            return this.settings().target() == 'locally' &&
-                                this.targetMachine() == 'Virtualbox';
-                        } else {
-                            return false;
-                        }
                     }.bind(this)
                 }
             });
@@ -222,8 +206,8 @@ function(ko, validation, mapping, Vagrant, env, vb) {
         }.bind(this));
     };
 
-    Project.prototype.up = function() {
-        switch (this.targetMachine()) {
+    Project.prototype.up = function(machine) {
+        switch (machine) {
             case 'Digital Ocean':
                 vagrant.installPlugin('vagrant-digitalocean', this.fullPath(), function() {
                     vagrant.addBox(

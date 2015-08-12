@@ -13,15 +13,6 @@ function(router, ko, $, postbox, Addon) {
 
             this.enableLiveUpdates();
 
-            this.target = ko.computed({
-                read: function() {
-                    return this.project().settings().target();
-                },
-                write: function(val) {
-                    this.project().settings().target(val);
-                }
-            }, this);
-
             this.addSyncedFolder = function() {
                 this.data().options.synced_folders.push({
                     from: '',

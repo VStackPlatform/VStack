@@ -1,13 +1,15 @@
-define(['knockout', 'ko-mapping'], function(ko, mapping) {
+define([
+    'knockout',
+    'ko-mapping',
+    'addons/nginx/lib/models/Directive'
+],
+function(ko, mapping, Directive) {
     var Stream = function(data) {
 
         mapping.fromJS({
             upstream_name: '',
             directives: [
-                {
-                    directive: ['server'],
-                    value: '127.0.0.1:9000'
-                }
+                new Directive('server 127.0.0.1:9000')
             ]
         }, {}, this);
         mapping.fromJS(data, {}, this);
@@ -17,10 +19,7 @@ define(['knockout', 'ko-mapping'], function(ko, mapping) {
          *
          */
         this.addDirective = function() {
-            this.directives.push({
-                directive: ko.observableArray([]),
-                value: ''
-            });
+            this.directives.push(new Directive());
         }.bind(this);
 
         /**

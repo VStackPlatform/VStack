@@ -135,8 +135,13 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
              * Save back to main project on change.
              */
             ko.computed(function () {
-                ko.toJS(this.data()); //Needed to trigger change as mapping does not trigger on sub changes but is need for conversion.
-                this.project.peek().settings.peek()[this.name] = mapping.toJS(this.data(), {}); // Block change on project.
+                /*
+                 * Need to convert using ko.toJSON first to allow model override using this.toJSON.
+                 * ko.toJSON is also needed to trigger this computed variable as mapping does not do that.
+                 * mapping.toJS removes the mapping data.
+                 */
+                var data = JSON.parse(ko.toJSON(this.data()));
+                this.project.peek().settings.peek()[this.name] = mapping.toJS(data, {}); // Block change on project.
                 console.log(this.project.peek().settings.peek());
             }, this);
         }
