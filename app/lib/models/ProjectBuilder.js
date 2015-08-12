@@ -409,14 +409,10 @@ function(Vagrant, env, app, Addon, mapping) {
 
             Addon.findEnabled().then(function(addons) {
                 addons.forEach(function(addon) {
-
-                    console.log(addon.modules);
                     addon.modules.forEach(function(module) {
                         data.modules.push(module);
                     });
                 });
-
-                console.log('data:', data);
 
                 //Create Puppetfile from template.
                 createFileFromTemplate(libraryTpl, libraryPath, data).then(
@@ -433,29 +429,6 @@ function(Vagrant, env, app, Addon, mapping) {
            deferred.reject(e);
         }
 
-        /*
-        if (this.settings.webServer.apache) {
-            data.modules.push({ mod: 'puppetlabs/puppetlabs-apache', tag: '1.5.0' });
-        }
-        if (this.settings.webServer.nginx) {
-            data.modules.push({ mod: 'damiandennis/pp-nginx', tag: 'a09be7bd607582bf2e53e93ec9b2f628c1ed2f07' });
-        }
-        if (this.settings.language.php) {
-            data.modules.push({ mod: 'damiandennis/puppet-php', tag: '2.0.24' });
-            if (this.settings.language.php_options.mpm != 'prefork') {
-                data.modules.push({mod: 'Slashbunny/puppet-phpfpm', tag: '0c268a93cc1f3415016a7008c0c0814ed28fa450'});
-            }
-            if (this.settings.language.php_options.composer == 1) {
-                data.modules.push({ mod: 'tPl0ch/puppet-composer', tag: '1.3.6' });
-            }
-        }
-        if (this.settings.database.mysql) {
-            data.modules.push({ mod: 'puppetlabs/puppetlabs-mysql', tag: '3.3.0' });
-        }
-        if (this.settings.database.redis) {
-            data.modules.push({ mod: 'echocat/puppet-redis', tag: 'v1.6.0' });
-        }
-        */
         return deferred.promise;
     };
 
@@ -511,72 +484,6 @@ function(Vagrant, env, app, Addon, mapping) {
                     }
                 });
             }.bind(this));
-
-            /*
-            if (this.settings.system.packages.length > 0) {
-                configData.packages = this.settings.system.packages;
-            }
-            if (this.settings.system.users.length > 0) {
-                configData.packages = this.settings.system.users;
-            }
-            if (this.settings.system.groups.length > 0) {
-                configData.packages = this.settings.system.groups;
-            }
-            if (this.settings.webServer.apache == 1) {
-                configData.apache = this.settings.webServer.apache_options;
-            }
-            if (this.settings.webServer.nginx == 1) {
-                try {
-                    var nginx_data = this.settings.webServer.nginx_options;
-                    // Need to put content in format for nginx puppet configuration.
-                    // TODO: change puppet module to suit per directive instead of block of code.
-                    nginx_data.sites.forEach(function (site, sitekey) {
-                        site.upstreams.forEach(function (server, key) {
-                            var directives = [];
-                            server.directives.forEach(function (directive) {
-                                directives.push(directive.directive[0] + ' ' + directive.value);
-                            });
-                            nginx_data.sites[sitekey].upstreams[key].directives = directives;
-                        });
-                        site.servers.forEach(function (server, key) {
-                            var directives = [];
-                            directives.push('server_name ' + server.server_name);
-                            directives.push('listen ' + server.listen);
-                            server.directives.forEach(function (directive) {
-                                directives.push(directive.directive[0] + ' ' + directive.value);
-                            });
-                            nginx_data.sites[sitekey].servers[key].directives = directives;
-                            server.locations.forEach(function (location, index) {
-                                if (location.directives !== undefined) {
-                                    var location_directives = [];
-                                    location.directives.forEach(function (l_directive) {
-                                        location_directives.push(l_directive.directive[0] + ' ' + l_directive.value);
-                                    });
-                                    nginx_data.sites[sitekey].servers[key].locations[index].directives = location_directives;
-                                }
-                            });
-                        });
-                    });
-                    configData.nginx = nginx_data;
-                } catch (e) {
-                    console.error(e);
-                    console.error(e.stack);
-                }
-            }
-            if (this.settings.database.mysql == 1) {
-                configData.mysql = this.settings.database.mysql_options;
-            }
-            if (this.settings.database.redis == 1) {
-                configData.redis = this.settings.database.redis_options;
-            }
-            if (this.settings.language.php == 1) {
-                configData.php = this.settings.language.php_options;
-            }
-            if (this.settings.language.nodejs == 1) {
-                configData.nodejs = this.settings.language.nodejs_options;
-            }
-            configData.ruby = this.settings.language.ruby_options;
-            */
 
         } catch (err) {
             deferred.reject(err);
