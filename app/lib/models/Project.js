@@ -53,9 +53,6 @@ function(ko, validation, mapping, Vagrant, env, vb) {
             this.id = ko.observable(data.id || undefined);
 
             this._db = db;
-            this._db.transaction(function (tx) {
-                tx.executeSql("CREATE TABLE IF NOT EXISTS project (name, path, settings, version)");
-            });
             this.name = ko.observable(data.name || undefined);
             this.path = ko.observable(data.path || undefined).extend({
                 required: true
