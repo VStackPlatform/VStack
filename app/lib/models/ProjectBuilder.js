@@ -374,11 +374,15 @@ function(Vagrant, env, app, Addon, mapping) {
                         return self.copyNodes(path);
                     }),
                 buildDirectory(path + env.pathSeparator() + 'modules')
-            ])
+            ]).catch(function(err){
+                console.error(err);
+            });
         })
         .then(function() {
             deferred.resolve(true);
-        }));
+        })).catch(function(err) {
+            console.error(err);
+        });
         return deferred.promise;
     };
 

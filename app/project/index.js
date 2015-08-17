@@ -34,11 +34,21 @@ function(router, ko, validation, Project, ProjectBuilder, Header, SideNav, mappi
                 .then(
                 function () {
                     return q.all([
-                        builder.copyHiera(),
-                        builder.createVagrantFile(),
-                        builder.createPuppetFiles(),
-                        builder.copyFiles()
-                    ]);
+                        builder.copyHiera().catch(function(err) {
+                            console.error(err);
+                        }),
+                        builder.createVagrantFile().catch(function(err) {
+                            console.error(err);
+                        }),
+                        builder.createPuppetFiles().catch(function(err) {
+                            console.error(err);
+                        }),
+                        builder.copyFiles().catch(function(err) {
+                            console.error(err);
+                        })
+                    ]).catch(function(err) {
+                        console.error(err);
+                    });
                 },
                 function (err) {
                     throw new Error(err);

@@ -7,5 +7,19 @@
   "modules": [
     { "mod": "puppetlabs/puppetlabs-firewall", "tag": "1.7.0" }
   ],
-  "data" : {}
+  "data" : {
+    "install": true,
+    "options": {
+      "rules": [
+        {
+          "ports": [22],
+          "priority": 1,
+          "tcp": true,
+          "udp": true,
+          "icmp": true,
+          "action": "accept"
+        }
+      ]
+    }
+  }
 }

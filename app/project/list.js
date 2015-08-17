@@ -5,7 +5,8 @@ define([
     'lib/models/Project',
     'ko-postbox',
     'ko-mapping',
-    'lib/models/Vagrant'
+    'lib/models/Vagrant',
+    'lib/models/Addon'
 ], function(
     router,
     shell,
@@ -13,15 +14,18 @@ define([
     Project,
     postbox,
     mapping,
-    Vagrant
+    Vagrant,
+    Addon
 ) {
     try {
+
         var project = new Project();
         var vagrant = new Vagrant();
 
         var obj = {
             loading: ko.observable(true),
             projects: ko.observableArray(),
+            targets: ko.observableArray(),
             activate: function () {
                 project.findAll().then(function (results) {
                     obj.projects(results);
@@ -36,6 +40,9 @@ define([
                     console.error(error);
                 }).then(function() {
                     obj.loading(false);
+                });
+                Addon.findByType('Target', false).then(function(targets) {
+                    obj.targets(targets);
                 });
             },
             copyProject: function (model, event) {
@@ -59,6 +66,7 @@ define([
                 });
             }
         };
+
 
         obj.commandRunning = ko.observable().syncWith('vagrant.commandRunning', true);
 

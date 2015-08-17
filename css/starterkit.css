@@ -74,17 +74,17 @@ div.jumbo {
     margin-left: 5px;
 }
 
-.list-inline .radio {
+.list-inline .radio, .list-inline .checkbox {
     position: static;
     margin-left: 0;
 }
 
-.list-inline .radio input[type=radio] {
+.list-inline .radio input[type=radio], .list-inline .checkbox input[type=checkbox] {
     position: static;
     margin-left: 0;
 }
 
-.list-inline .radio label {
+.list-inline .radio label, .list-inline .checkbox label {
     padding-left: 5px;
 }
 

@@ -1,4 +1,4 @@
-<div>
+<div class="row">
     <div class="col-lg-12">
         <!-- ko if: $data.prev -->
         <a class="btn btn-default pull-left" data-bind="click: prev">&laquo; Prev</a>
@@ -7,4 +7,64 @@
         <a class="btn btn-default pull-right" data-bind="click: next">Next &raquo;</a>
         <!-- /ko -->
     </div>
+</div>
+<h2 class="checkbox checkbox-success large">
+    <input id="firewall" data-bind="checked: data().install" type="checkbox" value="firewall" />
+    <label for="firewall">Install Firewall</label>
+</h2>
+<div data-bind="visible: data().install, with: data().options">
+    <!-- ko foreach: rules -->
+    <div class="panel clearfix">
+        <div class="clearfix" style="margin: 5px 5px 0 5px">
+            <a data-bind="click: $root.removeRule"><i class="fa fa-times pull-right"></i></a>
+        </div>
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label>Ports</label>
+                    <input type="text" class="form-control" data-bind="select2val: ports, select2: ports_config" />
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Priority</label>
+                    <input type="number" class="form-control" data-bind="value: priority" placeholder="Set the priority of this rule." />
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label>Protocol</label>
+                    <ul class="list-inline">
+                        <li class="checkbox checkbox-success">
+                            <input type="checkbox" value="tcp" data-bind="attr: { id: 'tcp' + $index() }, checked: tcp" />
+                            <label data-bind="attr: { for: 'tcp' + $index() }">TCP</label>
+                        </li>
+                        <li class="checkbox checkbox-success">
+                            <input type="checkbox" value="udp" data-bind="attr: { id: 'udp' + $index() }, checked: udp" />
+                            <label data-bind="attr: { for: 'udp' + $index() }">UDP</label>
+                        </li>
+                        <li class="checkbox checkbox-success">
+                            <input type="checkbox" value="udp" data-bind="attr: { id: 'icmp' + $index() }, checked: icmp" />
+                            <label data-bind="attr: { for: 'icmp' + $index() }">ICMP</label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Action</label>
+                    <ul class="list-inline">
+                        <li class="radio radio-success">
+                            <input type="radio" name="action" data-bind="attr: { id: 'accept' + $index(), name: 'action' + $index() }, checked: action" value="accept" />
+                            <label data-bind="attr: { for: 'accept' + $index() }">Accept</label>
+                        </li>
+                        <li class="radio radio-success">
+                            <input type="radio" name="action" data-bind="attr: { id: 'drop' + $index(), name: 'action' + $index() }, checked: action" value="drop" />
+                            <label data-bind="attr: { for: 'drop' + $index() }">Drop</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+
+    <a class="btn btn-sm btn-default pull-right" data-bind="click: $parent.addRule"><i class="fa fa-plus"></i>  Add rule</a>
 </div>

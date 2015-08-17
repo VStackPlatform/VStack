@@ -33,7 +33,18 @@
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
                             <!-- ko if: !$parent.commandRunning() -->
-                            <li><a data-bind="click: up">Up</a></li>
+                            <li>
+                                <a data-bind="click: up">Up</a>
+                                <ul class="dropdown-menu">
+                                    <!-- ko foreach: $root.targets -->
+
+                                    <li><a href="#" data-bind="text: ko.toJSON($parent.settings())"></a></li>
+                                    <!-- ko if: $parent.settings()[$data.name] !== undefined && $parent.settings()[name]['install'] == true -->
+                                        <li><a href="#" data-bind="text: $parent.settings()[$data.name]"></a></li>
+                                    <!-- /ko -->
+                                    <!-- /ko -->
+                                </ul>
+                            </li>
                             <li><a data-bind="click: provision">Provision</a></li>
                             <li><a data-bind="click: reload">Reload</a></li>
                             <li><a data-bind="click: halt">Halt</a></li>

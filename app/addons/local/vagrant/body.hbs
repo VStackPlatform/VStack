@@ -12,7 +12,14 @@ config.vm.define "local", primary: false, autostart: false do |local|
   local.vm.synced_folder "{{from}}", "{{to}}", owner: "{{owner}}", group: "{{group}}"{{#compare type "default" operator="!="}}, type: "{{type}}"{{/compare}}
   {{/compare}}
   {{#compare type "nfs" operator="=="}}
-  local.vm.synced_folder "{{from}}", "{{to}}", owner: nil, group: nil, type: "{{type}}"
+  local.nfs.map_uid = Process.uid
+  local.nfs.map_gid = Process.gid
+  local.vm.synced_folder "{{from}}", "{{to}}",
+    :nfs => true,
+    :linux__nfs_options => ["no_root_squash", "rw", "subtree_check"]
+  if Vagrant.has_plugin?("vagrant-bindfs")
+    local.bindfs.bind_folder "/var/www", "/var/www"
+  end
   {{/compare}}
   {{/each}}
 

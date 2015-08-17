@@ -33,7 +33,8 @@ define([
     'lib/taskMenu',
     'extensions/asyncComputed',
     'ko-es5'
-], function (system, app, viewLocator, vstack) {
+],
+function (system, app, viewLocator, vstack) {
 
     vstack.createTables();
 

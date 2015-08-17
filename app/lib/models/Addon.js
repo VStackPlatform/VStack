@@ -147,7 +147,8 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
         }
     });
 
-    var find = function(condition) {
+    var find = function(condition, model) {
+        model = model == undefined ? true : model;
         var deferred = q.defer();
         var sql = 'SELECT a.rowid as id,a.*,t.priority AS t_priority FROM addon a LEFT JOIN type t ON a.type = t.name';
         condition = condition || [];
@@ -162,8 +163,12 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
             tx.executeSql(sql, [], function (tx, results) {
                 var len = results.rows.length, i, data = [];
                 for (i = 0; i < len; i++) {
-                    var row = results.rows.item(i);
-                    var addon = new Addon(row);
+                    var row = results.rows.item(i), addon;
+                    if (model) {
+                        addon = new Addon(row);
+                    } else {
+                        addon = row;
+                    }
                     data.push(addon);
                 }
                 deferred.resolve(data);
@@ -183,9 +188,10 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
         return deferred.promise;
     };
 
-    Addon.findByType = function(type) {
+    Addon.findByType = function(type, model) {
+        var model = model == undefined ? true : model;
         var deferred = q.defer();
-        find(['type="'+type+'"']).then(function(data) {
+        find(['type="'+type+'"'], model).then(function(data) {
             deferred.resolve(data);
         });
         return deferred.promise;
