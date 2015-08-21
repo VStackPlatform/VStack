@@ -58,7 +58,7 @@ fi
 
 gem list -i librarian-puppet > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    gem install librarian-puppet -v 2.0.1
+    gem install librarian-puppet -v 2.2.1
 fi
 
 if [ ! -d ~/.vstack ]; then
@@ -84,6 +84,9 @@ if [ ! -f ~/.vstack/puppetmd5 ] || ! grep -Fxq $puppetMD5 ~/.vstack/puppetmd5 ||
     fi
     rm -rf modules/*
     librarian-puppet install --verbose
+    if [ $? -eq 1 ];then
+        exit 1
+    fi
     rm -rf ~/.vstack/install_running
 fi
 
