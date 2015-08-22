@@ -40,6 +40,7 @@ apt-get update --fix-missing
 #required if puppet not installed (Digital Ocean)
 if [ $PUPPET_INSTALLED -ne 0 ] || [ $PUPPET_RELEASE != "3.8" ]; then
     apt-get install --assume-yes puppet
+    sed -i 's/templatedir=\$confdir\/templates//g' /etc/puppet/puppet.conf
 fi
 
 #required for librarian-puppet but not installed.

@@ -4,9 +4,10 @@ define([
     'ko-mapping',
     'lib/models/Vagrant',
     'lib/environment',
-    'lib/virtualBox'
+    'lib/virtualBox',
+    'lib/models/Addon'
 ],
-function(ko, validation, mapping, Vagrant, env, vb) {
+function(ko, validation, mapping, Vagrant, env, vb, Addon) {
 
     var db = openDatabase('vstack', '1.0', 'VStack', 2 * 1024 * 1024);
     var q = require('q');
@@ -86,14 +87,11 @@ function(ko, validation, mapping, Vagrant, env, vb) {
                 return this.path() + env.pathSeparator() + this.name();
             }, this);
 
-            var jsonMap = {};
-
             var settings = {};
             if (data.settings !== undefined) {
-                mapping.fromJS(mapping.fromJSON(data.settings), jsonMap, settings);
+                ko.toJS(data.settings);
             }
             this.settings = ko.observable(settings);
-
 
             this.name.extend({
                 required: true,
@@ -125,7 +123,14 @@ function(ko, validation, mapping, Vagrant, env, vb) {
             validate = validate == undefined ? true : validate;
             if (!validate || this.validate()) {
                 this._db.transaction(function (tx) {
-                    var settings = mapping.toJSON(this.settings());
+                    Addon.findEnabled().then(function(addons) {
+                        addons.forEach(function (addon) {
+                            if (this.settings[addon.name] == undefined) {
+                                this.settings[addon.name] = mapping.toJS(addon.data());
+                            }
+                        }.bind(this));
+                    });
+                    var settings = ko.toJSON(this.settings());
                     if (this.isNewRecord) {
                         tx.executeSql("INSERT INTO project (name, path, version, settings) VALUES (?, ?, ?, ?)", [
                             this.name(),

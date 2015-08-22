@@ -1,36 +1,36 @@
 if $firewall == undef { $firewall = hiera('firewall', false) }
 
+class my_fw::pre {
+  Firewall {
+    require => undef,
+  }
+
+# Default firewall rules
+  firewall { '000 accept all icmp':
+    proto  => 'icmp',
+    action => 'accept',
+  }->
+  firewall { '001 accept all to lo interface':
+    proto   => 'all',
+    iniface => 'lo',
+    action  => 'accept',
+  }->
+  firewall { '002 accept related established rules':
+    proto  => 'all',
+    state  => ['RELATED', 'ESTABLISHED'],
+    action => 'accept',
+  }
+}
+
+class my_fw::post {
+  firewall { '999 drop all':
+    proto  => 'all',
+    action => 'drop',
+    before => undef,
+  }
+}
+
 if $firewall and $firewall['install'] {
-
-  class my_fw::pre {
-    Firewall {
-      require => undef,
-    }
-
-    # Default firewall rules
-    firewall { '000 accept all icmp':
-      proto  => 'icmp',
-      action => 'accept',
-    }->
-    firewall { '001 accept all to lo interface':
-      proto   => 'all',
-      iniface => 'lo',
-      action  => 'accept',
-    }->
-    firewall { '002 accept related established rules':
-      proto  => 'all',
-      state  => ['RELATED', 'ESTABLISHED'],
-      action => 'accept',
-    }
-  }
-
-  class my_fw::post {
-    firewall { '999 drop all':
-      proto  => 'all',
-      action => 'drop',
-      before => undef,
-    }
-  }
 
   Firewall {
     before  => Class['my_fw::post'],
@@ -41,7 +41,7 @@ if $firewall and $firewall['install'] {
 
   class { 'firewall': }
 
-  each( $firewall['rules'] ) |$key, $rule| {
+  each( $firewall['rules']['options'] ) |$key, $rule| {
     each( $rule['ports'] ) |$port| {
       if $rule['tcp'] and $rule['udp'] and $rule['icmp'] {
         firewall { "${rule['priority']}_${port}_${rule['action']}_all":
