@@ -88,7 +88,7 @@ define([
             }
         });
 
-        return new PHP();
+        return PHP;
 
     } catch (e) {
         console.error(e.stack);

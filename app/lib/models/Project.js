@@ -5,9 +5,10 @@ define([
     'lib/models/Vagrant',
     'lib/environment',
     'lib/virtualBox',
-    'lib/models/Addon'
+    'lib/models/Addon',
+    'ko-postbox'
 ],
-function(ko, validation, mapping, Vagrant, env, vb, Addon) {
+function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox) {
 
     var db = openDatabase('vstack', '1.0', 'VStack', 2 * 1024 * 1024);
     var q = require('q');
@@ -87,11 +88,11 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon) {
                 return this.path() + env.pathSeparator() + this.name();
             }, this);
 
-            var settings = {};
+            this.settings = ko.observable({});
+
             if (data.settings !== undefined) {
-                ko.toJS(data.settings);
+                this.settings(JSON.parse(data.settings));
             }
-            this.settings = ko.observable(settings);
 
             this.name.extend({
                 required: true,

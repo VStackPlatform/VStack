@@ -15,5 +15,5 @@ function(router, ko, validation, postbox, Addon) {
         }
     });
 
-    return new Redis();
+    return Redis;
 });

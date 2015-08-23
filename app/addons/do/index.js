@@ -28,5 +28,5 @@ function(router, ko, $, postbox, Addon) {
         }
     });
 
-    return new DigitalOcean();
+    return DigitalOcean;
 });

@@ -100,7 +100,7 @@ function(router, ko, validation, Project, ProjectBuilder, Header, SideNav, mappi
             .map(menu)
             .buildNavigationModel();
             obj.sideNav = new SideNav(obj.router);
-
+            return obj;
         });
 
     };

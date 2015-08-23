@@ -132,7 +132,7 @@ function(router, ko, validation, postbox, User, Addon, mapping) {
             }
         });
 
-        return new MySQL();
+        return MySQL;
 
     } catch (e) {
         console.error(e.stack);

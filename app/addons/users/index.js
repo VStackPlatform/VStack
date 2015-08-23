@@ -25,5 +25,5 @@ function(router, ko, $, postbox, Addon) {
         }
     });
 
-    return new Users();
+    return Users;
 });

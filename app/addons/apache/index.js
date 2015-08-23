@@ -80,7 +80,7 @@ define([
             }
         });
 
-        return new Apache();
+        return Apache;
 
     } catch (e) {
         console.error(e.stack);

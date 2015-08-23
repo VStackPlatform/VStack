@@ -44,14 +44,13 @@ if $firewall and $firewall['install'] {
   each( $firewall['rules']['options'] ) |$key, $rule| {
     each( $rule['ports'] ) |$port| {
       if $rule['tcp'] and $rule['udp'] and $rule['icmp'] {
-        firewall { "${rule['priority']}_${port}_${rule['action']}_all":
+        firewall { "${rule['priority']} ${port}_${rule['action']}_all":
           port   => $port,
-          proto  => 'all',
           action => $rule['action'],
         }
       } else {
         if $rule['tcp'] {
-          firewall { "${rule['priority']}_${port}_${rule['action']}_tcp":
+          firewall { "${rule['priority']} ${port}_${rule['action']}_tcp":
             port   => $port,
             proto  => 'tcp',
             action => $rule['action'],
@@ -59,7 +58,7 @@ if $firewall and $firewall['install'] {
         }
 
         if $rule['udp'] {
-          firewall { "${rule['priority']}_${port}_${rule['action']}_udp":
+          firewall { "${rule['priority']} ${port}_${rule['action']}_udp":
             port   => $port,
             proto  => 'udp',
             action => $rule['action'],
@@ -67,7 +66,7 @@ if $firewall and $firewall['install'] {
         }
 
         if $rule['icmp'] {
-          firewall { "${rule['priority']}_${port}_${rule['action']}_icmp":
+          firewall { "${rule['priority']} ${port}_${rule['action']}_icmp":
             port   => $port,
             proto  => 'icmp',
             action => $rule['action'],

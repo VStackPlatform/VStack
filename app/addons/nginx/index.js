@@ -72,5 +72,5 @@ define([
         }
     });
 
-    return new Nginx();
+    return Nginx;
 });

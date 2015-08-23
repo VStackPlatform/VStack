@@ -14,7 +14,7 @@
     }
   ],
   "data": {
-    "install": true,
+    "install": false,
     "options": {
       "mpm": "event",
       "modules": [],

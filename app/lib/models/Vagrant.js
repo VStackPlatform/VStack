@@ -74,10 +74,15 @@ define(['knockout', 'lib/environment', 'ko-postbox'], function(ko, env, postbox)
     };
 
     Vagrant.prototype.getStatus = function(fullPath) {
+
+
+        var deferred = q.defer();
+        deferred.resolve('');
+        /*
+        TODO: fix later on.
+        var path = fs.lstatSync(fullPath);
         var self = this;
         this.commandRunning(true);
-        var deferred = q.defer();
-        var path = fs.lstatSync(fullPath);
         if (path.isDirectory()) {
             exec('cd ' + fullPath + ' && ' + env.exeFile('vagrant') + ' status', function (error, stdout, stderr) {
 
@@ -104,7 +109,9 @@ define(['knockout', 'lib/environment', 'ko-postbox'], function(ko, env, postbox)
         } else {
             deferred.resolve('not folder');
         }
+        */
         return deferred.promise;
+
     };
     return Vagrant;
 });

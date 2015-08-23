@@ -7,7 +7,7 @@
     { "mod": "puppetlabs/puppetlabs-mysql", "tag": "3.3.0" }
   ],
   "data": {
-    "install": true,
+    "install": false,
     "options": {
       "version": "5.5",
       "root_password": "",

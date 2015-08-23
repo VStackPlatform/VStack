@@ -25,5 +25,5 @@ function(ko, Addon, Rule) {
             }.bind(this);
         }
     });
-    return new Firewall();
+    return Firewall;
 });

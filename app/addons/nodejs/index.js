@@ -20,7 +20,7 @@ function(router, ko, $, postbox, Addon) {
                 tokenSeparators: [',', ' ']
             }
         });
-        return new NodeJS();
+        return NodeJS;
 
     } catch (e) {
         console.error(e.stack);

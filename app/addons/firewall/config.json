@@ -8,7 +8,7 @@
     { "mod": "puppetlabs/puppetlabs-firewall", "tag": "1.7.0" }
   ],
   "data" : {
-    "install": true,
+    "install": false,
     "options": {
       "rules": [
         {

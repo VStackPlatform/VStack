@@ -112,9 +112,9 @@ function(router, ko, validation, Project, ProjectBuilder, Header, SideNav, mappi
                 fromParent: true
             })
             .map(menu)
-            .buildNavigationModel();
+            .buildNavigationModel(100);
             obj.sideNav = new SideNav(obj.router);
-
+            return obj;
         });
 
     };

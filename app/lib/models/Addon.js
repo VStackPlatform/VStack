@@ -14,10 +14,16 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
     var colors = require('colors/safe');
 
     var Addon = Class.extend({
-        init: function(data, dataMap) {
+        init: function(data, dataMap, forceConfig) {
+            forceConfig = forceConfig || false;
             this.identifier = 'Addon';
             if (typeof data == 'string') {
-                this.initFromConfig(data, dataMap || {});
+                if (forceConfig) {
+                    this.initFromConfig(data, dataMap || {});
+                } else {
+                    this.defaults = ko.observable().subscribeTo('addon.' + data, true);
+                    this.initFromArray(mapping.toJS(this.defaults()), dataMap || {});
+                }
             } else {
                 this.initFromArray(data, dataMap || {});
             }
@@ -27,8 +33,9 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
             this.dragging = ko.observable(false);
             this.project = ko.observable().syncWith('project.main', true);
             this.sideNavTypes = ko.observableArray().subscribeTo('project.sideNavTypes', true);
-            var settings = this.project().settings()[this.name];
+            var defaults = data;
 
+            var settings = this.project().settings()[data.name];
             if (settings !== undefined) {
                 data.data = settings;
             }
@@ -37,6 +44,10 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
                 'copy': ["id", "name", "title", "type", "version"],
                 'data': {
                     create: function (options) {
+                        //Make sure only converting top level.
+                        if (options.parent.identifier === undefined) {
+                            return options.data;
+                        }
                         if (typeof options.data == 'string') {
                             options.data = JSON.parse(options.data);
                         }
@@ -47,6 +58,10 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
                 },
                 'modules': {
                     create: function (options) {
+                        //Make sure only converting top level.
+                        if (options.parent.identifier === undefined) {
+                            return options.data;
+                        }
                         if (typeof options.data == 'string') {
                             return JSON.parse(options.data);
                         } else {
@@ -61,6 +76,19 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
             data.modules = data.modules || {};
 
             mapping.fromJS(data, addonMap, this);
+
+
+            this.activate = function() {
+                var settings = this.project().settings()[this.name];
+                var convert;
+                if (settings !== undefined) {
+                    convert = mapping.fromJS(settings, dataMap);
+                } else {
+                    convert = mapping.fromJS(defaults.data, dataMap);
+                }
+                this.data(convert);
+                return this;
+            };
 
             //@todo: clean this up as this is a hacky bit of code.
             ko.computed(function() {
@@ -142,7 +170,6 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
                  */
                 var data = JSON.parse(ko.toJSON(this.data()));
                 this.project.peek().settings.peek()[this.name] = mapping.toJS(data); // Block change on project.
-                console.log(this.project.peek().settings.peek());
             }, this);
         }
     });

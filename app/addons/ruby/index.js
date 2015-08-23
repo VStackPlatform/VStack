@@ -56,7 +56,7 @@ function(router, ko, $, postbox, Addon) {
             }
         });
 
-        return new Ruby();
+        return Ruby;
 
     } catch (e) {
         console.error(e.stack);

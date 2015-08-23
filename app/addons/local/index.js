@@ -37,7 +37,7 @@ function(router, ko, $, vb, postbox, env, Addon) {
             isWindows: ko.observable(env.isWindows)
         });
 
-        return new Local();
+        return Local;
     } catch (e) {
         console.error(e.stack);
         return {};

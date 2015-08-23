@@ -20,5 +20,5 @@ function(router, ko, $, postbox, Addon) {
         }
     });
 
-    return new Packages();
+    return Packages;
 });
