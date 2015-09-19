@@ -2,42 +2,51 @@ define([
     'plugins/router',
     'knockout',
     'ko-mapping',
-    'lib/models/Class',
-    'lib/environment',
-    'lib/vstack',
+    'app-lib/models/Class',
+    'app-lib/environment',
+    'app-lib/vstack',
     'ko-postbox'
 ],
 function (router, ko, mapping, Class, env, vstack, postbox) {
 
     var fs = require('fs');
     var q = require('q');
-    var colors = require('colors/safe');
 
     var Addon = Class.extend({
-        init: function(data, dataMap, forceConfig) {
-            forceConfig = forceConfig || false;
+        init: function(data, dataMap) {
+            var deferred = q.defer();
             this.identifier = 'Addon';
             if (typeof data == 'string') {
-                if (forceConfig) {
-                    this.initFromConfig(data, dataMap || {});
+                // Check the addon channel first (used like a cache).
+                this.defaults = ko.observable().subscribeTo('addon.' + data, true);
+                if (this.defaults() == undefined) {
+                    Addon.findOne(["a.name='" + data + "'"]).then(function(result) {
+                        this.defaults(result);
+                        this.initFromArray(mapping.toJS(this.defaults() || {}), dataMap || {});
+                        deferred.resolve(true);
+                    }.bind(this));
                 } else {
-                    this.defaults = ko.observable().subscribeTo('addon.' + data, true);
                     this.initFromArray(mapping.toJS(this.defaults()), dataMap || {});
+                    deferred.resolve(true);
                 }
             } else {
                 this.initFromArray(data, dataMap || {});
+                deferred.resolve(true);
             }
+            return deferred.promise;
         },
         initFromArray: function(data, dataMap) {
 
             this.dragging = ko.observable(false);
-            this.project = ko.observable().syncWith('project.main', true);
+            this.project = ko.observable({settings: ko.observableArray()}).syncWith('project.main', true);
             this.sideNavTypes = ko.observableArray().subscribeTo('project.sideNavTypes', true);
             var defaults = data;
 
-            var settings = this.project().settings()[data.name];
-            if (settings !== undefined) {
-                data.data = settings;
+            if (this.project() !== undefined) {
+                var settings = this.project().settings()[data.name];
+                if (settings !== undefined) {
+                    data.data = settings;
+                }
             }
 
             var addonMap = {
@@ -132,11 +141,6 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
             }, this);
 
         },
-        initFromConfig: function(name, dataMap) {
-            var basePath = process.cwd();
-            var config = JSON.parse(fs.readFileSync([basePath, 'app', 'addons', name, 'config.json'].join(env.pathSeparator()), 'utf8'));
-            this.initFromArray(config, dataMap);
-        },
         save: function() {
             var deferred = q.defer();
             vstack.db.transaction(function (tx) {
@@ -186,6 +190,7 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
             sql += condition;
         });
         sql += ' ORDER BY t.priority, a.priority';
+
         vstack.db.transaction(function (tx) {
             tx.executeSql(sql, [], function (tx, results) {
                 var len = results.rows.length, i, data = [];
@@ -224,9 +229,9 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
         return deferred.promise;
     };
 
-    Addon.findOne = function() {
+    Addon.findOne = function(condition) {
         var deferred = q.defer();
-        find().then(function(data) {
+        find(condition).then(function(data) {
             if (data) {
                 deferred.resolve(data[0]);
             } else {

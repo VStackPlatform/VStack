@@ -1,4 +1,4 @@
-define(['knockout', 'lib/models/Addon', 'lib/vstack'], function(ko, Addon, vstack) {
+define(['knockout', 'app-lib/models/Addon', 'app-lib/vstack'], function(ko, Addon, vstack) {
     var q = require('q');
     var Type = function(data) {
         this.identifier = 'Type';

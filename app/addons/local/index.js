@@ -2,10 +2,10 @@ define([
     'plugins/router',
     'knockout',
     'jquery',
-    'lib/virtualBox',
+    'app-lib/virtualBox',
     'ko-postbox',
-    'lib/environment',
-    'lib/models/Addon'
+    'app-lib/environment',
+    'app-lib/models/Addon'
 ],
 function(router, ko, $, vb, postbox, env, Addon) {
 

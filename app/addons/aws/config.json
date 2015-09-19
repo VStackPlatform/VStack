@@ -1,6 +1,6 @@
 {
-  "name": "do",
-  "title": "Digital Ocean",
+  "name": "aws",
+  "title": "Amazon EC2",
   "type": "Target",
   "priority": 2,
   "data": {

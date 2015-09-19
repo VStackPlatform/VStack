@@ -2,11 +2,11 @@ define([
     'plugins/router',
     'shell',
     'knockout',
-    'lib/models/Project',
+    'app-lib/models/Project',
     'ko-postbox',
     'ko-mapping',
-    'lib/models/Vagrant',
-    'lib/models/Addon'
+    'app-lib/models/Vagrant',
+    'app-lib/models/Addon'
 ], function(
     router,
     shell,
@@ -25,24 +25,38 @@ define([
         var obj = {
             loading: ko.observable(true),
             projects: ko.observableArray(),
-            targets: ko.observableArray(),
             activate: function () {
                 project.findAll().then(function (results) {
                     obj.projects(results);
-                    for (var i in obj.projects()) {
-                        (function(current) {
-                            setTimeout(function() {
-                                obj.projects()[current].updateStatus();
-                            }, Math.random() * 10000);
-                        })(i);
-                    }
+                    Addon.findByType('Target', false).then(function(targets) {
+                        obj.projects().forEach(function(project) {
+                            targets.forEach(function (target) {
+                                if (project.settings()[target.name] !== undefined &&
+                                    project.settings()[target.name].install == true) {
+                                    vagrant.getStatus(project.fullPath(), target.name)
+                                        .then(function (result) {
+                                            project.statuses.push({
+                                                title: target.title,
+                                                name: target.name,
+                                                status: result,
+                                                command: true
+                                            });
+                                        }).catch(function(error) {
+                                            project.statuses.push({
+                                                title: target.title,
+                                                name: target.name,
+                                                status: error,
+                                                command: false
+                                            });
+                                        });
+                                }
+                            });
+                        });
+                    });
                 }, function (error) {
                     console.error(error);
                 }).then(function() {
                     obj.loading(false);
-                });
-                Addon.findByType('Target', false).then(function(targets) {
-                    obj.targets(targets);
                 });
             },
             copyProject: function (model, event) {
@@ -66,7 +80,6 @@ define([
                 });
             }
         };
-
 
         obj.commandRunning = ko.observable().syncWith('vagrant.commandRunning', true);
 

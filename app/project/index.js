@@ -2,13 +2,13 @@
     'plugins/router',
     'knockout',
     'ko-validation',
-    'lib/models/Project',
-    'lib/models/ProjectBuilder',
+    'app-lib/models/Project',
+    'app-lib/models/ProjectBuilder',
     'modules/Header',
     'modules/SideNav',
     'ko-mapping',
-    'lib/models/Addon',
-    'lib/environment',
+    'app-lib/models/Addon',
+    'app-lib/environment',
     'ko-postbox',
     'bindings/fadeaway'
 ],
@@ -83,8 +83,7 @@ function(router, ko, validation, Project, ProjectBuilder, Header, SideNav, mappi
 
 
     obj.activate = function() {
-
-        if (!obj.project().isNewRecord) {
+        if (obj.project() == undefined || !obj.project().isNewRecord) {
             obj.project(new Project());
         }
 
@@ -111,8 +110,8 @@ function(router, ko, validation, Project, ProjectBuilder, Header, SideNav, mappi
                 moduleId: 'project',
                 fromParent: true
             })
-            .map(menu)
-            .buildNavigationModel(100);
+            obj.router.map(menu);
+            obj.router.buildNavigationModel(100);
             obj.sideNav = new SideNav(obj.router);
             return obj;
         });

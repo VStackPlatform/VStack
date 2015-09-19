@@ -3,13 +3,13 @@ define([
     'knockout',
     'jquery',
     'ko-postbox',
-    'lib/models/Addon'
+    'app-lib/models/Addon'
 ],
 function(router, ko, $, postbox, Addon) {
 
     var DigitalOcean = Addon.extend({
         init: function () {
-            this._super('do');
+            this._super('digitalocean');
 
             this.enableLiveUpdates();
 

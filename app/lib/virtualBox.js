@@ -1,4 +1,4 @@
-define(['lib/environment'], function(env) {
+define(['app-lib/environment'], function(env) {
     var exec = require('child_process').exec;
     var q = require('q');
     var fs = require('fs');

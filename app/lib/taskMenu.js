@@ -1,4 +1,4 @@
-define(['lib/models/Project'], function(Project) {
+define(['app-lib/models/Project'], function(Project) {
 
     var gui = require('nw.gui');
     var win = gui.Window.get();

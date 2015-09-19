@@ -3,7 +3,7 @@ define([
     'knockout',
     'ko-validation',
     'ko-postbox',
-    'lib/models/Addon',
+    'app-lib/models/Addon',
     'bindings/select2'
 ],
 function(router, ko, validation, postbox, Addon) {

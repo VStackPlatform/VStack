@@ -6974,11 +6974,11 @@ a.list-group-item-danger.active:focus {
 }
 .drag-handle {
   position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
+  top: 0;
+  bottom: 0;
+  left: 0;
   width: 20px;
-  margin: 6px 0px;
+  margin: 6px 0;
   background-image: url("../images/drag-handle.png");
   background-repeat: repeat-y;
   background-position: center center;

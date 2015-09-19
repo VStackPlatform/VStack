@@ -7,7 +7,7 @@ define([
     'addons/nginx/lib/models/Site',
     'addons/nginx/lib/directives',
     'ko-postbox',
-    'lib/models/Addon',
+    'app-lib/models/Addon',
     'ko-mapping',
     'bindings/select2'
 ], function(router, ko, $, Server, Stream, Site, directives, postbox, Addon, mapping) {

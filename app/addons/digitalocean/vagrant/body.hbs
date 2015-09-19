@@ -3,7 +3,7 @@ config.vm.define "digitalocean", primary: false, autostart: false do |digitaloce
     raise 'vagrant-digitalocean plugin is not installed!'
   end
 
-  {{#with do.options}}
+  {{#with digitalocean.options}}
   digitalocean.vm.box               = "dummy"
   digitalocean.vm.hostname          = "{{server_name}}"
   digitalocean.nfs.functional       = false

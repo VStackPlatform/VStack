@@ -3,7 +3,7 @@ define([
     'knockout',
     'jquery',
     'ko-postbox',
-    'lib/models/Addon',
+    'app-lib/models/Addon',
     'bindings/select2'
 ], function(router, ko, $, postbox, Addon) {
 

@@ -4,7 +4,7 @@ define([
     'jquery',
     'addons/apache/lib/models/VirtualHost',
     'ko-postbox',
-    'lib/models/Addon',
+    'app-lib/models/Addon',
     'ko-mapping',
     'bindings/select2'
 ], function (router, ko, $, VirtualHost, postbox, Addon, mapping) {

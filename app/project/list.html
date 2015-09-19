@@ -14,43 +14,48 @@
             <thead>
             <tr>
                 <th>Name</th>
-                <th width="15%">Target</th>
-                <th width="15%">Status</th>
+                <th width="20%">Target</th>
+                <th width="20%">Status</th>
                 <th width="5%"></th>
             </tr>
             </thead>
             <tbody>
             <!-- ko foreach: projects -->
-            <tr data-bind="css: statusCss">
+            <tr>
                 <td data-bind="text: name"></td>
-                <!-- <td data-bind="text: targetMachine"></td> @todo readd this code -->
-                <td></td>
-                <td data-bind="text: status"></td>
+                <td colspan="2">
+                    <div data-bind="visible: statuses().length == 0">Loading...</div>
+                   <table width="100%" class="table table-bordered table-condensed" style="margin: 0" data-bind="visible: statuses().length > 0">
+                       <tbody>
+                           <!-- ko foreach: statuses -->
+                           <tr>
+                               <td width="50%" data-bind="text: title"></td>
+                               <td>
+                                   <!-- ko text: status --><!-- /ko -->
+                                   <div class="btn-group drop pull-right" data-bind="visible: command">
+                                       <button type="button" class="btn btn-default btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                           Commands <span class="caret"></span>
+                                       </button>
+                                       <ul class="dropdown-menu">
+                                           <li><a data-bind="click: $parent.up">Up</a></li>
+                                           <li><a data-bind="click: $parent.provision">Provision</a></li>
+                                           <li><a data-bind="click: $parent.reload">Reload</a></li>
+                                           <li><a data-bind="click: $parent.halt">Halt</a></li>
+                                           <li><a data-bind="click: $parent.destroy">Destroy</a></li>
+                                       </ul>
+                                   </div>
+                               </td>
+                           </tr>
+                           <!-- /ko -->
+                       </tbody>
+                   </table>
+                </td>
                 <td class="form-actions">
                     <div class="btn-group drop">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <button type="button" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
                             Actions <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <!-- ko if: !$parent.commandRunning() -->
-                            <li>
-                                <a data-bind="click: up">Up</a>
-                                <ul class="dropdown-menu">
-                                    <!-- ko foreach: $root.targets -->
-
-                                    <li><a href="#" data-bind="text: ko.toJSON($parent.settings())"></a></li>
-                                    <!-- ko if: $parent.settings()[$data.name] !== undefined && $parent.settings()[name]['install'] == true -->
-                                        <li><a href="#" data-bind="text: $parent.settings()[$data.name]"></a></li>
-                                    <!-- /ko -->
-                                    <!-- /ko -->
-                                </ul>
-                            </li>
-                            <li><a data-bind="click: provision">Provision</a></li>
-                            <li><a data-bind="click: reload">Reload</a></li>
-                            <li><a data-bind="click: halt">Halt</a></li>
-                            <li><a data-bind="click: destroy">Destroy</a></li>
-                            <li class="divider"></li>
-                            <!-- /ko -->
                             <li><a data-bind="attr: {href: editUrl, title: 'Edit'}">Edit</a></li>
                             <li><a data-bind="click: $parent.copyProject">Copy</a></li>
                             <li><a data-bind="click: $parent.deleteProject">Delete</a></li>

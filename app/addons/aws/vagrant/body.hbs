@@ -1,0 +1,39 @@
+config.vm.define "aws", primary: false, autostart: false do |aws|
+  unless Vagrant.has_plugin?("vagrant-aws")
+    raise 'vagrant-aws plugin is not installed!'
+  end
+
+  {{#with aws.options}}
+  aws.vm.box               = "dummy"
+  aws.vm.hostname          = "{{server_name}}"
+  aws.nfs.functional       = false
+  aws.ssh.private_key_path = "{{private_key_path}}"
+  aws.ssh.username         = "{{private_key_user}}"
+  {{#each synced_folders}}
+  aws.vm.synced_folder "{{from}}", "{{to}}", owner: "{{owner}}", group: "{{group}}", type: "rsync"
+  {{/each}}
+
+  aws.vm.provider :aws do |provider|
+    provider.token        = "{{token}}"
+    provider.image        = "{{distribution}}"
+    provider.region       = "{{data_center}}"
+    provider.size         = "{{server_size}}"
+    provider.ssh_key_name = "{{ssh_key_name}}"
+  end
+  {{/with}}
+
+  aws.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ["www", ".git"]
+
+  aws.vm.provision "shell" do |shell|
+      shell.path = "scripts/pre-puppet.sh"
+      shell.args = ['remote']
+  end
+  aws.vm.provision "puppet" do |puppet|
+     puppet.manifests_path = "puppet"
+     puppet.manifest_file  = "manifests"
+     puppet.hiera_config_path = "hiera.yaml"
+     puppet.options = "--parser=future --modulepath=~/.vstack/modules"
+  end
+  aws.vm.provision "shell", path: "scripts/post-puppet.sh"
+end
+

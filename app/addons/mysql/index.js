@@ -4,7 +4,7 @@ define([
     'ko-validation',
     'ko-postbox',
     'addons/mysql/lib/models/User',
-    'lib/models/Addon',
+    'app-lib/models/Addon',
     'ko-mapping',
     'bindings/select2'
 ],

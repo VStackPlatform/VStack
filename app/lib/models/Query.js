@@ -1,4 +1,4 @@
-define(['lib/models/Class'], function(Class) {
+define(['app-lib/models/Class'], function(Class) {
 
     var Query = Class.extend({
         init: function(database, title, version, size) {

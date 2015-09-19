@@ -1,5 +1,10 @@
-﻿define(['plugins/router', 'durandal/app', 'knockout', 'modules/Term'], function (router, app, ko, Term) {
-
+﻿define([
+    'plugins/router',
+    'durandal/app',
+    'knockout',
+    'modules/Term'
+],
+function (router, app, ko, Term) {
     return {
         router: router,
         activate: function () {

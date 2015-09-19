@@ -1,4 +1,4 @@
-define(['knockout', 'lib/models/NavItem', 'ko-postbox'], function(ko, NavItem, postbox) {
+define(['knockout', 'app-lib/models/NavItem', 'ko-postbox'], function(ko, NavItem, postbox) {
 
     var SideNav = function(childRouter) {
 

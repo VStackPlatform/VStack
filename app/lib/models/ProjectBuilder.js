@@ -4,10 +4,10 @@
  * Created by damian on 15/05/15.
  */
 define([
-    'lib/models/Vagrant',
-    'lib/environment',
+    'app-lib/models/Vagrant',
+    'app-lib/environment',
     'durandal/app',
-    'lib/models/Addon',
+    'app-lib/models/Addon',
     'ko-mapping'
 ],
 function(Vagrant, env, app, Addon, mapping) {

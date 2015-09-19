@@ -1,20 +1,22 @@
 ﻿requirejs.config({
     paths: {
-        'text': '../lib/requirejs-text/text',
-        'durandal':'../lib/durandal/js',
-        'plugins' : '../lib/durandal/js/plugins',
-        'transitions' : '../lib/durandal/js/transitions',
+        'text': '../node_modules/requirejs-text/text',
+        'durandal':'../node_modules/durandal/js',
+        'plugins' : '../node_modules/durandal/js/plugins',
+        'transitions' : '../node_modules/durandal/js/transitions',
         'knockout': '../node_modules/knockout/build/output/knockout-latest.debug',
         'bootstrap': '../node_modules/bootstrap/dist/js/bootstrap',
-        'jquery': '../lib/jquery/jquery',
-        'jquery-ui': '../lib/jquery-ui/jquery-ui.min',
-        'bootstrap-checkbox': 'lib/bootstrap-checkbox/js/bootstrap-checkbox',
-        'select2': '../node_modules/select2/select2.min',
-        'ko-validation': '../node_modules/knockout.validation/dist/knockout.validation.min',
+        'jquery': '../node_modules/durandal/node_modules/jquery/dist/jquery',
+        'jquery-ui': '../node_modules/jquery-ui-bundle/jquery-ui',
+        'bootstrap-checkbox': '../node_modules/bootstrap-checkbox/dist/js/bootstrap-checkbox',
+        'select2': '../node_modules/select2/select2',
+        'ko-validation': '../node_modules/knockout.validation/dist/knockout.validation',
         'ko-mapping': '../node_modules/knockout.mapping/knockout.mapping',
         'ko-postbox': '../node_modules/knockout-postbox/build/knockout-postbox',
         'ko-dragdrop': '../node_modules/knockout-dragdrop/lib/knockout.dragdrop',
-        'ko-es5': '../lib/knockout-es5/dist/knockout-es5.min'
+        'ko-es5': '../node_modules/knockout-es5/dist/knockout-es5',
+        'app-lib': './lib',
+        'v-config': './lib/config'
     },
     shim: {
         'bootstrap': {
@@ -24,37 +26,4 @@
     }
 });
 
-define([
-    'durandal/system',
-    'durandal/app',
-    'durandal/viewLocator',
-    'lib/vstack',
-    'bootstrap',
-    'lib/taskMenu',
-    'extensions/asyncComputed',
-    'ko-es5'
-],
-function (system, app, viewLocator, vstack) {
-
-    vstack.createTables();
-
-    //>>excludeStart("build", true);
-    system.debug(true);
-    //>>excludeEnd("build");
-
-    app.title = 'VStack';
-
-    app.configurePlugins({
-        router: true,
-        dialog: true
-    });
-
-    app.start().then(function() {
-        //Replace 'viewmodels' in the moduleId with 'views' to locate the view.
-        //Look for partial views in a 'views' folder in the root.
-        viewLocator.useConvention();
-
-        //Show the app by setting the root view model for our application with a transition.
-        app.setRoot('shell', 'entrance');
-    });
-});
+define(['app-lib/loadDurandal']);

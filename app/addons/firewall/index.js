@@ -1,6 +1,6 @@
 define([
     'knockout',
-    'lib/models/Addon',
+    'app-lib/models/Addon',
     'addons/firewall/lib/models/Rule',
     'bindings/select2'
 ],
