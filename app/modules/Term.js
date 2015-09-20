@@ -1,4 +1,11 @@
-define(['knockout', 'ko-postbox', 'jquery', 'jquery-ui', 'bindings/debug'], function(ko, postbox) {
+define([
+    'knockout',
+    'ko-postbox',
+    'jquery',
+    'jquery-ui',
+    'bindings/debug'
+],
+function(ko, postbox, $) {
 
     var Terminal = require('terminal.js');
     var gui = require('nw.gui');

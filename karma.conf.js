@@ -55,7 +55,7 @@ module.exports = function(config) {
             {pattern: 'app/**/*.js', included: false},
             {pattern: 'images/**/*', included: false},
             {pattern: 'node_modules/font-awesome/fonts/*', included: false},
-            {pattern: 'node_modules/durandal/node_modules/jquery/dist/jquery', included: false},
+            {pattern: 'node_modules/durandal/node_modules/jquery/dist/jquery.js', included: false},
             {pattern: 'node_modules/jquery-ui-bundle/**/*', included: false},
             {pattern: 'node_modules/durandal/**/*', included: false},
             {pattern: 'node_modules/knockout-es5/dist/**/*', included: false},
