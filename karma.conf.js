@@ -67,6 +67,9 @@ module.exports = function(config) {
             {pattern: 'node_modules/bootstrap/dist/**/*', included: false},
             {pattern: 'node_modules/requirejs-text/text.js', included: false},
             {pattern: 'node_modules/select2/select2.js', included: false},
+            {pattern: 'node_modules/q/**/*', included: false},
+            {pattern: 'node_modules/ncp/**/*', included: false},
+            {pattern: 'node_modules/handlebars/**/*', included: false},
             'app/test-main.js'
         ],
         exclude: [
