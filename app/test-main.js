@@ -63,9 +63,17 @@ requirejs.config({
                 </div> \
                 </div>'
             );
-            requirejs(['app-lib/loadDurandal'], function (loadDurandal) {
-                loadDurandal.then(function() {
-                    window.__karma__.start();
+            requirejs(['app-lib/vstack'], function(vstack) {
+                vstack.createTables();
+                requirejs(['app-lib/loadDurandal'], function (loadDurandal) {
+                    loadDurandal.then(function () {
+                        /**
+                         * @todo change this to a promise when we can work out how to load durandal before running tests.
+                         */
+                        setTimeout(function() {
+                            window.__karma__.start();
+                        }, 3000);
+                    });
                 });
             });
         });

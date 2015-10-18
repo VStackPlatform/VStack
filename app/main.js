@@ -26,4 +26,7 @@
     }
 });
 
-define(['app-lib/loadDurandal']);
+define(['app-lib/vstack'], function(vstack) {
+    vstack.createTables();
+    requirejs(['app-lib/loadDurandal']);
+});

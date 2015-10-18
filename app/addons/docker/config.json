@@ -1,0 +1,12 @@
+{
+  "name": "docker",
+  "title": "Docker",
+  "type": "System",
+  "priority": 3,
+  "data": {
+    "install": false,
+    "options": {
+
+    }
+  }
+}

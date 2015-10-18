@@ -6,11 +6,12 @@ define([
     'app-lib/environment',
     'app-lib/virtualBox',
     'app-lib/models/Addon',
-    'ko-postbox'
+    'ko-postbox',
+    'app-lib/vstack'
 ],
-function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox) {
+function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox, vstack) {
 
-    var db = openDatabase('vstack', '1.0', 'VStack', 2 * 1024 * 1024);
+    var db = vstack.db;
     var q = require('q');
     var vagrant = new Vagrant();
 
@@ -40,6 +41,7 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox) {
         },
         message: 'This name already exists in virtualbox.'
     };
+
     ko.validation.registerExtenders();
 
     /**
@@ -77,6 +79,9 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox) {
                 return color;
             }, this);*/
 
+            /**
+             * Returns the edit url.
+             */
             this.editUrl = ko.computed(function () {
                 if (!this.isNewRecord) {
                     return '#project/edit/' + this.id();
@@ -85,6 +90,9 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox) {
                 }
             }, this);
 
+            /**
+             * Returns the full path to the project.
+             */
             this.fullPath = ko.computed(function () {
                 return this.path() + env.pathSeparator() + this.name();
             }, this);
@@ -104,6 +112,11 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox) {
                 }
             });
 
+            /**
+             * Validates the project.
+             *
+             * @returns {boolean}
+             */
             this.validate = function() {
                 var group = validation.group([this.name, this.path]);
                 group.showAllMessages();
@@ -116,42 +129,68 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox) {
              * @param {boolean} [validate=true] validate
              */
             this.save = function(validate) {
+                var deferred = q.defer();
                 try {
                     validate = validate == undefined ? true : validate;
                     if (!validate || this.validate()) {
-                        this._db.transaction(function (tx) {
+
                             Addon.findEnabled().then(function(addons) {
                                 addons.forEach(function (addon) {
                                     if (this.settings[addon.name] == undefined) {
                                         this.settings[addon.name] = mapping.toJS(addon.data());
                                     }
                                 }.bind(this));
-                            });
-                            var settings = ko.toJSON(this.settings());
-                            if (this.isNewRecord) {
-                                tx.executeSql("INSERT INTO project (name, path, version, settings) VALUES (?, ?, ?, ?)", [
-                                    this.name(),
-                                    this.path(),
-                                    this.version(),
-                                    settings
-                                ]);
-                            } else {
-                                tx.executeSql("UPDATE project SET name=?, path=?, version=?, settings=? WHERE rowid = ?", [
-                                    this.name(),
-                                    this.path(),
-                                    this.version(),
-                                    settings,
-                                    this.id()
-                                ]);
-                            }
+                                var settings = ko.toJSON(this.settings());
+                                try {
+                                    if (this.isNewRecord) {
+                                        this._db.transaction(function (tx) {
+                                            tx.executeSql("INSERT INTO project (name, path, version, settings) VALUES (?, ?, ?, ?)", [
+                                                this.name(),
+                                                this.path(),
+                                                this.version(),
+                                                settings
+                                            ], function () {
+                                                deferred.resolve(true);
+                                            }, function () {
+                                                deferred.resolve(false);
+                                            });
+                                        }.bind(this));
+                                    } else {
+                                        this._db.transaction(function (tx) {
+                                            tx.executeSql("UPDATE project SET name=?, path=?, version=?, settings=? WHERE rowid = ?", [
+                                                this.name(),
+                                                this.path(),
+                                                this.version(),
+                                                settings,
+                                                this.id()
+                                            ], function () {
+                                                deferred.resolve(true);
+                                            }, function () {
+                                                deferred.resolve(false);
+                                            });
+                                        }.bind(this));
+                                    }
+                                }
+                                catch (e) {
+                                    console.error(e.stack);
+                                }
+
                         }.bind(this));
-                        return true;
+                    } else {
+                        deferred.resolve(false);
                     }
                 } catch (e) {
                     console.error(e.stack);
+                    deferred.resolve(false);
                 }
+                return deferred.promise;
             };
 
+            /**
+             * Updates the status of the project.
+             *
+             * @param project
+             */
             this.updateStatus = function(project) {
                 Addon.findByType('Target', false).then(function(targets) {
                     targets.forEach(function (target) {
@@ -241,16 +280,16 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox) {
 
             this.provision = function (model) {
                 vagrant.provision(this.fullPath(), model.name, this.updateStatus.bind(this));
-            };
+            }.bind(this);
             this.reload = function (model) {
                 vagrant.reload(this.fullPath(), model.name, this.updateStatus.bind(this));
-            };
+            }.bind(this);
             this.halt = function (model) {
                 vagrant.halt(this.fullPath(), model.name, this.updateStatus.bind(this));
-            };
+            }.bind(this);
             this.destroy = function (model) {
                 vagrant.destroy(this.fullPath(), model.name, this.updateStatus.bind(this));
-            };
+            }.bind(this);
 
             /**
              * Deletes the project.
@@ -272,14 +311,6 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox) {
             console.error(e.stack);
         }
     };
-
-
-
-
-
-
-
-
 
     return Project;
 });

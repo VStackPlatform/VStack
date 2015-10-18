@@ -5,14 +5,13 @@ define(['app-lib/models/Project'], function(Project) {
 
 
     // Get the minimize event
-    win.on('close', function () {
-        this.hide();
-    });
+    //win.on('close', function () {
+    //    this.hide();
+    //});
 
 
     if (localStorage.taskMenuCreated == undefined || localStorage.taskMenuCreated == "false") {
 
-        localStorage.taskMenuCreated = "true";
         var project = new Project();
         project.findAll().then(function (results) {
 

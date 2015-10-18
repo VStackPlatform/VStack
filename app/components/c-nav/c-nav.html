@@ -1,0 +1,12 @@
+<!-- ko if: $data -->
+<div class="row">
+    <div class="col-lg-12">
+        <!-- ko if: $component.prev -->
+        <a class="btn btn-default pull-left" data-bind="click: prev">&laquo; Prev</a>
+        <!-- /ko -->
+        <!-- ko if: $component.next -->
+        <a class="btn btn-default pull-right" data-bind="click: next">Next &raquo;</a>
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->

@@ -3,11 +3,6 @@ define([
 ], function(vstack) {
 
     /*
-    beforeAll(function(done) {
-        vstack.createTables().then(function() {
-            done();
-        });
-    });
     afterAll(function(done) {
         vstack.dropTables().then(function() {
             done();

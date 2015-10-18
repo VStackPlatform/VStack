@@ -4,7 +4,8 @@ define([
     'jquery',
     'ko-postbox',
     'app-lib/models/Addon',
-    'bindings/select2'
+    'bindings/select2',
+    'components/c-nav/c-nav'
 ], function(router, ko, $, postbox, Addon) {
 
     try {

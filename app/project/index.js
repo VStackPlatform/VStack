@@ -69,10 +69,11 @@ function(router, ko, validation, Project, ProjectBuilder, Header, SideNav, mappi
             })
             .finally(function () {
                 console.log('saving project...');
-                if (obj.project().save()) {
-                    obj.project(new Project());
-                    router.navigate('#projects');
-                }
+                obj.project().save().then(function(result) {
+                    if (result) {
+                        router.navigate('#projects');
+                    }
+                });
             });
         }
     };

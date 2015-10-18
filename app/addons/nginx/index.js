@@ -9,7 +9,8 @@ define([
     'ko-postbox',
     'app-lib/models/Addon',
     'ko-mapping',
-    'bindings/select2'
+    'bindings/select2',
+    'components/c-nav/c-nav'
 ], function(router, ko, $, Server, Stream, Site, directives, postbox, Addon, mapping) {
 
     var Nginx = Addon.extend({

@@ -3,7 +3,8 @@ define([
     'knockout',
     'jquery',
     'ko-postbox',
-    'app-lib/models/Addon'
+    'app-lib/models/Addon',
+    'components/c-nav/c-nav'
 ],
 function(router, ko, $, postbox, Addon) {
 

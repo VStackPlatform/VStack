@@ -5,7 +5,8 @@ define([
     'app-lib/virtualBox',
     'ko-postbox',
     'app-lib/environment',
-    'app-lib/models/Addon'
+    'app-lib/models/Addon',
+    'components/c-nav/c-nav'
 ],
 function(router, ko, $, vb, postbox, env, Addon) {
 

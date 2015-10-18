@@ -5,7 +5,7 @@ config.vm.define "local", primary: false, autostart: false do |local|
   local.vm.box_check_update = {{checkForUpdates}}
   local.vm.hostname = "{{hostname}}"
   {{#each forward_ports}}
-  local.vm.network "forwarded_port", guest: {{host}}, host: {{vm}}
+  local.vm.network "forwarded_port", guest: {{host}}, host: {{vm}}, auto_correct: true
   {{/each}}
   {{#each synced_folders}}
   {{#compare type "nfs" operator="!="}}

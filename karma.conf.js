@@ -24,7 +24,8 @@ module.exports = function(config) {
         },
 
         preprocessors: {
-            'app/!(test)/**/*.js': 'coverage'
+            'app/addons/index.js': 'coverage',
+            'app/!(test|addons)/**/*.js': 'coverage'
         },
 
         reporters: ['coverage'],

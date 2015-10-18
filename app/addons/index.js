@@ -43,6 +43,10 @@ function(ko, Addon, Type, env, vstack) {
                console.error(stderr);
             } else {
                 var finished = 0;
+                //Remove all addons and refresh.
+                vstack.db.transaction(function (tx) {
+                    tx.executeSql("DELETE FROM addon", []);
+                });
                 files.forEach(function (file) {
                     var filePath = env.buildPath([srcPath, file]);
                     fs.stat(filePath, function (stderr, stat) {

@@ -2,7 +2,8 @@ define([
     'knockout',
     'app-lib/models/Addon',
     'addons/firewall/lib/models/Rule',
-    'bindings/select2'
+    'bindings/select2',
+    'components/c-nav/c-nav'
 ],
 function(ko, Addon, Rule) {
 

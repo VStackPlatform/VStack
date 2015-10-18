@@ -1,0 +1,5 @@
+config.vm.provision "docker" do |d|
+    d.run "ubuntu",
+    cmd: "bash -l",
+    args: "-v '/vagrant:/var/www'"
+end

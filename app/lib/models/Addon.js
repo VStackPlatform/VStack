@@ -5,7 +5,8 @@ define([
     'app-lib/models/Class',
     'app-lib/environment',
     'app-lib/vstack',
-    'ko-postbox'
+    'ko-postbox',
+    'components/c-addon/c-addon'
 ],
 function (router, ko, mapping, Class, env, vstack, postbox) {
 
@@ -98,47 +99,6 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
                 this.data(convert);
                 return this;
             };
-
-            //@todo: clean this up as this is a hacky bit of code.
-            ko.computed(function() {
-                this.sideNavTypes().forEach(function (menuItem, key) {
-                    if (menuItem.name == this.type) {
-
-                        var moduleKey = 0, moduleRoute;
-                        menuItem.menu().forEach(function (item, index) {
-                            if (item.route == this.name) {
-                                moduleKey = index;
-                                moduleRoute = item.route;
-                            }
-                        }.bind(this));
-
-                        var project = this.project.peek();
-
-                        if (menuItem.menu()[moduleKey - 1] !== undefined) {
-                            this.prev = function () {
-                                router.navigate(project.editUrl() + '/' + menuItem.menu()[moduleKey - 1].route);
-                            };
-                        } else if (this.sideNavTypes()[key - 1] != undefined) {
-                            this.prev = function () {
-                                router.navigate(project.editUrl() + '/' + this.sideNavTypes()[key - 1].menu().pop().route);
-                            };
-                        } else {
-                            this.prev = undefined
-                        }
-                        if (menuItem.menu()[moduleKey + 1] !== undefined) {
-                            this.next = function () {
-                                router.navigate(project.editUrl() + '/' + menuItem.menu()[moduleKey + 1].route);
-                            };
-                        } else if (this.sideNavTypes()[key + 1] != undefined) {
-                            this.next = function () {
-                                router.navigate(project.editUrl() + '/' + this.sideNavTypes()[key + 1].menu()[0].route);
-                            };
-                        } else {
-                            this.next = undefined
-                        }
-                    }
-                }.bind(this));
-            }, this);
 
         },
         save: function() {

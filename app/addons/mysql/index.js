@@ -6,7 +6,8 @@ define([
     'addons/mysql/lib/models/User',
     'app-lib/models/Addon',
     'ko-mapping',
-    'bindings/select2'
+    'bindings/select2',
+    'components/c-nav/c-nav'
 ],
 function(router, ko, validation, postbox, User, Addon, mapping) {
 

@@ -2,21 +2,18 @@ define([
     'durandal/system',
     'durandal/app',
     'durandal/viewLocator',
-    'app-lib/vstack',
     'bootstrap',
     'app-lib/taskMenu',
     'extensions/asyncComputed',
     'ko-es5'
 ],
-function (system, app, viewLocator, vstack) {
+function (system, app, viewLocator) {
 
     var gui = require('nw.gui');
     var q = require('q');
     var deferred = q.defer();
     var win = gui.Window.get();
     win.showDevTools('', true);
-
-    vstack.createTables();
 
     //>>excludeStart("build", true);
     system.debug(true);
