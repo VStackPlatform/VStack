@@ -4,7 +4,7 @@ if $php == undef { $php = hiera('php', false) }
 if ($apache['install'] == true) {
 
   class { 'apache':
-    default_vhost => true,
+    default_vhost => false,
     mpm_module => $apache['options']['mpm'], #prefork event or worker
     require => [
       Apt::Source['trusty_multiverse'],

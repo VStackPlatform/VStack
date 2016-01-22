@@ -1,4 +1,9 @@
 ﻿requirejs.config({
+    map: {
+        '*': {
+            'css': '../node_modules/require-css/css'
+        }
+    },
     paths: {
         'text': '../node_modules/requirejs-text/text',
         'durandal':'../node_modules/durandal/js',
@@ -16,7 +21,8 @@
         'ko-dragdrop': '../node_modules/knockout-dragdrop/lib/knockout.dragdrop',
         'ko-es5': '../node_modules/knockout-es5/dist/knockout-es5',
         'app-lib': './lib',
-        'v-config': './lib/config'
+        'v-config': './lib/config',
+        'lodash': '../node_modules/lodash/index'
     },
     shim: {
         'bootstrap': {
@@ -26,7 +32,7 @@
     }
 });
 
-define(['app-lib/vstack'], function(vstack) {
+define(['app-lib/vstack', 'css!../node_modules/font-awesome/css/font-awesome.min.css'], function(vstack) {
     vstack.createTables();
     requirejs(['app-lib/loadDurandal']);
 });

@@ -41,16 +41,16 @@ define(['knockout'], function(ko) {
             return this.name.replace(/ /, '-').toLowerCase();
         };
 
-        this.menu = ko.computed(function () {
+        this.menu = ko.pureComputed(function () {
             return filterMenu(menu, this.name);
         }, this);
-        this.active = ko.computed(function () {
+        this.active = ko.pureComputed(function () {
             return activeMenu(this.menu());
         }, this);
-        this.css = ko.computed(function () {
+        this.css = ko.pureComputed(function () {
             return menuCss(this.active());
         }, this);
-        this.attr = ko.computed(function () {
+        this.attr = ko.pureComputed(function () {
             return menuAttr(this.active());
         }, this);
     };

@@ -1,10 +1,16 @@
-define(['knockout', 'ko-mapping'], function(ko, mapping) {
+define(function(requirejs) {
+
+    var ko = requirejs('knockout');
+    var mapping = requirejs('ko-mapping');
+
     return function (data) {
+
         mapping.fromJS({
             username: '',
             host: 'localhost',
             password: ''
         }, {}, this);
+
         mapping.fromJS(data, {}, this);
 
         this.username.extend({
@@ -17,11 +23,11 @@ define(['knockout', 'ko-mapping'], function(ko, mapping) {
 
         this.passVisible = ko.observable(false);
 
-        this.passText = ko.computed(function() {
+        this.passText = ko.pureComputed(function() {
             return this.passVisible() ? 'Hide' : 'Show';
         }, this);
 
-        this.passType = ko.computed(function() {
+        this.passType = ko.pureComputed(function() {
             return this.passVisible() ? 'text' : 'password';
         }, this);
 

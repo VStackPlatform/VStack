@@ -9,7 +9,7 @@ define(['knockout'], function(ko) {
             localStorage.showBanner = !this.showBanner();
             this.showBanner(!this.showBanner());
         };
-        this.bannerToggleClass = ko.computed(function() {
+        this.bannerToggleClass = ko.pureComputed(function() {
             return this.showBanner() ? 'fa-angle-up' : 'fa-angle-down';
         }, this);
     };

@@ -30,6 +30,14 @@ define([
                 });
                 this.enableLiveUpdates();
 
+                this.vhost = VirtualHost;
+
+                this.mpms = [
+                    {"prefork": "Prefork (DSO)"},
+                    {"worker": "Worker (FastCGI)"},
+                    {"event": "Event (FastCGI)"}
+                ];
+
                 /**
                  * Remove a virtual host.
                  *

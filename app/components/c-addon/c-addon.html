@@ -1,7 +1,7 @@
 <!-- ko with: $parentContext.$data -->
     <c-nav params="name: name, type: type"></c-nav>
     <h2 class="checkbox checkbox-success large">
-        <input id="do" data-bind="checked: data().install" type="checkbox" value="do" />
+        <input id="do" data-bind="checked: data().install, attr: {disabled: $component.readonly}" type="checkbox" value="do" />
         <label for="do" data-bind="text: 'Install ' + title"></label>
     </h2>
     <div data-bind="visible: data().install, with: data().options">

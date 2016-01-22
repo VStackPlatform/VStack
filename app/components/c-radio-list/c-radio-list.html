@@ -1,0 +1,19 @@
+<!-- ko if: $data -->
+<label data-bind="text: title"></label>:
+<ul class="list-inline">
+    <!-- ko foreach: {data: options, as: 'item'} -->
+    <li class="radio radio-success">
+        <!-- ko ifnot: $component.isObject(item) -->
+        <input data-bind="attr: {name: $parent.title, id: 'v' + item}, value: item, checked: $component.value" type="radio" />
+        <label data-bind="attr: {for: 'v' + item}, text: item"></label>
+        <!-- /ko -->
+        <!-- ko if: $component.isObject(item) -->
+        <!-- ko foreach: {data: Object.keys(item), as: 'key'} -->
+        <input data-bind="attr: {name: $parent.title, id: 'v' + item[key]}, value: key, checked: $component.value" type="radio" />
+        <label data-bind="attr: {for: 'v' + item[key]}, text: item[key]"></label>
+        <!-- /ko -->
+        <!-- /ko -->
+    </li>
+    <!-- /ko -->
+</ul>
+<!-- /ko -->

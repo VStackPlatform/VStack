@@ -42,7 +42,7 @@ function(ko, postbox, $) {
             this.isOpen(!this.isOpen());
         };
 
-        this.active = ko.computed(function () {
+        this.active = ko.pureComputed(function () {
             return this.isOpen() ? 'active' : '';
         }, this);
 

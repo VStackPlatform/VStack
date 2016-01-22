@@ -1,15 +1,16 @@
-define([
-    'plugins/router',
-    'knockout',
-    'ko-validation',
-    'ko-postbox',
-    'addons/mysql/lib/models/User',
-    'app-lib/models/Addon',
-    'ko-mapping',
-    'bindings/select2',
-    'components/c-nav/c-nav'
-],
-function(router, ko, validation, postbox, User, Addon, mapping) {
+define(function(require) {
+
+    require('bindings/select2');
+    require('components/c-nav/c-nav');
+
+    var router = require('plugins/router');
+    var ko = require('knockout');
+    var validation = require('ko-validation');
+    var postbox = require('ko-postbox');
+    var User = require('addons/mysql/lib/models/User');
+    var Addon = require('app-lib/models/Addon');
+    var mapping = require('ko-mapping');
+    var Grant = require('addons/mysql/lib/models/Grant');
 
     try {
         var MySQL = Addon.extend({
@@ -22,6 +23,11 @@ function(router, ko, validation, postbox, User, Addon, mapping) {
                                     "users": {
                                         "create": function (model) {
                                             return new User(model.data);
+                                        }
+                                    },
+                                    "grants": {
+                                        "create": function (model) {
+                                            return new Grant(model.data);
                                         }
                                     }
                                 }, this);
@@ -68,7 +74,7 @@ function(router, ko, validation, postbox, User, Addon, mapping) {
                 /**
                  * Only users that are fully validated.
                  */
-                this.validUsers = ko.computed(function() {
+                this.validUsers = ko.pureComputed(function() {
                     return ko.utils.arrayFilter(this.data().options.users(), function(user) {
                         var group = validation.group(user);
                         return group().length == 0;
@@ -82,7 +88,7 @@ function(router, ko, validation, postbox, User, Addon, mapping) {
                 /**
                  * When to show the grants section.
                  */
-                this.showGrants = ko.computed(function() {
+                this.showGrants = ko.pureComputed(function() {
                     var users = this.validUsers().length;
                     var databases = this.data().options.databases().length;
                     return databases > 0 && users > 0;
@@ -93,21 +99,21 @@ function(router, ko, validation, postbox, User, Addon, mapping) {
                  * Adds a new grant to config.
                  */
                 this.addGrant = function() {
-                    this.data().options.grants.push({
+                    this.data().options.grants.push(new Grant({
                         username: ko.observable(''),
                         database: ko.observable(''),
                         table: ko.observable('*'),
                         privileges: ko.observableArray(['ALL'])
-                    });
+                    }));
                 }.bind(this);
 
                 this.rootPassVisible = ko.observable(false);
 
-                this.rootPassText = ko.computed(function() {
+                this.rootPassText = ko.pureComputed(function() {
                     return this.rootPassVisible() ? 'Hide' : 'Show';
                 }, this);
 
-                this.rootPassType = ko.computed(function() {
+                this.rootPassType = ko.pureComputed(function() {
                     return this.rootPassVisible() ? 'text' : 'password';
                 }, this);
 

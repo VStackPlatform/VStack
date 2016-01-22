@@ -64,25 +64,10 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox, vstack) {
             this.version = ko.observable(data.version || '1.0');
             this.statuses = ko.observableArray();
 
-            /* TODO get this working again.
-            this.statusCss = ko.computed(function() {
-                var color = 'active';
-                switch (this.statuses()) {
-                    case 'running':
-                    case 'active':
-                        return 'success';
-                        break;
-                    case 'poweroff':
-                        return 'warning';
-                        break;
-                }
-                return color;
-            }, this);*/
-
             /**
              * Returns the edit url.
              */
-            this.editUrl = ko.computed(function () {
+            this.editUrl = ko.pureComputed(function () {
                 if (!this.isNewRecord) {
                     return '#project/edit/' + this.id();
                 } else {
@@ -93,7 +78,7 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox, vstack) {
             /**
              * Returns the full path to the project.
              */
-            this.fullPath = ko.computed(function () {
+            this.fullPath = ko.pureComputed(function () {
                 return this.path() + env.pathSeparator() + this.name();
             }, this);
 
@@ -186,26 +171,34 @@ function(ko, validation, mapping, Vagrant, env, vb, Addon, postbox, vstack) {
                 return deferred.promise;
             };
 
-            /**
+            /**name
              * Updates the status of the project.
              *
              * @param project
              */
             this.updateStatus = function(project) {
+                project = project || this;
                 Addon.findByType('Target', false).then(function(targets) {
                     targets.forEach(function (target) {
                         if (project.settings()[target.name] !== undefined &&
                             project.settings()[target.name].install == true) {
                             vagrant.getStatus(project.fullPath(), target.name)
                                 .then(function (result) {
-                                    project.statuses.push({
-                                        name: target.title,
-                                        status: result,
-                                        command: true
+                                    project.statuses().forEach(function(value, key) {
+                                        if (target.name === value().name) {
+                                            project.statuses()[key]({
+                                                name: target.name,
+                                                title: target.title,
+                                                status: result,
+                                                command: true
+                                            });
+                                        }
                                     });
-                                }).catch(function(error) {
-                                    project.statuses.push({
-                                        name: target.title,
+                                })
+                                .catch(function(error) {
+                                    project.statuses()[key]({
+                                        name: target.name,
+                                        title: target.title,
                                         status: error,
                                         command: false
                                     });

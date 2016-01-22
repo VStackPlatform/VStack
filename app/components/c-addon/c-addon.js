@@ -8,7 +8,13 @@
             'knockout',
             'ko-mapping',
             'components/c-addon/models/CAddon',
-            'components/c-nav/c-nav'
+            'components/c-nav/c-nav',
+            'components/c-group/c-group',
+            'components/c-radio-list/c-radio-list',
+            'components/c-textfield/c-textfield',
+            'components/c-select2/c-select2',
+            'components/c-select/c-select',
+            'components/c-help/c-help'
         ], factory);
     }
 }(this, function(ko, mapping, CAddon) {

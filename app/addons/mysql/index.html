@@ -1,138 +1,129 @@
-<c-nav params="name: name, type: type"></c-nav>
-<div class="row">
-    <div class="col-lg-12" data-bind="with: data">
-        <h2 class="checkbox checkbox-success large">
-            <input id="mysql" data-bind="checked: install" type="checkbox" value="mysql" />
-            <label for="mysql">Install MySQL</label>
-        </h2>
-        <div data-bind="visible: install, with: options">
-            <div class="row">
-                <div class="form-group col-lg-6">
-                    <label>Version:</label>
-                    <ul class="list-inline">
-                        <li class="radio radio-success">
-                            <input id="php5-5" data-bind="checked: version" type="radio" value="5.5" />
-                            <label for="php5-5">5.5</label>
-                        </li>
-                        <li class="radio radio-success">
-                            <input id="php5-6" data-bind="checked: version" type="radio" value="5.6" />
-                            <label for="php5-6">5.6</label>
-                        </li>
-                    </ul>
-                </div>
+<c-addon>
+    <div class="row">
+        <div class="form-group col-lg-6">
+            <label>Version:</label>
+            <ul class="list-inline">
+                <li class="radio radio-success">
+                    <input id="php5-5" data-bind="checked: version" type="radio" value="5.5" />
+                    <label for="php5-5">5.5</label>
+                </li>
+                <li class="radio radio-success">
+                    <input id="php5-6" data-bind="checked: version" type="radio" value="5.6" />
+                    <label for="php5-6">5.6</label>
+                </li>
+            </ul>
+        </div>
 
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-6">
+            <label>Root Password:</label>
+            <div class="input-group">
+                <input class="form-control" placeholder="Root Password" data-bind="value: root_password, attr: { type: $root.rootPassType }" />
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" data-bind="text: $root.rootPassText, click: $root.toggleRootPassVisible"></button>
+                </span>
             </div>
-            <div class="row">
-                <div class="form-group col-lg-6">
-                    <label>Root Password:</label>
+        </div>
+        <div class="form-group col-lg-6">
+            <label>Databases:</label>
+            <input type="text" class="form-control" id="database" placeholder="Databases" data-bind="select2: $root.database_config, select2val: databases" />
+            <p class="alert-danger" data-bind="validationMessage: databases"></p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <label>Users:</label>
+            <!-- ko foreach: users -->
+            <div class="panel clearfix">
+                <div class="clearfix" style="margin: 5px 5px 0 5px">
+                    <a data-bind="click: $root.removeUser"><i class="fa fa-times pull-right"></i></a>
+                </div>
+                <div class="col-lg-7">
+                    <label for="username">Username:</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="username" placeholder="Username" data-bind="value: username, valueUpdate: 'afterkeydown'" />
+                            <span class="input-group-addon">@</span>
+                            <input type="text" class="form-control" id="host" placeholder="Host" data-bind="value: host, valueUpdate: 'afterkeydown'" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-5">
+                    <label>Password:</label>
                     <div class="input-group">
-                        <input class="form-control" placeholder="Root Password" data-bind="value: root_password, attr: { type: $root.rootPassType }" />
+                        <input class="form-control" placeholder="Password" data-bind="value: password, valueUpdate: 'afterkeydown', attr: { type: passType }" />
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" data-bind="text: $root.rootPassText, click: $root.toggleRootPassVisible"></button>
+                            <button class="btn btn-default" type="button" data-bind="text: passText, click: togglePassVisible"></button>
                         </span>
                     </div>
                 </div>
-                <div class="form-group col-lg-6">
-                    <label>Databases:</label>
-                    <input type="text" class="form-control" id="database" placeholder="Databases" data-bind="select2: $root.database_config, select2val: databases" />
-                    <p class="alert-danger" data-bind="validationMessage: databases"></p>
-                </div>
             </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <label>Users:</label>
-                    <!-- ko foreach: users -->
-                    <div class="panel clearfix">
-                        <div class="clearfix" style="margin: 5px 5px 0 5px">
-                            <a data-bind="click: $root.removeUser"><i class="fa fa-times pull-right"></i></a>
-                        </div>
-                        <div class="col-lg-7">
-                            <label for="username">Username:</label>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="username" placeholder="Username" data-bind="value: username, valueUpdate: 'afterkeydown'" />
-                                    <span class="input-group-addon">@</span>
-                                    <input type="text" class="form-control" id="host" placeholder="Host" data-bind="value: host, valueUpdate: 'afterkeydown'" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-5">
-                            <label>Password:</label>
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Password" data-bind="value: password, valueUpdate: 'afterkeydown', attr: { type: passType }" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" data-bind="text: passText, click: togglePassVisible"></button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /ko -->
-                    <a class="btn btn-sm btn-default pull-right" data-bind="click: $root.addUser"><i class="fa fa-plus"></i>  Add user</a>
-                </div>
-            </div>
-            <div class="row" data-bind="visible: $root.showGrants">
-                <div class="col-lg-12">
-                    <label>Grants:</label>
-                    <!-- ko foreach: grants -->
-                    <div class="panel clearfix">
-                        <div class="clearfix" style="margin: 5px 5px 0 5px">
-                            <a data-bind="click: $parents[1].removeGrant"><i class="fa fa-times pull-right"></i></a>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label>Username:</label>
-                            <select class="form-control" data-bind="value: username, options: $root.validUsers, optionsText: $root.userHost, optionsValue: $root.userHost"></select>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label>Database:</label>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <select class="form-control" data-bind="value: database, options: $parent.databases, optionsCaption: '*'"></select>
-                                    <span class="input-group-addon">.</span>
-                                    <input type="text" class="form-control" id="table" placeholder="Table" data-bind="value: table" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-12">
-                            <label>Privileges:</label>
-                            <select class="form-control" data-bind="selectedOptions: privileges, select2: {}" multiple="multiple">
-                                <option value=CREATE">CREATE</option>
-                                <option value=DROP">DROP</option>
-                                <option value="GRANT OPTION">GRANT OPTION</option>
-                                <option value="LOCK TABLES">LOCK TABLES</option>
-                                <option value="REFERENCES">REFERENCES</option>
-                                <option value="EVENT">EVENT</option>
-                                <option value="ALTER">ALTER</option>
-                                <option value="DELETE">DELETE</option>
-                                <option value="INDEX">INDEX</option>
-                                <option value="INSERT">INSERT</option>
-                                <option value="SELECT">SELECT</option>
-                                <option value="UPDATE">UPDATE</option>
-                                <option value="CREATE TEMPORARY TABLES">CREATE TEMPORARY TABLES</option>
-                                <option value="TRIGGER">TRIGGER</option>
-                                <option value="CREATE VIEW">CREATE VIEW</option>
-                                <option value="SHOW VIEW">SHOW VIEW</option>
-                                <option value="ALTER ROUTINE">ALTER ROUTINE</option>
-                                <option value="CREATE ROUTINE">CREATE ROUTINE</option>
-                                <option value="EXECUTE">EXECUTE</option>
-                                <option value="FILE">FILE</option>
-                                <option value="CREATE USER">CREATE USER</option>
-                                <option value="PROCESS">PROCESS</option>
-                                <option value="RELOAD">RELOAD</option>
-                                <option value="REPLICATION CLIENT">REPLICATION CLIENT</option>
-                                <option value="REPLICATION SLAVE">REPLICATION SLAVE</option>
-                                <option value="SHOW DATABASES">SHOW DATABASES</option>
-                                <option value="SHUTDOWN">SHUTDOWN</option>
-                                <option value="SUPER">SUPER</option>
-                                <option value="ALL">ALL</option>
-                                <option value="USAGE">USAGE</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- /ko -->
-                    <a class="btn btn-sm btn-default pull-right" data-bind="click: $root.addGrant"><i class="fa fa-plus"></i>  Add grant</a>
-                </div>
-            </div>
+            <!-- /ko -->
+            <a class="btn btn-sm btn-default pull-right" data-bind="click: $root.addUser"><i class="fa fa-plus"></i>  Add user</a>
         </div>
     </div>
-</div>
+    <div class="row" data-bind="visible: $root.showGrants">
+        <div class="col-lg-12">
+            <label>Grants:</label>
+            <!-- ko foreach: grants -->
+            <div class="panel clearfix">
+                <div class="clearfix" style="margin: 5px 5px 0 5px">
+                    <a data-bind="click: $parents[1].removeGrant"><i class="fa fa-times pull-right"></i></a>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Username:</label>
+                    <select class="form-control" data-bind="options: $root.validUsers, value: username, optionsText: $root.userHost, optionsValue: $root.userHost"></select>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Database:</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <select class="form-control" data-bind="value: database, options: $parent.databases, optionsCaption: '*'"></select>
+                            <span class="input-group-addon">.</span>
+                            <input type="text" class="form-control" id="table" placeholder="Table" data-bind="value: table" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-12">
+                    <label>Privileges:</label>
+                    <select class="form-control" data-bind="selectedOptions: privileges, select2: {}" multiple="multiple">
+                        <option value=CREATE">CREATE</option>
+                        <option value=DROP">DROP</option>
+                        <option value="GRANT OPTION">GRANT OPTION</option>
+                        <option value="LOCK TABLES">LOCK TABLES</option>
+                        <option value="REFERENCES">REFERENCES</option>
+                        <option value="EVENT">EVENT</option>
+                        <option value="ALTER">ALTER</option>
+                        <option value="DELETE">DELETE</option>
+                        <option value="INDEX">INDEX</option>
+                        <option value="INSERT">INSERT</option>
+                        <option value="SELECT">SELECT</option>
+                        <option value="UPDATE">UPDATE</option>
+                        <option value="CREATE TEMPORARY TABLES">CREATE TEMPORARY TABLES</option>
+                        <option value="TRIGGER">TRIGGER</option>
+                        <option value="CREATE VIEW">CREATE VIEW</option>
+                        <option value="SHOW VIEW">SHOW VIEW</option>
+                        <option value="ALTER ROUTINE">ALTER ROUTINE</option>
+                        <option value="CREATE ROUTINE">CREATE ROUTINE</option>
+                        <option value="EXECUTE">EXECUTE</option>
+                        <option value="FILE">FILE</option>
+                        <option value="CREATE USER">CREATE USER</option>
+                        <option value="PROCESS">PROCESS</option>
+                        <option value="RELOAD">RELOAD</option>
+                        <option value="REPLICATION CLIENT">REPLICATION CLIENT</option>
+                        <option value="REPLICATION SLAVE">REPLICATION SLAVE</option>
+                        <option value="SHOW DATABASES">SHOW DATABASES</option>
+                        <option value="SHUTDOWN">SHUTDOWN</option>
+                        <option value="SUPER">SUPER</option>
+                        <option value="ALL">ALL</option>
+                        <option value="USAGE">USAGE</option>
+                    </select>
+                </div>
+            </div>
+            <!-- /ko -->
+            <a class="btn btn-sm btn-default pull-right" data-bind="click: $root.addGrant"><i class="fa fa-plus"></i>  Add grant</a>
+        </div>
+    </div>
+</c-addon>

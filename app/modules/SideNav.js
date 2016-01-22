@@ -2,7 +2,7 @@ define(['knockout', 'app-lib/models/NavItem', 'ko-postbox'], function(ko, NavIte
 
     var SideNav = function(childRouter) {
 
-        this.types = ko.computed(function() {
+        this.types = ko.pureComputed(function() {
             var navItems = [];
             var navTypes = [];
 

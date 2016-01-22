@@ -1,0 +1,14 @@
+{
+  "name": "git",
+  "title": "Git",
+  "type": "System",
+  "priority": "5",
+  "data": {
+    "install": true,
+    "options": {
+      "version": "1.9.1",
+      "repos": [],
+      "token": ""
+    }
+  }
+}

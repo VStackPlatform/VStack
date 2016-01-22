@@ -1,0 +1,16 @@
+<!-- ko if: $data -->
+<div class="form-group clearfix">
+    <label><!-- ko text: label --><!-- /ko -->:</label>
+    <!-- ko foreach: models -->
+    <div class="panel clearfix">
+        <div class="clearfix" style="margin: 5px 5px 0 5px">
+            <a data-bind="click: $component.removeModel"><i class="fa fa-times pull-right"></i></a>
+        </div>
+        <!-- ko template: {nodes: $componentTemplateNodes, data: $data} --><!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <a class="btn btn-sm btn-default pull-right" data-bind="click: $component.addModel">
+        <i class="fa fa-plus"></i>  Add <!-- ko text: label --><!-- /ko -->
+    </a>
+</div>
+<!-- /ko -->

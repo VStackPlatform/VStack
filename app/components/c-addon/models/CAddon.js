@@ -4,16 +4,18 @@
 ;(function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define([
-            'knockout',
-            'components/models/Component'
-        ], factory);
+        define(factory);
     }
-}(this, function(ko, Component) {
+}(this, function(require) {
+
+    var ko = require('knockout');
+    var Component = require('components/models/Component');
+    var mapping = require('ko-mapping');
 
     var CAddon = Component.extend({
-        init: function() {
-
+        init: function(params) {
+            params.readonly = params.readonly || false;
+            mapping.fromJS(params, {}, this);
         }
     });
 

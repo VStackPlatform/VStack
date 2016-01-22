@@ -1,0 +1,11 @@
+<!-- ko if: $data -->
+<label data-bind="text: title"></label>
+<!-- ko if: optionsIsObject -->
+    <!-- ko text: optionsValue --><!-- /ko -->
+    <select class="form-control" data-bind="value: value, options: options, optionsValue: optionsValue, optionsText: optionsText"></select>
+<!-- /ko -->
+<!-- ko ifnot: optionsIsObject -->
+<select class="form-control" data-bind="value: value, options: options"></select>
+<!-- /ko -->
+<p class="alert-danger" data-bind="validationMessage: value"></p>
+<!-- /ko -->

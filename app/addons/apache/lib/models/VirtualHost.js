@@ -1,5 +1,12 @@
-define(['knockout', 'ko-mapping'], function(ko, mapping) {
+define(function(require) {
+
+    var ko = require('knockout'),
+        mapping = require('ko-mapping'),
+        Directory = require('addons/apache/lib/models/Directory'),
+        Alias = require('addons/apache/lib/models/Alias');
+
     var VirtualHost = function(data) {
+
         mapping.fromJS({
             name: 'localdev',
             serveraliases: ['www.localdev'],
@@ -26,25 +33,23 @@ define(['knockout', 'ko-mapping'], function(ko, mapping) {
             ssl_chain: '',
             ssl_certs_dir: ''
         }, {}, this);
-        mapping.fromJS(data, {}, this);
 
-        /**
-         * Removes a alias for a vhost.
-         *
-         * @param model the alias to remove.
-         */
-        this.removeAlias = function(model) {
-            this.aliases.remove(model);
-        }.bind(this);
+        mapping.fromJS(data, {
+            "directories": {
+                create: function(options) {
+                    return new Directory(options.data);
+                }
+            },
+            "aliases": {
+                create: function(options) {
+                    return new Alias(options.data);
+                }
+            }
+        }, this);
 
-        /**
-         * Removes a directory for a vhost.
-         *
-         * @param model the directory to remove.
-         */
-        this.removeDirectory = function(model) {
-            this.directories.remove(model);
-        }.bind(this);
+        this.directoryModel = Directory;
+        this.aliasModel = Alias;
+
 
         /**
          * The conversion back to json.
@@ -71,29 +76,6 @@ define(['knockout', 'ko-mapping'], function(ko, mapping) {
      */
     VirtualHost.prototype.toggleSSL = function(model) {
         return model.ssl(!model.ssl());
-    };
-
-    /**
-     * Adds an alias for a vhost
-     */
-    VirtualHost.prototype.addAlias = function() {
-        this.aliases.push({
-            type: 'alias',
-            url: '',
-            path: ''
-        });
-    };
-
-    /**
-     * Adds a directory for a vhost.
-     *
-     */
-    VirtualHost.prototype.addDirectory = function() {
-        this.directories.push({
-            path: '',
-            allow_override: ko.observableArray(),
-            options: ko.observableArray()
-        });
     };
 
     return VirtualHost;

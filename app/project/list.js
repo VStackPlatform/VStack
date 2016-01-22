@@ -35,19 +35,19 @@ define([
                                     project.settings()[target.name].install == true) {
                                     vagrant.getStatus(project.fullPath(), target.name)
                                         .then(function (result) {
-                                            project.statuses.push({
+                                            project.statuses.push(ko.observable({
                                                 title: target.title,
                                                 name: target.name,
                                                 status: result,
                                                 command: true
-                                            });
+                                            }));
                                         }).catch(function(error) {
-                                            project.statuses.push({
+                                            project.statuses.push(ko.observable({
                                                 title: target.title,
                                                 name: target.name,
                                                 status: error,
                                                 command: false
-                                            });
+                                            }));
                                         });
                                 }
                             });

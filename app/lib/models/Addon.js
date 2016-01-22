@@ -133,6 +133,7 @@ function (router, ko, mapping, Class, env, vstack, postbox) {
                  * mapping.toJS removes the mapping data.
                  */
                 var data = JSON.parse(ko.toJSON(this.data()));
+                console.log(data);
                 this.project.peek().settings.peek()[this.name] = mapping.toJS(data); // Block change on project.
             }, this);
         }

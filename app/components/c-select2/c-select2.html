@@ -1,0 +1,6 @@
+<!-- ko if: $data -->
+<label data-bind="attr: {for: id}">
+    <!-- ko text: title --><!-- /ko -->:
+</label>
+<input type="text" class="form-control" data-bind="select2val: value, select2: options, attr: {id: id}" />
+<!-- /ko -->

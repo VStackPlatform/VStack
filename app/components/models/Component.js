@@ -9,14 +9,42 @@
         define([
             'knockout',
             'app-lib/models/Class',
-            'jquery'
+            'jquery',
+            'ko-mapping',
+            'lodash'
         ], factory);
     }
-}(this, function(ko, Class, $) {
+}(this, function(ko, Class, $, mapping, _) {
 
-    return Class.extend({
+    var Component = Class.extend({
         init: function() {
 
+        },
+
+        /**
+         * Converts nodes to html string.
+         *
+         * @param {array} nodes array of DOM nodes.
+         * @returns {string}
+         */
+        nodesToHtml: function(nodes) {
+            var div = $('<div />');
+            nodes.forEach(function(value) {
+                div.append(value);
+            });
+            return div[0].innerHTML;
+        },
+
+        /**
+         * Sets defaults and maps the data.
+         *
+         * @param params
+         * @param map
+         * @param defaults
+         */
+        mapData: function(params, map, defaults) {
+            params = _.merge(defaults, params);
+            mapping.fromJS(params, map, this);
         },
 
         /**
@@ -73,11 +101,35 @@
                 }
 
             });
-
-
             return componentInfo;
-
         }
     });
+
+    /**
+     * Makes validation for component args simple.
+     *
+     * @param {object} rules The rules that are added to the component.
+     * @param {object} params The parameters that were passed through.
+     * @param {string} name The name of the component.
+     * @returns {boolean} If the validation was successful.
+     */
+    Component.validate = function(rules, params, name) {
+        var validated = true;
+        ko.utils.objectForEach(rules, function(type, args) {
+            switch (type) {
+                case 'required':
+                    args.forEach(function(arg) {
+                        if (params[arg] === undefined) {
+                            console.error(name + ' component requires that parameter "' + arg + '" be defined.');
+                            validated = false;
+                        }
+                    });
+                    break;
+            }
+        });
+        return validated;
+    };
+
+    return Component;
 
 }));
