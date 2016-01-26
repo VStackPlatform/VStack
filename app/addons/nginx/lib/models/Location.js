@@ -11,7 +11,13 @@ function(ko, mapping, Directive) {
             path: '',
             directives: []
         }, {}, this);
-        mapping.fromJS(data, {}, this);
+        mapping.fromJS(data, {
+            "directives": {
+                create: function (options) {
+                    return new Directive(options.data);
+                }
+            }
+        }, this);
 
         /**
          * Adds a directive for a location.

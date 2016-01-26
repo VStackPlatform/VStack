@@ -14,19 +14,24 @@ if $nginx['install'] == true {
 
     each( $site['servers'] ) |$server| {
       $listen = regsubst($server['listen'], '[^a-z0-9]+', '-')
-      $server_name = sprintf("%s-%s", $server['server_name'], $listen)
-      nginx::server { $server_name:
+      $server_id = sprintf("%s-%s", $server['server_name'], $listen)
+      $directives = union($server['directives'], [
+        "server_name ${server['server_name']}",
+        "listen ${server['listen']}"
+      ])
+      nginx::server { $server_id:
         site => Nginx::Site[$site['site_name']],
-        directives => $server['directives']
+        directives => $directives
       }
       each( $server['locations'] ) |$key, $location| {
-        nginx::server::location { sprintf("%s-%s", $server_name, $key):
+        nginx::server::location { sprintf("%s-%s", $server_id, $key):
           location => $location['path'],
           site => Nginx::Site[$site['site_name']],
-          server   => Nginx::Server[$server_name],
+          server   => Nginx::Server[$server_id],
           directives  => $location['directives']
         }
       }
     }
   }
 }
+

@@ -1,4 +1,4 @@
-define(['knockout', 'ko-mapping'], function(ko, mapping) {
+define(['knockout', 'ko-mapping', 'jquery'], function(ko, mapping, $) {
 
     var Directive = function(data) {
 
@@ -8,7 +8,7 @@ define(['knockout', 'ko-mapping'], function(ko, mapping) {
         }, {}, this);
 
         if ($.isArray(data)) {
-            data.forEach(function () {
+            data.forEach(function (options) {
                 var matches = options.data.match(/([a-z0-9_]+) (.*)/i);
                 this.directive.push(matches[1]);
                 this.value(matches[2]);

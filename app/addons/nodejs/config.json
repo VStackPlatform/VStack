@@ -3,12 +3,14 @@
   "title": "NodeJS",
   "type": "Language",
   "priority": 5,
-  "modules": [],
+  "modules": [
+    { "mod": "VStackPlatform/puppet-nvm", "tag": "0805a7fb561bfa0fd63996d495f6b238701f2c27" }
+  ],
   "data": {
     "install": false,
     "options": {
-      "version": "0.12.4",
-      "npm": ["bower", "gulp"]
+      "version": "5.0.0",
+      "npm": ["gulp", "slush"]
     }
   }
 }

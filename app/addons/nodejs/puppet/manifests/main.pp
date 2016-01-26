@@ -1,8 +1,7 @@
 if $nodejs == undef { $nodejs = hiera('nodejs') }
 
 if $nodejs['install'] == true {
-  $nvmInstall = '/usr/local/nvm'
-  $home = '/root'
+
   $version = $nodejs['options']['version']
 
   if ! defined(Package['curl']) {
@@ -11,39 +10,23 @@ if $nodejs['install'] == true {
     }
   }
 
-  # Install NVM to manage nodejs installations.
-  exec{ 'nvm_install':
-    command => "/usr/bin/curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | NVM_DIR=${nvmInstall} bash",
-    creates => "${nvmInstall}/.nvm/nvm.sh",
-    unless => "/usr/bin/test -e ${nvmInstall}/nvm.sh",
-    environment => [ "HOME=${home}" ],
+  class { 'nvm':
+    users => ['vagrant']
   }
 
-  # Install the specified version.
-  exec{ 'nodejs_install':
-    command => sprintf('. %s/nvm.sh && nvm install %s', $nvmInstall, $nodejs['options']['version']),
-    cwd => $home,
-    provider    => shell,
-    unless      => sprintf("/usr/bin/test -e %s/versions/node/v%s/bin/node", $nvmInstall, $nodejs['options']['version']),
-    environment => [ "HOME=${home}", "NVM_DIR=${nvmInstall}" ],
-    require => Exec['nvm_install']
+  class { 'nvm::nodejs': }
+
+  nvm::nodejs::install{ "node_js_$version":
+    version     => $version,
+    set_default  => true
   }
 
-  exec{ 'nodejs_default':
-    command => sprintf('. %s/nvm.sh && nvm alias default %s', $nvmInstall, $nodejs['options']['version']),
-    cwd => $home,
-    provider    => shell,
-    unless      => "/usr/bin/test -e ${nvmInstall}/alias/default",
-    environment => [ "HOME=${home}", "NVM_DIR=${nvmInstall}" ],
-    require => Exec['nodejs_install']
+  class { 'nvm::npm':
+    node_version => $version,
   }
 
-  ## Install NPM modules.
-  each( $nodejs['options']['npm'] ) |$module| {
-    exec{ sprintf('npm_install_%s', $module):
-      command => sprintf('%s/versions/node/v%s/bin/npm install -g %s', $nvmInstall, $version, $module),
-      unless => sprintf('%s/versions/node/v%s/bin/npm list -g %s', $nvmInstall, $version, $module),
-      require => Exec['nodejs_default']
-    }
+  nvm::npm::add_modules{ 'npm_global_modules':
+    modules   => $nodejs['options']['npm']
   }
+
 }

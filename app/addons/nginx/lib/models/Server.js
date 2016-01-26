@@ -12,6 +12,11 @@ function(mapping, Location, ko, Directive) {
                 "create": function (model) {
                     return new Location(model.data);
                 }
+            },
+            "directives": {
+                create: function (options) {
+                    return new Directive(options.data);
+                }
             }
         };
 
