@@ -46,7 +46,7 @@
     "terminal.js": "~1.0.5"
   },
   "devDependencies": {
-    "gulp": "^3.9.0",
+    "gulp": "^3.9.1",
     "gulp-karma": "0.0.4",
     "gulp-less": "^3.0.3",
     "jasmine": "^2.3.2",
