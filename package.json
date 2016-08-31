@@ -49,7 +49,7 @@
     "gulp": "^3.9.0",
     "gulp-karma": "0.0.4",
     "gulp-less": "^3.0.3",
-    "jasmine": "^2.3.2",
+    "jasmine": "^2.5.0",
     "jasmine-core": "^2.3.4",
     "jasmine-jquery": "^2.1.0",
     "karma": "^0.13.9",
