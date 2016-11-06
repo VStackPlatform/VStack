@@ -59,7 +59,7 @@
     "karma-jasmine-ajax": "^0.1.13",
     "karma-jasmine-jquery": "^0.1.1",
     "karma-jquery": "^0.1.0",
-    "karma-nodewebkit-launcher": "0.0.12",
+    "karma-nodewebkit-launcher": "0.0.13",
     "karma-requirejs": "^0.2.2",
     "requirejs": "^2.1.20"
   }
