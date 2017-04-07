@@ -32,7 +32,7 @@
     "knockout": "^3.3.0",
     "knockout-dragdrop": "^2.4.2",
     "knockout-es5": "^0.1.1",
-    "knockout-postbox": "~0.5.1",
+    "knockout-postbox": "~0.6.0",
     "knockout.mapping": "~2.4.3",
     "knockout.validation": "~2.0.2",
     "lodash": "^3.8.0",
