@@ -25,7 +25,7 @@
     "colors": "~1.1.0",
     "durandal": "^2.1.0",
     "font-awesome": "^4.4.0",
-    "handlebars": "~3.0.3",
+    "handlebars": "~4.0.8",
     "install": "^0.2.6",
     "jquery": "^2.1.4",
     "jquery-ui-bundle": "^1.11.4",
